@@ -25,8 +25,9 @@ const AddCustomerForm = ({ setIsOpen, className }) => {
 
     try {
       const response = await handleApi("/customers/add", "POST", data)
-      console.log(response)
+      
       if (response?.success) {
+        
         e.target.reset()
         toast.success("Customer added successfully")
         setIsOpen(false)

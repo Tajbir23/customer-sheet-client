@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import CustomerTable from './components/CustomerTable'
 import { FaSearch, FaUserPlus } from 'react-icons/fa'
-import AddCustomerForm from './components/addCustomerForm'
+import AddCustomerForm from './components/AddCustomerForm'
 
 
 const Customers = () => {

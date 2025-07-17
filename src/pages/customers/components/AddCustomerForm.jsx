@@ -1,5 +1,6 @@
 import React from 'react'
 import handleApi from '../../../libs/handleAPi'
+import { toast } from 'react-toastify'
 
 const AddCustomerForm = ({ setIsOpen, className }) => {
   const handleSubmit = async (e) => {
@@ -22,10 +23,16 @@ const AddCustomerForm = ({ setIsOpen, className }) => {
       paymentDate: formData.paymentDate.value
     }
 
-    console.log(data)
-    const response = await handleApi("/customers/add", "POST", data)
-    if (response?.success) {
-      setIsOpen(false)
+    try {
+      const response = await handleApi("/customers/add", "POST", data)
+      console.log(response)
+      if (response?.success) {
+        e.target.reset()
+        toast.success("Customer added successfully")
+        setIsOpen(false)
+      }
+    } catch (error) {
+      console.error("Error adding customer:", error)
     }
   }
   return (
@@ -209,7 +216,11 @@ const AddCustomerForm = ({ setIsOpen, className }) => {
               Add Customer
             </button>
             <button 
-              onClick={() => setIsOpen(false)} 
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                setIsOpen(false);
+              }} 
               className="flex-1 bg-red-600 text-white py-2 px-4 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors duration-200"
             >
               Cancel

@@ -4,6 +4,8 @@ import { useState } from 'react';
 import handleApi from '../../../libs/handleAPi';
 import { useNavigate } from 'react-router-dom';
 import CustomerDetailsModal from './CustomerDetailsModal';
+import DeleteCustomerModal from './DeleteCustomerModal';
+import { toast } from 'react-toastify';
 
 const formatDate = (dateString) => {
     if (!dateString) return '';
@@ -70,6 +72,7 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search }) => {
 
     const [activeNote, setActiveNote] = useState(null);
     const [selectedCustomer, setSelectedCustomer] = useState(null);
+    const [deleteCustomerId, setDeleteCustomerId] = useState(null);
 
     const handleViewDetails = (customer) => {
         console.log(customer)
@@ -83,6 +86,22 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search }) => {
             )
         );
         setSelectedCustomer(updatedCustomer);
+    };
+
+    const handleDelete = async (_id) => {
+        try {
+            const response = await handleApi(`/customers/delete/${_id}`, 'DELETE');
+            if (response?.success) {
+                setCustomers(prev => prev.filter(c => c._id !== _id));
+                toast.success('Customer deleted successfully');
+            } else {
+                toast.error('Failed to delete customer');
+            }
+        } catch (err) {
+            toast.error('Error deleting customer');
+        } finally {
+            setDeleteCustomerId(null);
+        }
     };
 
     if (isLoading) {
@@ -193,9 +212,15 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search }) => {
                                     <td className="px-4 py-3.5 whitespace-nowrap">
                                         <button
                                             onClick={() => handleViewDetails(item)}
-                                            className="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                                            className="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mr-2"
                                         >
                                             View Details
+                                        </button>
+                                        <button
+                                            onClick={() => setDeleteCustomerId(item._id)}
+                                            className="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                                        >
+                                            Delete
                                         </button>
                                     </td>
                                 </tr>
@@ -211,6 +236,13 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search }) => {
                     onClose={() => setSelectedCustomer(null)}
                     formatDate={formatDate}
                     onUpdate={handleCustomerUpdate}
+                />
+            )}
+            {deleteCustomerId && (
+                <DeleteCustomerModal
+                    _id={deleteCustomerId}
+                    onClose={() => setDeleteCustomerId(null)}
+                    onDelete={handleDelete}
                 />
             )}
         </div>

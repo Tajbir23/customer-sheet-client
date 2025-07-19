@@ -72,7 +72,7 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search }) => {
 
     const [activeNote, setActiveNote] = useState(null);
     const [selectedCustomer, setSelectedCustomer] = useState(null);
-    const [deleteCustomerId, setDeleteCustomerId] = useState(null);
+    const [deleteCustomer, setDeleteCustomer] = useState(null);
 
     const handleViewDetails = (customer) => {
         console.log(customer)
@@ -100,7 +100,7 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search }) => {
         } catch (err) {
             toast.error('Error deleting customer');
         } finally {
-            setDeleteCustomerId(null);
+            setDeleteCustomer(null);
         }
     };
 
@@ -217,7 +217,7 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search }) => {
                                             View Details
                                         </button>
                                         <button
-                                            onClick={() => setDeleteCustomerId(item._id)}
+                                            onClick={() => setDeleteCustomer(item)}
                                             className="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                                         >
                                             Delete
@@ -238,10 +238,10 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search }) => {
                     onUpdate={handleCustomerUpdate}
                 />
             )}
-            {deleteCustomerId && (
+            {deleteCustomer && (
                 <DeleteCustomerModal
-                    _id={deleteCustomerId}
-                    onClose={() => setDeleteCustomerId(null)}
+                    customer={deleteCustomer}
+                    onClose={() => setDeleteCustomer(null)}
                     onDelete={handleDelete}
                 />
             )}

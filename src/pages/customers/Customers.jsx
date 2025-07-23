@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import CustomerTable from './components/CustomerTable'
 import { FaSearch, FaUserPlus } from 'react-icons/fa'
 import AddCustomerForm from './components/AddCustomerForm'
@@ -8,7 +8,16 @@ const Customers = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [search, setSearch] = useState('')
+  const [debouncedSearch, setDebouncedSearch] = useState('')
 
+  // Debounce search term
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search)
+    }, 500) // Wait for 500ms after the user stops typing
+
+    return () => clearTimeout(timer)
+  }, [search])
 
   return (
     <div className="p-4 sm:p-6 h-screen relative overflow-auto">
@@ -35,7 +44,7 @@ const Customers = () => {
         </div>
       </div>
 
-      <CustomerTable className={`${isOpen ? 'opacity-50' : 'opacity-100'}`} setIsLoading={setIsLoading} isLoading={isLoading} search={search} />
+      <CustomerTable className={`${isOpen ? 'opacity-50' : 'opacity-100'}`} setIsLoading={setIsLoading} isLoading={isLoading} search={debouncedSearch} />
     </div>
   )
 }

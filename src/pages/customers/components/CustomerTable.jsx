@@ -40,6 +40,7 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search }) => {
     const [customers, setCustomers] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
+    const [sortConfig, setSortConfig] = useState({ key: 'orderDate', direction: 'desc' });
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -49,7 +50,7 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search }) => {
             try {
                 setIsLoading(true);
                 const response = await handleApi(
-                    `/customers/get?search=${search}&page=${currentPage}&limit=${ITEMS_PER_PAGE}`,
+                    `/customers/get?search=${search}&page=${currentPage}&limit=${ITEMS_PER_PAGE}&sortBy=${sortConfig.key}&sortDirection=${sortConfig.direction}`,
                     "GET",
                     {},
                     navigate
@@ -72,7 +73,7 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search }) => {
         return () => {
             isMounted = false;
         };
-    }, [search, currentPage, setIsLoading, navigate]);
+    }, [search, currentPage, sortConfig, setIsLoading, navigate]);
 
     const [selectedCustomer, setSelectedCustomer] = useState(null);
     const [deleteCustomer, setDeleteCustomer] = useState(null);
@@ -110,6 +111,14 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search }) => {
         setCurrentPage(page);
     };
 
+    const handleSort = (key) => {
+        setSortConfig(prevConfig => ({
+            key,
+            direction: prevConfig.key === key && prevConfig.direction === 'asc' ? 'desc' : 'asc'
+        }));
+        setCurrentPage(1); // Reset to first page when sorting changes
+    };
+
     if (isLoading) {
         return (
             <div className={`w-full ${className}`}>
@@ -125,7 +134,10 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search }) => {
             <div className="relative shadow-md sm:rounded-lg bg-white dark:bg-gray-900 mb-6">
                 <div className="min-w-full">
                     <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                        <TableHeader />
+                        <TableHeader 
+                            sortConfig={sortConfig}
+                            onSort={handleSort}
+                        />
                         <tbody className="bg-white divide-y divide-gray-200 dark:bg-gray-900 dark:divide-gray-700">
                             {customers?.map((item) => (
                                 <TableRow

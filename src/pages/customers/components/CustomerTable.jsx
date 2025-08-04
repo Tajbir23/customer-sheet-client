@@ -7,6 +7,7 @@ import DeleteCustomerModal from './DeleteCustomerModal';
 import TableHeader from './TableHeader';
 import TableRow from './TableRow';
 import Pagination from './Pagination';
+import PageSizeSelector from './PageSizeSelector';
 
 const formatDate = (dateString) => {
     if (!dateString) return '';
@@ -34,13 +35,13 @@ const TableSkeleton = () => {
     );
 };
 
-const ITEMS_PER_PAGE = 10;
-
 const CustomerTable = ({ className, isLoading, setIsLoading, search }) => {
     const [customers, setCustomers] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [sortConfig, setSortConfig] = useState({ key: 'orderDate', direction: 'desc' });
+    const [pageSize, setPageSize] = useState(10);
+    const [totalItems, setTotalItems] = useState(0);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -50,14 +51,15 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search }) => {
             try {
                 setIsLoading(true);
                 const response = await handleApi(
-                    `/customers/get?search=${search}&page=${currentPage}&limit=${ITEMS_PER_PAGE}&sortBy=${sortConfig.key}&sortDirection=${sortConfig.direction}`,
+                    `/customers/get?search=${search}&page=${currentPage}&limit=${pageSize}&sortBy=${sortConfig.key}&sortDirection=${sortConfig.direction}`,
                     "GET",
                     {},
                     navigate
                 );
                 if (response?.success && isMounted) {
                     setCustomers(response.customers);
-                    setTotalPages(Math.ceil(response.total / ITEMS_PER_PAGE));
+                    setTotalItems(response.total);
+                    setTotalPages(Math.ceil(response.total / pageSize));
                 }
             } catch (error) {
                 console.error('Error fetching customers:', error);
@@ -73,7 +75,7 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search }) => {
         return () => {
             isMounted = false;
         };
-    }, [search, currentPage, sortConfig, setIsLoading, navigate]);
+    }, [search, currentPage, pageSize, sortConfig, setIsLoading, navigate]);
 
     const [selectedCustomer, setSelectedCustomer] = useState(null);
     const [deleteCustomer, setDeleteCustomer] = useState(null);
@@ -119,6 +121,11 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search }) => {
         setCurrentPage(1); // Reset to first page when sorting changes
     };
 
+    const handlePageSizeChange = (newPageSize) => {
+        setPageSize(newPageSize);
+        setCurrentPage(1); // Reset to first page when page size changes
+    };
+
     if (isLoading) {
         return (
             <div className={`w-full ${className}`}>
@@ -131,6 +138,16 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search }) => {
 
     return (
         <div className={`w-full ${className} overflow-auto`}>
+            <div className="flex justify-between items-center mb-4">
+                <PageSizeSelector 
+                    pageSize={pageSize}
+                    onPageSizeChange={handlePageSizeChange}
+                />
+                <div className="text-sm text-gray-700 dark:text-gray-300">
+                    Showing {customers.length ? (currentPage - 1) * pageSize + 1 : 0} to {Math.min(currentPage * pageSize, totalItems)} of {totalItems} entries
+                </div>
+            </div>
+
             <div className="relative shadow-md sm:rounded-lg bg-white dark:bg-gray-900 mb-6">
                 <div className="min-w-full">
                     <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">

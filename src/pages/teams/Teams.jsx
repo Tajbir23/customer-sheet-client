@@ -184,7 +184,7 @@ const EmptyState = ({ message, icon: Icon, type = 'default' }) => (
 );
 
 const Teams = () => {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
@@ -193,7 +193,7 @@ const Teams = () => {
 
   // Sort teams with inactive first
   const sortedTeams = useMemo(() => {
-    if (!data) return [];
+    if (!Array.isArray(data)) return [];
     return [...data].sort((a, b) => {
       if (a.isActive === b.isActive) {
         return a.gptAccount.localeCompare(b.gptAccount);
@@ -208,14 +208,18 @@ const Teams = () => {
       setIsLoading(true);
       setError(null);
       const response = await handleApi(`/gptTeam/team?search=${searchTerm}`, 'GET');
+      
       if (response.success) {
-        setData(response.data);
+        // The data is in response.data
+        setData(response.data || []);
       } else {
         setError(response.message || 'Failed to fetch teams');
+        setData([]);
       }
     } catch (err) {
       setError('An error occurred while fetching teams');
       console.error('Error fetching teams:', err);
+      setData([]);
     } finally {
       setIsLoading(false);
     }
@@ -231,10 +235,10 @@ const Teams = () => {
       
       if (response.success) {
         setData(prevData => {
+          if (!Array.isArray(prevData)) return [];
           const updatedData = prevData.map(team => 
             team._id === teamId ? { ...team, isActive: newActiveState } : team
           );
-          // Sort the updated data
           return updatedData;
         });
         toast.success(`Team ${newActiveState ? 'activated' : 'deactivated'} successfully`);
@@ -277,7 +281,7 @@ const Teams = () => {
 
   const handleSearchChange = (e) => {
     setSearch(e.target.value);
-    setError(null); // Clear error when search changes
+    setError(null);
   };
 
   const renderContent = () => {
@@ -298,7 +302,7 @@ const Teams = () => {
       return <EmptyState message={error} icon={FaExclamationCircle} type="error" />;
     }
 
-    if (!sortedTeams || sortedTeams.length === 0) {
+    if (!Array.isArray(sortedTeams) || sortedTeams.length === 0) {
       return <EmptyState message="No teams found" icon={FaSearch} />;
     }
 

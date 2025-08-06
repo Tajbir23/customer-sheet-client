@@ -5,6 +5,7 @@ import Customers from "../pages/customers/Customers";
 import Layout from "../Layout";
 import AuthCheck from "./AuthCheck";
 import Login from "../pages/login/Login";
+import Teams from "../pages/teams/Teams";
 
 const Routes = createBrowserRouter([
     {
@@ -18,6 +19,10 @@ const Routes = createBrowserRouter([
             {
                 path: "/customers",
                 element: <Customers />,
+            },
+            {
+                path: "/teams",
+                element: <Teams />
             }
         ],
     },

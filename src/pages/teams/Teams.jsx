@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import handleApi from '../../libs/handleAPi';
-import { FaServer, FaUserFriends, FaEnvelope, FaCircle, FaChevronDown, FaChevronUp } from 'react-icons/fa';
+import { FaServer, FaUserFriends, FaEnvelope, FaCircle, FaChevronDown, FaChevronUp, FaExclamationCircle, FaSearch } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 
 const ToggleButton = ({ isActive, isLoading, onClick }) => (
@@ -159,6 +159,30 @@ const TeamCard = ({ team, onToggleActive, isToggling }) => {
   );
 };
 
+const EmptyState = ({ message, icon: Icon, type = 'default' }) => (
+  <div className="flex flex-col items-center justify-center py-12">
+    <div className={`rounded-full p-4 mb-4 ${
+      type === 'error' 
+        ? 'bg-red-100 dark:bg-red-900/20 text-red-600 dark:text-red-400'
+        : 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400'
+    }`}>
+      <Icon className="w-8 h-8" />
+    </div>
+    <p className={`text-lg font-medium mb-2 ${
+      type === 'error'
+        ? 'text-red-600 dark:text-red-400'
+        : 'text-gray-900 dark:text-white'
+    }`}>
+      {message}
+    </p>
+    {type !== 'error' && (
+      <p className="text-sm text-gray-500 dark:text-gray-400">
+        Try adjusting your search or filter to find what you're looking for.
+      </p>
+    )}
+  </div>
+);
+
 const Teams = () => {
   const [data, setData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -171,12 +195,10 @@ const Teams = () => {
   const sortedTeams = useMemo(() => {
     if (!data) return [];
     return [...data].sort((a, b) => {
-      // First sort by active status (inactive first)
       if (a.isActive === b.isActive) {
-        // If status is the same, sort by gptAccount alphabetically
         return a.gptAccount.localeCompare(b.gptAccount);
       }
-      return a.isActive ? 1 : -1; // Inactive teams come first
+      return a.isActive ? 1 : -1;
     });
   }, [data]);
 
@@ -255,17 +277,44 @@ const Teams = () => {
 
   const handleSearchChange = (e) => {
     setSearch(e.target.value);
+    setError(null); // Clear error when search changes
   };
 
-  if (error) {
-    return (
-      <div className="p-4">
-        <div className="bg-red-50 dark:bg-red-900/50 border border-red-200 dark:border-red-800 rounded-lg p-4">
-          <p className="text-red-600 dark:text-red-400">{error}</p>
+  const renderContent = () => {
+    if (isLoading) {
+      return (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {[1, 2, 3, 4, 5, 6].map((item) => (
+            <div
+              key={item}
+              className="bg-gray-100 dark:bg-gray-800 h-48 rounded-xl animate-pulse"
+            />
+          ))}
         </div>
+      );
+    }
+
+    if (error) {
+      return <EmptyState message={error} icon={FaExclamationCircle} type="error" />;
+    }
+
+    if (!sortedTeams || sortedTeams.length === 0) {
+      return <EmptyState message="No teams found" icon={FaSearch} />;
+    }
+
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {sortedTeams.map((team) => (
+          <TeamCard 
+            key={team._id} 
+            team={team} 
+            onToggleActive={handleToggleActive}
+            isToggling={togglingTeam === team._id}
+          />
+        ))}
       </div>
     );
-  }
+  };
 
   return (
     <div className="container mx-auto px-4 sm:px-6 py-8">
@@ -275,47 +324,26 @@ const Teams = () => {
           <label htmlFor="search" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
             Search GPT Teams
           </label>
-          <input
-            id="search"
-            type="text"
-            placeholder="Search by GPT account or member email..."
-            value={search}
-            onChange={handleSearchChange}
-            className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
-          />
+          <div className="relative">
+            <input
+              id="search"
+              type="text"
+              placeholder="Search by GPT account or member email..."
+              value={search}
+              onChange={handleSearchChange}
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
+            />
+            <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500" />
+          </div>
         </div>
       </div>
 
-      {/* Loading State */}
-      {isLoading ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[1, 2, 3, 4, 5, 6].map((item) => (
-            <div
-              key={item}
-              className="bg-gray-100 dark:bg-gray-800 h-48 rounded-xl animate-pulse"
-            />
-          ))}
+      {/* Content Area */}
+      <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
+        <div className="p-6">
+          {renderContent()}
         </div>
-      ) : (
-        /* Teams Grid */
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {sortedTeams.map((team) => (
-            <TeamCard 
-              key={team._id} 
-              team={team} 
-              onToggleActive={handleToggleActive}
-              isToggling={togglingTeam === team._id}
-            />
-          ))}
-        </div>
-      )}
-
-      {/* No Results */}
-      {!isLoading && (!sortedTeams || sortedTeams.length === 0) && (
-        <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-          No teams found
-        </div>
-      )}
+      </div>
     </div>
   );
 };

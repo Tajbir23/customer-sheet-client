@@ -1,8 +1,22 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import handleApi from '../../../libs/handleAPi'
 import { toast } from 'react-toastify'
 
 const AddCustomerForm = ({ setIsOpen, className }) => {
+  const [references, setReferences] = useState([])
+
+
+  useEffect(() => {
+    
+    const fetchReferences = async () => {
+      const response = await handleApi("/references", "GET")
+      if (response?.success) {
+        setReferences(response.data)
+      }
+    }
+    fetchReferences()
+  }, [])
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     const formData = e.target
@@ -62,6 +76,19 @@ const AddCustomerForm = ({ setIsOpen, className }) => {
                   name="email"
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Reference</label>
+                <select
+                  name="reference"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">Select reference</option>
+                  {references.map((reference) => (
+                    <option key={reference._id} value={reference._id}>{reference.username}</option>
+                  ))}
+                </select>
               </div>
             </div>
           </div>
@@ -231,6 +258,6 @@ const AddCustomerForm = ({ setIsOpen, className }) => {
       </div>
     </div>
   )
-}
+}   
 
 export default AddCustomerForm

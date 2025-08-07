@@ -108,7 +108,7 @@ const Home = () => {
         <StatCard
           icon={FaMoneyBillWave}
           title="Total Revenue"
-          value={`$${data?.orderSummery?.totalRevenue?.toLocaleString() || 0}`}
+          value={`${data?.orderSummery?.totalRevenue?.toLocaleString() || 0} TK`}
           colorClass="text-green-600 dark:text-green-500"
         />
         <StatCard
@@ -121,7 +121,7 @@ const Home = () => {
         <StatCard
           icon={FaMoneyBillWave}
           title="My Revenue"
-          value={`$${data?.orderSummery?.myRevenue?.toLocaleString() || 0}`}
+          value={`${data?.orderSummery?.myRevenue?.toLocaleString() || 0} TK`}
           subValue={`${data?.orderSummery?.totalMyOrder || 0} personal orders`}
           colorClass="text-purple-600 dark:text-purple-500"
         />

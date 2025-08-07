@@ -81,7 +81,7 @@ export const RevenuePieChart = ({ data }) => {
                 <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
               ))}
             </Pie>
-            <Tooltip formatter={(value) => `$${value.toLocaleString()}`} />
+            <Tooltip formatter={(value) => `${value.toLocaleString()} TK`} />
             <Legend />
           </PieChart>
         </ResponsiveContainer>

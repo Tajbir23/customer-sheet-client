@@ -8,6 +8,7 @@ const EditCustomerModal = ({ customer, onClose, onUpdate }) => {
     const [formData, setFormData] = useState({
         subscriptionEnd: customer.subscriptionEnd?.split('T')[0] || '',
         gptAccount: customer.gptAccount || '',
+        email: customer.email || '',
         orderDate: customer.orderDate?.split('T')[0] || '',
         note: customer.note || '',
         reminderDate: customer.reminderDate?.split('T')[0] || '',
@@ -76,6 +77,18 @@ const EditCustomerModal = ({ customer, onClose, onUpdate }) => {
                                 type="text"
                                 name="gptAccount"
                                 value={formData.gptAccount}
+                                onChange={handleChange}
+                                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                Customer Email
+                            </label>
+                            <input
+                                type="text"
+                                name="email"
+                                value={formData.email}
                                 onChange={handleChange}
                                 className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                             />

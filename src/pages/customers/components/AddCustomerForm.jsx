@@ -5,9 +5,7 @@ import { toast } from 'react-toastify'
 const AddCustomerForm = ({ setIsOpen, className }) => {
   const [references, setReferences] = useState([])
 
-
   useEffect(() => {
-    
     const fetchReferences = async () => {
       const response = await handleApi("/references", "GET")
       if (response?.success) {
@@ -16,6 +14,12 @@ const AddCustomerForm = ({ setIsOpen, className }) => {
     }
     fetchReferences()
   }, [])
+
+  const calculateSubscriptionEndDate = (orderDate, durationInDays) => {
+    const date = new Date(orderDate);
+    date.setDate(date.getDate() + parseInt(durationInDays));
+    return date.toISOString().split('T')[0]; // Returns YYYY-MM-DD format
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -27,7 +31,7 @@ const AddCustomerForm = ({ setIsOpen, className }) => {
       waOrFbId: formData.waOrFbId.value,
       orderDate: formData.orderDate.value,
       gptAccount: formData.gptAccount.value,
-      subscriptionEnd: formData.subscriptionEnd.value,
+      subscriptionEnd: calculateSubscriptionEndDate(formData.orderDate.value, formData.subscriptionEnd.value),
       paymentStatus: formData.paymentStatus.value,
       note: formData.note.value,
       reminderDate: formData.reminderDate.value,
@@ -41,11 +45,12 @@ const AddCustomerForm = ({ setIsOpen, className }) => {
       const response = await handleApi("/customers/add", "POST", data)
       
       if (response?.success) {
-        
         e.target.reset()
         toast.success("Customer added successfully")
         setIsOpen(false)
       }
+
+      
     } catch (error) {
       console.error("Error adding customer:", error)
     }
@@ -145,8 +150,10 @@ const AddCustomerForm = ({ setIsOpen, className }) => {
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Subscription End</label>
                 <input
-                  type="date"
+                  type="number"
                   name="subscriptionEnd"
+                  min="1"
+                  placeholder="Number of days"
                   className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>

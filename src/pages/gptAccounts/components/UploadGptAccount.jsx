@@ -1,6 +1,8 @@
 import QrScanner from 'qr-scanner'
 import React, { useState, useEffect } from 'react'
 import gptSecretToCode from '../../../libs/gptSecretToCode'
+import handleApi from '../../../libs/handleAPi'
+import { toast } from 'react-toastify'
 
 const UploadGptAccount = ({ setIsOpen }) => {
     const [formData, setFormData] = useState({
@@ -156,9 +158,19 @@ const UploadGptAccount = ({ setIsOpen }) => {
         }
     }
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async(e) => {
         e.preventDefault()
         // TODO: Handle form submission
+        try {
+            const response = await handleApi('/gpt-account/add', 'POST', formData)
+            if(response.status === 200){
+                toast.success('Account added successfully')
+            }else{
+                toast.error('Failed to add account')
+            }
+        } catch (error) {
+            
+        }
         setIsOpen(false)
     }
 

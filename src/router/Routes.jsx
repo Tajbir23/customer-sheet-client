@@ -6,6 +6,7 @@ import Layout from "../Layout";
 import AuthCheck from "./AuthCheck";
 import Login from "../pages/login/Login";
 import Teams from "../pages/teams/Teams";
+import GptAccounts from "../pages/gptAccounts/gptAccounts";
 
 const Routes = createBrowserRouter([
     {
@@ -23,6 +24,10 @@ const Routes = createBrowserRouter([
             {
                 path: "/teams",
                 element: <Teams />
+            },
+            {
+                path: "/chatgpt-accounts",
+                element: <GptAccounts />
             }
         ],
     },

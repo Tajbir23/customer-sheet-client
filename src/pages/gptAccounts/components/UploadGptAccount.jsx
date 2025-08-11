@@ -2,7 +2,7 @@ import QrScanner from 'qr-scanner'
 import React, { useState, useEffect } from 'react'
 import gptSecretToCode from '../../../libs/gptSecretToCode'
 
-const UploadGptAccount = () => {
+const UploadGptAccount = ({ setIsOpen }) => {
     const [formData, setFormData] = useState({
         gptAccount: '',
         password: '',
@@ -125,7 +125,13 @@ const UploadGptAccount = () => {
     }
 
     const handleChange = (e) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value })
+        const { name, value } = e.target
+        const fieldMap = {
+            'gpt_account_email': 'gptAccount',
+            'gpt_account_pass': 'password'
+        }
+        const formField = fieldMap[name] || name
+        setFormData(prev => ({ ...prev, [formField]: value }))
     }
 
     const handleQrChange = async (e) => {
@@ -150,77 +156,160 @@ const UploadGptAccount = () => {
         }
     }
 
+    const handleSubmit = (e) => {
+        e.preventDefault()
+        // TODO: Handle form submission
+        setIsOpen(false)
+    }
+
     return (
-        <div>
-            <form className="max-w-md mx-auto mt-8 p-6 bg-white rounded-lg shadow-md">
-                <input 
-                    type="text" 
-                    name='gptAccount' 
-                    required 
-                    placeholder='Enter your email' 
-                    value={formData.gptAccount} 
-                    onChange={handleChange}
-                    onPaste={handleTextPaste}
-                    className="w-full mb-4 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <input 
-                    type="text" 
-                    name='password' 
-                    required 
-                    placeholder='Enter your password' 
-                    value={formData.password} 
-                    onChange={handleChange}
-                    className="w-full mb-4 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <input 
-                    type="text" 
-                    name='secret' 
-                    required 
-                    placeholder='Enter Chat gpt secret' 
-                    value={formData.secret} 
-                    onChange={handleChange}
-                    onPaste={handleTextPaste}
-                    className="w-full mb-4 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                {totpCode && (
-                    <div className="mb-4 p-4 bg-gray-50 rounded-md">
-                        <div className="flex justify-between items-center">
-                            <div className="text-lg font-semibold">{totpCode}</div>
-                            <div className="text-sm text-gray-500">
-                                Refreshes in: {timeLeft}s
-                            </div>
-                        </div>
-                    </div>
-                )}
-                <div className="mb-4">
-                    <input 
-                        type="file" 
-                        name='qr-code' 
-                        required 
-                        onChange={handleQrChange}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
-                    />
-                    <p className="mt-2 text-sm text-gray-600">
-                        You can also paste an image directly (Ctrl+V) or paste the TOTP URL
-                    </p>
-                    {selectedFile && (
-                        <p className="mt-2 text-sm text-green-600">
-                            File selected: {selectedFile.name}
-                        </p>
-                    )}
-                    {error && (
-                        <p className="mt-2 text-sm text-red-600">
-                            {error}
-                        </p>
-                    )}
+        <div className="fixed inset-0 backdrop-blur-sm bg-white/30 flex items-center justify-center p-4 z-50">
+            <div className="bg-white rounded-lg shadow-xl w-full max-w-xl max-h-[90vh] flex flex-col">
+                {/* Modal Header - Fixed */}
+                <div className="flex justify-between items-center p-6 border-b shrink-0">
+                    <h2 className="text-xl font-semibold text-gray-800">Upload GPT Account</h2>
+                    <button 
+                        onClick={() => setIsOpen(false)}
+                        className="text-gray-500 hover:text-gray-700"
+                    >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
                 </div>
-                <button 
-                    type='submit'
-                    className="w-full bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-                >
-                    Upload
-                </button>
-            </form>
+
+                {/* Modal Body - Scrollable */}
+                <div className="p-6 overflow-y-auto flex-grow">
+                    <form onSubmit={handleSubmit} className="space-y-4">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Email Address
+                            </label>
+                            <input 
+                                type="text" 
+                                name='gpt_account_email' 
+                                required 
+                                placeholder='Enter your email' 
+                                value={formData.gptAccount} 
+                                onChange={handleChange}
+                                onPaste={handleTextPaste}
+                                autoComplete="off"
+                                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Password
+                            </label>
+                            <input 
+                                type="password" 
+                                name='gpt_account_pass' 
+                                required 
+                                placeholder='Enter your password' 
+                                value={formData.password} 
+                                onChange={handleChange}
+                                autoComplete="new-password"
+                                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                        </div>
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                2FA Secret
+                            </label>
+                            <input 
+                                type="text" 
+                                name='secret' 
+                                required 
+                                placeholder='Enter Chat gpt secret' 
+                                value={formData.secret} 
+                                onChange={handleChange}
+                                onPaste={handleTextPaste}
+                                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                        </div>
+
+                        {totpCode && (
+                            <div className="p-4 bg-blue-50 rounded-md">
+                                <div className="flex justify-between items-center">
+                                    <div>
+                                        <label className="block text-sm font-medium text-blue-700 mb-1">
+                                            2FA Code
+                                        </label>
+                                        <div className="text-2xl font-mono font-bold text-blue-700 tracking-wider">
+                                            {totpCode}
+                                        </div>
+                                    </div>
+                                    <div className="text-sm text-blue-600 font-medium">
+                                        Refreshes in: {timeLeft}s
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                QR Code
+                            </label>
+                            <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+                                <div className="space-y-1 text-center">
+                                    <svg className="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                                        <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+                                    </svg>
+                                    <div className="flex text-sm text-gray-600">
+                                        <label htmlFor="qr-upload" className="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
+                                            <span>Upload a file</span>
+                                            <input 
+                                                id="qr-upload"
+                                                type="file" 
+                                                name='qr-code' 
+                                                onChange={handleQrChange}
+                                                className="sr-only"
+                                            />
+                                        </label>
+                                        <p className="pl-1">or drag and drop</p>
+                                    </div>
+                                    <p className="text-xs text-gray-500">
+                                        You can also paste an image directly (Ctrl+V)
+                                    </p>
+                                </div>
+                            </div>
+                            {selectedFile && (
+                                <p className="mt-2 text-sm text-green-600">
+                                    File selected: {selectedFile.name}
+                                </p>
+                            )}
+                        </div>
+
+                        {error && (
+                            <div className="p-4 bg-red-50 rounded-md">
+                                <p className="text-sm text-red-600">
+                                    {error}
+                                </p>
+                            </div>
+                        )}
+                    </form>
+                </div>
+
+                {/* Modal Footer - Fixed */}
+                <div className="flex justify-end gap-4 p-6 border-t shrink-0">
+                    <button
+                        type="button"
+                        onClick={() => setIsOpen(false)}
+                        className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    >
+                        Cancel
+                    </button>
+                    <button
+                        onClick={handleSubmit}
+                        type="button"
+                        className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    >
+                        Upload Account
+                    </button>
+                </div>
+            </div>
         </div>
     )
 }

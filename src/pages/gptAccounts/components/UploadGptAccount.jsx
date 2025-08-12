@@ -163,13 +163,14 @@ const UploadGptAccount = ({ setIsOpen }) => {
         // TODO: Handle form submission
         try {
             const response = await handleApi('/gpt-account/add', 'POST', formData)
-            if(response.status === 200){
+            if(response.success){
                 toast.success('Account added successfully')
+                setIsOpen(false)
             }else{
                 toast.error('Failed to add account')
             }
         } catch (error) {
-            
+            toast.error(error.message)
         }
         setIsOpen(false)
     }

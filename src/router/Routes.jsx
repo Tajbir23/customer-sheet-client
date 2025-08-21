@@ -7,6 +7,7 @@ import AuthCheck from "./AuthCheck";
 import Login from "../pages/login/Login";
 import Teams from "../pages/teams/Teams";
 import GptAccounts from "../pages/gptAccounts/gptAccounts";
+import DropboxPolicy from "../pages/dropboxPolicy/page";
 
 const Routes = createBrowserRouter([
     {
@@ -34,6 +35,10 @@ const Routes = createBrowserRouter([
     {
         path: "/login",
         element: <Login />
+    },
+    {
+        path: "/dropbox-policy",
+        element: <DropboxPolicy />
     }
 ])
 

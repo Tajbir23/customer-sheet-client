@@ -1,163 +1,9 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import handleApi from '../../libs/handleAPi';
-import { FaServer, FaUserFriends, FaEnvelope, FaCircle, FaChevronDown, FaChevronUp, FaExclamationCircle, FaSearch } from 'react-icons/fa';
+import { FaUserFriends, FaEnvelope, FaChevronDown, FaChevronUp, FaExclamationCircle, FaSearch } from 'react-icons/fa';
 import { toast } from 'react-toastify';
+import TeamCard from './components/TeamCard';
 
-const ToggleButton = ({ isActive, isLoading, onClick }) => (
-  <button
-    onClick={onClick}
-    disabled={isLoading}
-    className={`
-      relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent 
-      transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
-      ${isActive ? 'bg-green-500' : 'bg-gray-400'}
-      ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}
-    `}
-  >
-    <span
-      className={`
-        pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 
-        transition duration-200 ease-in-out
-        ${isActive ? 'translate-x-5' : 'translate-x-0'}
-      `}
-    />
-  </button>
-);
-
-const TeamCard = ({ team, onToggleActive, isToggling }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
-
-  return (
-    <div 
-      className={`
-        rounded-xl overflow-hidden border transition-all duration-200 hover:shadow-lg h-full flex flex-col
-        ${team.isActive 
-          ? 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700' 
-          : 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800/30'
-        }
-      `}
-    >
-      {/* Main Content */}
-      <div className="p-4 sm:p-6 flex-grow">
-        {/* Header Row */}
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center space-x-3">
-            <div className={`w-2 h-2 rounded-full ${team.isActive ? 'bg-green-500' : 'bg-red-500'}`} />
-            <span className={`text-sm font-medium ${
-              team.isActive 
-                ? 'text-gray-500 dark:text-gray-400' 
-                : 'text-red-600 dark:text-red-400'
-            }`}>
-              {team.isActive ? 'Active' : 'Inactive'}
-            </span>
-          </div>
-          <ToggleButton
-            isActive={team.isActive}
-            isLoading={isToggling === team._id}
-            onClick={() => onToggleActive(team._id, !team.isActive)}
-          />
-        </div>
-
-        {/* Account Info */}
-        <div className="mb-4">
-          <div className="flex items-center gap-2 mb-1">
-            <FaEnvelope className={`flex-shrink-0 ${
-              team.isActive 
-                ? 'text-blue-500 dark:text-blue-400' 
-                : 'text-red-500 dark:text-red-400'
-            }`} />
-            <h3 className={`text-lg font-semibold break-all ${
-              team.isActive 
-                ? 'text-gray-900 dark:text-white' 
-                : 'text-red-900 dark:text-red-100'
-            }`}>
-              {team.gptAccount}
-            </h3>
-          </div>
-          <div className={`ml-7 text-sm capitalize ${
-            team.isActive 
-              ? 'text-gray-500 dark:text-gray-400' 
-              : 'text-red-600/70 dark:text-red-400/70'
-          }`}>
-            {team.server}
-          </div>
-        </div>
-
-        {/* Stats Row */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <FaUserFriends className={
-              team.isActive 
-                ? 'text-gray-400' 
-                : 'text-red-400 dark:text-red-500'
-            } />
-            <span className={`text-sm font-medium ${
-              team.isActive 
-                ? 'text-gray-600 dark:text-gray-300' 
-                : 'text-red-700 dark:text-red-300'
-            }`}>
-              {team.members.length} members
-            </span>
-          </div>
-          <button
-            onClick={() => setIsExpanded(!isExpanded)}
-            className={`
-              flex items-center gap-2 text-sm font-medium transition-colors
-              ${team.isActive 
-                ? 'text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300' 
-                : 'text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300'
-              }
-              focus:outline-none
-            `}
-          >
-            {isExpanded ? (
-              <>
-                Hide Members
-                <FaChevronUp className="w-4 h-4" />
-              </>
-            ) : (
-              <>
-                Show Members
-                <FaChevronDown className="w-4 h-4" />
-              </>
-            )}
-          </button>
-        </div>
-      </div>
-
-      {/* Members List */}
-      {isExpanded && (
-        <div className={`border-t ${
-          team.isActive 
-            ? 'border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50' 
-            : 'border-red-200 dark:border-red-800/30 bg-red-50/50 dark:bg-red-900/30'
-        }`}>
-          <div className="p-4 sm:p-6 space-y-2">
-            {team.members.map((member, index) => (
-              <div 
-                key={index}
-                className="flex items-center gap-2 text-sm"
-              >
-                <div className={`w-1.5 h-1.5 rounded-full flex-shrink-0 ${
-                  team.isActive 
-                    ? 'bg-gray-400 dark:bg-gray-600' 
-                    : 'bg-red-400 dark:bg-red-600'
-                }`} />
-                <span className={
-                  team.isActive 
-                    ? 'text-gray-600 dark:text-gray-400' 
-                    : 'text-red-700 dark:text-red-300'
-                }>
-                  {member}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-    </div>
-  );
-};
 
 const EmptyState = ({ message, icon: Icon, type = 'default' }) => (
   <div className="flex flex-col items-center justify-center py-12">
@@ -253,6 +99,71 @@ const Teams = () => {
     }
   };
 
+  // Handle member removal
+  const handleRemoveMember = async (teamId, member, memberIndex) => {
+    try {
+      const response = await handleApi(`/gptTeam/team/${teamId}/member`, 'DELETE', {
+        member: member
+      });
+      
+      if (response.success) {
+        setData(prevData => {
+          if (!Array.isArray(prevData)) return [];
+          const updatedData = prevData.map(team => {
+            if (team._id === teamId) {
+              const updatedMembers = team.members.filter((_, index) => index !== memberIndex);
+              return { ...team, members: updatedMembers };
+            }
+            return team;
+          });
+          return updatedData;
+        });
+        toast.success('Member removed successfully');
+      } else {
+        toast.error(response.message || 'Failed to remove member');
+      }
+    } catch (err) {
+      toast.error('An error occurred while removing member');
+      console.error('Error removing member:', err);
+      throw err; // Re-throw to handle in Member component
+    }
+  };
+
+  // Handle adding multiple members
+  const handleAddMembers = async (teamId, emailArray) => {
+    try {
+      const response = await handleApi(`/gptTeam/team/${teamId}/members`, 'POST', {
+        members: emailArray
+      });
+      
+      if (response.success) {
+        setData(prevData => {
+          if (!Array.isArray(prevData)) return [];
+          const updatedData = prevData.map(team => {
+            if (team._id === teamId) {
+              // Add new members to existing members array, avoiding duplicates
+              const existingMembers = team.members || [];
+              const newMembers = emailArray.filter(email => !existingMembers.includes(email));
+              return { ...team, members: [...existingMembers, ...newMembers] };
+            }
+            return team;
+          });
+          return updatedData;
+        });
+        
+        const addedCount = emailArray.length;
+        toast.success(`${addedCount} member${addedCount === 1 ? '' : 's'} added successfully`);
+      } else {
+        toast.error(response.message || 'Failed to add members');
+        throw new Error(response.message || 'Failed to add members');
+      }
+    } catch (err) {
+      toast.error('An error occurred while adding members');
+      console.error('Error adding members:', err);
+      throw err; // Re-throw to handle in TeamCard component
+    }
+  };
+
   // Debounce search
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -313,6 +224,8 @@ const Teams = () => {
             key={team._id} 
             team={team} 
             onToggleActive={handleToggleActive}
+            onRemoveMember={handleRemoveMember}
+            onAddMembers={handleAddMembers}
             isToggling={togglingTeam === team._id}
           />
         ))}

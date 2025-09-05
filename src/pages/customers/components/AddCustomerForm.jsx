@@ -36,6 +36,7 @@ const AddCustomerForm = ({ setIsOpen, className }) => {
       note: formData.note.value,
       reminderDate: formData.reminderDate.value,
       reminderNote: formData.reminderNote.value,
+      reference: formData.reference.value,
       paidAmount: formData.paidAmount.value,
       paymentMethod: formData.paymentMethod.value,
       paymentDate: formData.paymentDate.value

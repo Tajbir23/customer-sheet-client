@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react"
-import { FaTrash } from "react-icons/fa"
 import handleApi from "../../../libs/handleAPi"
 import { toast } from "react-toastify"
 

@@ -9,6 +9,7 @@ import Teams from "../pages/teams/Teams";
 import GptAccounts from "../pages/gptAccounts/gptAccounts";
 import DropboxPolicy from "../pages/dropboxPolicy/page";
 import Asocks from "../pages/asocks/Asocks";
+import MemberChecklist from "../pages/memberCheckList/MemberChecklist";
 
 const Routes = createBrowserRouter([
     {
@@ -34,6 +35,10 @@ const Routes = createBrowserRouter([
             {
                 path:"/asocks",
                 element: <Asocks />
+            },
+            {
+                path: "/member-check-list",
+                element: <MemberChecklist />
             }
         ],
     },

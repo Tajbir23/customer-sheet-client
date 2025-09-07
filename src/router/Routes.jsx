@@ -8,6 +8,7 @@ import Login from "../pages/login/Login";
 import Teams from "../pages/teams/Teams";
 import GptAccounts from "../pages/gptAccounts/gptAccounts";
 import DropboxPolicy from "../pages/dropboxPolicy/page";
+import Asocks from "../pages/asocks/Asocks";
 
 const Routes = createBrowserRouter([
     {
@@ -29,6 +30,10 @@ const Routes = createBrowserRouter([
             {
                 path: "/chatgpt-accounts",
                 element: <GptAccounts />
+            },
+            {
+                path:"/asocks",
+                element: <Asocks />
             }
         ],
     },

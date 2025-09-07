@@ -1,8 +1,19 @@
-import React from 'react'
-import { FaCheck, FaTimes, FaEnvelope, FaTag, FaStar } from 'react-icons/fa'
+import React, { useState } from 'react'
+import { FaCheck, FaTimes, FaEnvelope, FaTag, FaStar, FaCopy } from 'react-icons/fa'
 
 const MemberItem = ({ member }) => {
   const { email, isChecked, isResell } = member
+  const [copied, setCopied] = useState(false)
+
+  const handleCopyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(email)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch (err) {
+      console.error('Failed to copy email:', err)
+    }
+  }
 
   return (
     <div className={`group relative overflow-hidden rounded-2xl border-2 transition-all duration-300 hover:scale-[1.02] ${
@@ -38,11 +49,28 @@ const MemberItem = ({ member }) => {
                 <FaEnvelope className="text-sm" />
               </div>
               <div className="min-w-0 flex-1">
-                <p className={`font-semibold text-sm sm:text-base truncate ${
-                  isChecked ? 'text-green-800' : 'text-gray-700'
-                }`}>
-                  {email}
-                </p>
+                <div className="flex items-center gap-2">
+                  <p className={`font-semibold text-sm sm:text-base truncate ${
+                    isChecked ? 'text-green-800' : 'text-gray-700'
+                  }`}>
+                    {email}
+                  </p>
+                  <button
+                    onClick={handleCopyEmail}
+                    className={`flex-shrink-0 p-1.5 rounded-md transition-all duration-200 group/copy ${
+                      isChecked 
+                        ? 'bg-green-100 hover:bg-green-200 text-green-600' 
+                        : 'bg-gray-100 hover:bg-gray-200 text-gray-600'
+                    }`}
+                    title="Copy email"
+                  >
+                    {copied ? (
+                      <FaCheck className="text-xs text-green-500" />
+                    ) : (
+                      <FaCopy className="text-xs group-hover/copy:scale-110 transition-transform" />
+                    )}
+                  </button>
+                </div>
                 <p className={`text-xs ${
                   isChecked ? 'text-green-600' : 'text-gray-500'
                 }`}>

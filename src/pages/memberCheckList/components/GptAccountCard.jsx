@@ -1,9 +1,10 @@
-import React from 'react'
+import React, { useState } from 'react'
 import MemberItem from './MemberItem'
-import { FaEnvelope, FaUsers, FaClock, FaCalendarAlt } from 'react-icons/fa'
+import { FaEnvelope, FaUsers, FaClock, FaCalendarAlt, FaCopy, FaCheck } from 'react-icons/fa'
 
 const GptAccountCard = ({ accountData }) => {
   const { gptAccount, members, createdAt } = accountData
+  const [copied, setCopied] = useState(false)
   
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -18,6 +19,16 @@ const GptAccountCard = ({ accountData }) => {
       hour: '2-digit',
       minute: '2-digit'
     })
+  }
+
+  const handleCopyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(gptAccount)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch (err) {
+      console.error('Failed to copy email:', err)
+    }
   }
 
   const checkedMembers = members.filter(member => member.isChecked).length
@@ -43,9 +54,22 @@ const GptAccountCard = ({ accountData }) => {
                     <FaEnvelope className="text-white text-lg" />
                   </div>
                   <div className="min-w-0 flex-1">
-                    <h3 className="text-xl sm:text-2xl font-bold text-white truncate">
-                      {gptAccount}
-                    </h3>
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-xl sm:text-2xl font-bold text-white truncate">
+                        {gptAccount}
+                      </h3>
+                      <button
+                        onClick={handleCopyEmail}
+                        className="flex-shrink-0 p-2 bg-white/20 hover:bg-white/30 rounded-lg transition-all duration-200 backdrop-blur-sm group/copy"
+                        title="Copy email"
+                      >
+                        {copied ? (
+                          <FaCheck className="text-green-300 text-sm" />
+                        ) : (
+                          <FaCopy className="text-white text-sm group-hover/copy:scale-110 transition-transform" />
+                        )}
+                      </button>
+                    </div>
                     <p className="text-blue-100 text-sm font-medium">GPT Account</p>
                   </div>
                 </div>

@@ -1,7 +1,10 @@
-import React from 'react';
-import { FaEye, FaTrash, FaClock, FaCheckCircle, FaExclamationTriangle } from 'react-icons/fa';
+import React, { useState } from 'react';
+import { FaEye, FaTrash, FaClock, FaCheckCircle, FaExclamationTriangle, FaCopy, FaCheck } from 'react-icons/fa';
+import { toast } from 'react-toastify';
 
 const TableRow = ({ item, index, formatDate, onViewDetails, onDelete }) => {
+    const [copiedEmail, setCopiedEmail] = useState(false);
+
     const getStatusConfig = (status) => {
         switch (status) {
             case 'paid':
@@ -25,6 +28,27 @@ const TableRow = ({ item, index, formatDate, onViewDetails, onDelete }) => {
                     border: 'border-gray-200',
                     icon: FaExclamationTriangle
                 };
+        }
+    };
+
+    const handleCopyEmail = async (email) => {
+        if (!email) {
+            toast.warning('No email to copy');
+            return;
+        }
+
+        try {
+            await navigator.clipboard.writeText(email);
+            setCopiedEmail(true);
+            toast.success(`Email copied: ${email}`);
+            
+            // Reset the copied state after 2 seconds
+            setTimeout(() => {
+                setCopiedEmail(false);
+            }, 2000);
+        } catch (error) {
+            console.error('Failed to copy email:', error);
+            toast.error('Failed to copy email');
         }
     };
 
@@ -56,11 +80,32 @@ const TableRow = ({ item, index, formatDate, onViewDetails, onDelete }) => {
             </td>
             
             <td className="px-6 py-4 whitespace-nowrap hidden md:table-cell">
-                <div className="text-sm text-gray-900 font-medium truncate max-w-[200px]">
-                    {item.email}
-                </div>
-                <div className="text-xs text-gray-500">
-                    {item.waOrFbId ? `ID: ${item.waOrFbId}` : 'No ID provided'}
+                <div className="flex items-center gap-2">
+                    <div className="flex-1">
+                        <div className="text-sm text-gray-900 font-medium truncate max-w-[200px]">
+                            {item.email}
+                        </div>
+                        <div className="text-xs text-gray-500">
+                            {item.waOrFbId ? `ID: ${item.waOrFbId}` : 'No ID provided'}
+                        </div>
+                    </div>
+                    {item.email && (
+                        <button
+                            onClick={() => handleCopyEmail(item.email)}
+                            className={`group/copy p-2 rounded-lg transition-all duration-200 ${
+                                copiedEmail 
+                                    ? 'bg-green-100 text-green-600' 
+                                    : 'bg-gray-100 hover:bg-blue-100 text-gray-500 hover:text-blue-600'
+                            }`}
+                            title={copiedEmail ? 'Email copied!' : 'Copy email address'}
+                        >
+                            {copiedEmail ? (
+                                <FaCheck className="w-3 h-3" />
+                            ) : (
+                                <FaCopy className="w-3 h-3 group-hover/copy:scale-110 transition-transform duration-200" />
+                            )}
+                        </button>
+                    )}
                 </div>
             </td>
 

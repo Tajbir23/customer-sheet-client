@@ -83,7 +83,7 @@ const MemberItem = ({ member }) => {
           {/* Status and Indicators */}
           <div className="flex items-center gap-2 flex-shrink-0 flex-wrap">
             {/* Reference Badge */}
-            {reference._id && (
+            {reference?._id && (
               <div className="flex items-center gap-1 bg-gradient-to-r from-blue-100 to-cyan-100 text-blue-700 px-3 py-2 rounded-xl text-xs font-bold border border-blue-200 shadow-sm">
                 <FaUser className="text-xs" />
                 <span>{reference.username}</span>

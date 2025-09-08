@@ -9,6 +9,7 @@ const Customers = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [search, setSearch] = useState('')
   const [debouncedSearch, setDebouncedSearch] = useState('')
+  const [searchSubscriptionEndDate, setSearchSubscriptionEndDate] = useState('')
 
   // Debounce search term
   useEffect(() => {
@@ -36,7 +37,16 @@ const Customers = () => {
             />
             <FaSearch className="absolute left-3 top-3 text-gray-400" />
           </div>
-          
+          <div className="relative w-full sm:w-auto">
+            <input
+              type="date"
+              placeholder="Search subscription end date..."
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={searchSubscriptionEndDate}
+              onChange={(e) => setSearchSubscriptionEndDate(e.target.value)}
+            />
+            <FaSearch className="absolute left-3 top-3 text-gray-400" />
+          </div>
           <button onClick={() => setIsOpen(true)} className="flex items-center justify-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors w-full sm:w-auto">
             <FaUserPlus />
             <span>Add Customer</span>
@@ -44,7 +54,7 @@ const Customers = () => {
         </div>
       </div>
 
-      <CustomerTable className={`${isOpen ? 'opacity-50' : 'opacity-100'}`} setIsLoading={setIsLoading} isLoading={isLoading} search={debouncedSearch} />
+      <CustomerTable className={`${isOpen ? 'opacity-50' : 'opacity-100'}`} setIsLoading={setIsLoading} isLoading={isLoading} search={debouncedSearch} searchSubscriptionEndDate={searchSubscriptionEndDate} />
     </div>
   )
 }

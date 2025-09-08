@@ -35,7 +35,7 @@ const TableSkeleton = () => {
     );
 };
 
-const CustomerTable = ({ className, isLoading, setIsLoading, search }) => {
+const CustomerTable = ({ className, isLoading, setIsLoading, search, searchSubscriptionEndDate }) => {
     const [customers, setCustomers] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
@@ -51,7 +51,7 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search }) => {
             try {
                 setIsLoading(true);
                 const response = await handleApi(
-                    `/customers/get?search=${search}&page=${currentPage}&limit=${pageSize}&sortBy=${sortConfig.key}&sortDirection=${sortConfig.direction}`,
+                    `/customers/get?search=${search}&searchSubscriptionEndDate=${searchSubscriptionEndDate}&page=${currentPage}&limit=${pageSize}&sortBy=${sortConfig.key}&sortDirection=${sortConfig.direction}`,
                     "GET",
                     {},
                     navigate
@@ -75,7 +75,7 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search }) => {
         return () => {
             isMounted = false;
         };
-    }, [search, currentPage, pageSize, sortConfig, setIsLoading, navigate]);
+    }, [search, searchSubscriptionEndDate, currentPage, pageSize, sortConfig, setIsLoading, navigate]);
 
     const [selectedCustomer, setSelectedCustomer] = useState(null);
     const [deleteCustomer, setDeleteCustomer] = useState(null);

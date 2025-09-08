@@ -1,56 +1,131 @@
 import React from 'react';
+import { FaEye, FaTrash, FaClock, FaCheckCircle, FaExclamationTriangle } from 'react-icons/fa';
 
-const TableRow = ({ item, formatDate, onViewDetails, onDelete }) => {
+const TableRow = ({ item, index, formatDate, onViewDetails, onDelete }) => {
+    const getStatusConfig = (status) => {
+        switch (status) {
+            case 'paid':
+                return {
+                    bg: 'bg-green-50',
+                    text: 'text-green-700',
+                    border: 'border-green-200',
+                    icon: FaCheckCircle
+                };
+            case 'pending':
+                return {
+                    bg: 'bg-yellow-50',
+                    text: 'text-yellow-700',
+                    border: 'border-yellow-200',
+                    icon: FaClock
+                };
+            default:
+                return {
+                    bg: 'bg-gray-50',
+                    text: 'text-gray-700',
+                    border: 'border-gray-200',
+                    icon: FaExclamationTriangle
+                };
+        }
+    };
+
+    const statusConfig = getStatusConfig(item.paymentStatus);
+    const StatusIcon = statusConfig.icon;
+
     return (
-        <tr className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
-            <td className="px-4 py-3.5 whitespace-nowrap">
-                <div className="text-sm font-medium text-gray-900 dark:text-white">
-                    {item.customerName}
+        <tr className={`group hover:bg-blue-50/50 transition-all duration-200 ${
+            index % 2 === 0 ? 'bg-white' : 'bg-gray-50/30'
+        }`}>
+            <td className="px-6 py-4 whitespace-nowrap">
+                <div className="flex items-center">
+                    <div className="flex-shrink-0 h-10 w-10">
+                        <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-sm">
+                            <span className="text-sm font-semibold text-white">
+                                {item.customerName?.charAt(0)?.toUpperCase() || 'U'}
+                            </span>
+                        </div>
+                    </div>
+                    <div className="ml-4">
+                        <div className="text-sm font-semibold text-gray-900 group-hover:text-blue-800 transition-colors">
+                            {item.customerName}
+                        </div>
+                        <div className="text-xs text-gray-500 capitalize">
+                            {item.orderFrom} Customer
+                        </div>
+                    </div>
                 </div>
             </td>
             
-            <td className="px-4 py-3.5 whitespace-nowrap hidden md:table-cell">
-                <div className="text-sm text-gray-700 dark:text-gray-300 truncate max-w-[200px]">
+            <td className="px-6 py-4 whitespace-nowrap hidden md:table-cell">
+                <div className="text-sm text-gray-900 font-medium truncate max-w-[200px]">
                     {item.email}
                 </div>
-            </td>
-            <td className="px-4 py-3.5 whitespace-nowrap hidden md:table-cell">
-                <div className="text-sm font-mono text-gray-700 dark:text-gray-300">
-                    {formatDate(item.subscriptionEnd)}
+                <div className="text-xs text-gray-500">
+                    {item.waOrFbId ? `ID: ${item.waOrFbId}` : 'No ID provided'}
                 </div>
             </td>
-            <td className="px-4 py-3.5 whitespace-nowrap hidden md:table-cell">
-                <div className="text-sm font-mono text-gray-700 dark:text-gray-300">
-                    {item.gptAccount}
+
+            <td className="px-6 py-4 whitespace-nowrap hidden md:table-cell">
+                <div className="flex flex-col">
+                    <span className="text-sm font-semibold text-gray-900">
+                        {formatDate(item.subscriptionEnd)}
+                    </span>
+                    <span className="text-xs text-gray-500">
+                        Subscription End
+                    </span>
                 </div>
             </td>
-            <td className="px-4 py-3.5 whitespace-nowrap hidden md:table-cell">
-                <div className="text-sm text-gray-700 dark:text-gray-300">
-                    {formatDate(item.orderDate)}
+
+            <td className="px-6 py-4 whitespace-nowrap hidden md:table-cell">
+                <div className="flex items-center">
+                    <div className="w-2 h-2 bg-green-400 rounded-full mr-2"></div>
+                    <span className="text-sm font-mono text-gray-900 bg-gray-100 px-2 py-1 rounded-md text-xs">
+                        {item.gptAccount || 'Not assigned'}
+                    </span>
                 </div>
-            </td>                      
-            <td className="px-4 py-3.5 whitespace-nowrap hidden md:table-cell">
-                <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                    item.paymentStatus === 'paid' 
-                    ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300'
-                    : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300'
-                }`}>
-                    {item.paymentStatus}
-                </span>
             </td>
-            <td className="px-4 py-3.5 whitespace-nowrap">
-                <button
-                    onClick={() => onViewDetails(item)}
-                    className="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 mr-2"
-                >
-                    View Details
-                </button>
-                <button
-                    onClick={() => onDelete(item)}
-                    className="inline-flex items-center px-3 py-1 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                >
-                    Delete
-                </button>
+
+            <td className="px-6 py-4 whitespace-nowrap hidden md:table-cell">
+                <div className="flex flex-col">
+                    <span className="text-sm font-medium text-gray-900">
+                        {formatDate(item.orderDate)}
+                    </span>
+                    <span className="text-xs text-gray-500">
+                        Order Date
+                    </span>
+                </div>
+            </td>
+
+            <td className="px-6 py-4 whitespace-nowrap hidden md:table-cell">
+                <div className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold border ${statusConfig.bg} ${statusConfig.text} ${statusConfig.border}`}>
+                    <StatusIcon className="w-3 h-3 mr-1.5" />
+                    <span className="capitalize">{item.paymentStatus}</span>
+                </div>
+                {item.paidAmount && (
+                    <div className="text-xs text-gray-500 mt-1">
+                        ${item.paidAmount}
+                    </div>
+                )}
+            </td>
+
+            <td className="px-6 py-4 whitespace-nowrap">
+                <div className="flex items-center space-x-2">
+                    <button
+                        onClick={() => onViewDetails(item)}
+                        className="group/btn inline-flex items-center gap-2 px-3 py-2 text-xs font-medium text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 hover:border-blue-300 rounded-lg transition-all duration-200 hover:shadow-md transform hover:-translate-y-0.5"
+                        title="View Details"
+                    >
+                        <FaEye className="w-3 h-3 group-hover/btn:scale-110 transition-transform" />
+                        <span className="hidden sm:inline">View</span>
+                    </button>
+                    <button
+                        onClick={() => onDelete(item)}
+                        className="group/btn inline-flex items-center gap-2 px-3 py-2 text-xs font-medium text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 hover:border-red-300 rounded-lg transition-all duration-200 hover:shadow-md transform hover:-translate-y-0.5"
+                        title="Delete Customer"
+                    >
+                        <FaTrash className="w-3 h-3 group-hover/btn:scale-110 transition-transform" />
+                        <span className="hidden sm:inline">Delete</span>
+                    </button>
+                </div>
             </td>
         </tr>
     );

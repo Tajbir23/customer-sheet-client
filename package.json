@@ -12,6 +12,8 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.1.11",
     "buffer": "^6.0.3",
+    "jspdf": "^2.5.1",
+    "jspdf-autotable": "^3.5.31",
     "qr-scanner": "^1.4.2",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",

@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import { FaCheck, FaTimes, FaEnvelope, FaTag, FaStar, FaCopy } from 'react-icons/fa'
+import { FaCheck, FaTimes, FaEnvelope, FaTag, FaStar, FaCopy, FaUser } from 'react-icons/fa'
 
 const MemberItem = ({ member }) => {
-  const { email, isChecked, isResell } = member
+  const { email, isChecked, isResell, reference } = member
   const [copied, setCopied] = useState(false)
 
   const handleCopyEmail = async () => {
@@ -80,8 +80,16 @@ const MemberItem = ({ member }) => {
             </div>
           </div>
           
-          {/* Status and Resell Indicators */}
-          <div className="flex items-center gap-3 flex-shrink-0">
+          {/* Status and Indicators */}
+          <div className="flex items-center gap-2 flex-shrink-0 flex-wrap">
+            {/* Reference Badge */}
+            {reference._id && (
+              <div className="flex items-center gap-1 bg-gradient-to-r from-blue-100 to-cyan-100 text-blue-700 px-3 py-2 rounded-xl text-xs font-bold border border-blue-200 shadow-sm">
+                <FaUser className="text-xs" />
+                <span>{reference.username}</span>
+              </div>
+            )}
+            
             {/* Resell Badge */}
             {isResell && (
               <div className="flex items-center gap-1 bg-gradient-to-r from-purple-100 to-pink-100 text-purple-700 px-3 py-2 rounded-xl text-xs font-bold border border-purple-200 shadow-sm">

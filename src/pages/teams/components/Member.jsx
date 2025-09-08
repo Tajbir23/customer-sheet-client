@@ -1,10 +1,13 @@
 import React, { useState } from 'react'
 import { FaTrash, FaTimes, FaUser, FaEnvelope } from 'react-icons/fa'
 
+
 const Member = ({ index, team, member, onRemoveMember }) => {
     const [showModal, setShowModal] = useState(false)
     const [isRemoving, setIsRemoving] = useState(false)
+    
 
+    
     const handleRemoveClick = () => {
         setShowModal(true)
     }

@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ToggleButton from "./ToggleButton";
-import { FaUserFriends, FaEnvelope, FaChevronUp, FaChevronDown, FaPlus, FaTimes, FaUserPlus } from "react-icons/fa";
+import { FaUserFriends, FaEnvelope, FaChevronUp, FaChevronDown, FaPlus, FaTimes, FaUserPlus, FaServer, FaCopy, FaCheck } from "react-icons/fa";
 import Member from "./Member";
+import handleApi from "../../../libs/handleAPi";
 
 const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembers }) => {
     const [isExpanded, setIsExpanded] = useState(false);
@@ -9,6 +10,27 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
     const [emailsText, setEmailsText] = useState('');
     const [isAdding, setIsAdding] = useState(false);
     const [emailErrors, setEmailErrors] = useState([]);
+    const [references, setReferences] = useState([]);
+    const [selectedReference, setSelectedReference] = useState('');
+    const [copied, setCopied] = useState(false);
+
+    useEffect(() => {
+        const fetchReferences = async () => {
+            const response = await handleApi('/references')
+            setReferences(response.data)
+        }
+        fetchReferences()
+    }, [])
+
+    const handleCopyEmail = async () => {
+        try {
+            await navigator.clipboard.writeText(team.gptAccount)
+            setCopied(true)
+            setTimeout(() => setCopied(false), 2000)
+        } catch (err) {
+            console.error('Failed to copy email:', err)
+        }
+    }
   
     const handleRemoveMember = async (teamId, member, memberIndex) => {
         if (onRemoveMember) {
@@ -20,12 +42,14 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
         setShowAddModal(true);
         setEmailsText('');
         setEmailErrors([]);
+        setSelectedReference('');
     };
 
     const handleCloseAddModal = () => {
         setShowAddModal(false);
         setEmailsText('');
         setEmailErrors([]);
+        setSelectedReference('');
     };
 
     // Validate and parse emails
@@ -71,7 +95,7 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
 
         try {
             if (onAddMembers) {
-                await onAddMembers(team._id, validEmails);
+                await onAddMembers(team._id, validEmails, selectedReference);
                 handleCloseAddModal();
             }
         } catch (error) {
@@ -84,251 +108,270 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
 
     return (
       <>
-        <div 
-          className={`
-            rounded-xl overflow-hidden border transition-all duration-200 hover:shadow-lg h-full flex flex-col
+        <div className="group relative">
+          {/* Main Card */}
+          <div className={`
+            relative overflow-hidden rounded-3xl transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl
             ${team.isActive 
-              ? 'bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700' 
-              : 'bg-red-50 dark:bg-red-900/20 border-red-200 dark:border-red-800/30'
+              ? 'bg-white shadow-xl border border-gray-100' 
+              : 'bg-gradient-to-br from-red-50 to-red-100 shadow-lg border border-red-200'
             }
-          `}
-        >
-          {/* Main Content */}
-          <div className="p-4 sm:p-6 flex-grow">
-            {/* Header Row */}
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center space-x-3">
-                <div className={`w-2 h-2 rounded-full ${team.isActive ? 'bg-green-500' : 'bg-red-500'}`} />
-                <span className={`text-sm font-medium ${
-                  team.isActive 
-                    ? 'text-gray-500 dark:text-gray-400' 
-                    : 'text-red-600 dark:text-red-400'
-                }`}>
-                  {team.isActive ? 'Active' : 'Inactive'}
-                </span>
+          `}>
+            
+            {/* Header Section */}
+            <div className={`
+              relative p-8 overflow-hidden
+              ${team.isActive 
+                ? 'bg-gradient-to-br from-blue-600 via-blue-700 to-purple-700' 
+                : 'bg-gradient-to-br from-red-500 via-red-600 to-red-700'
+              }
+            `}>
+              {/* Background Pattern */}
+              <div className="absolute inset-0 opacity-10">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-white rounded-full -translate-y-16 translate-x-16"></div>
+                <div className="absolute bottom-0 left-0 w-24 h-24 bg-white rounded-full translate-y-12 -translate-x-12"></div>
               </div>
-              <ToggleButton
-                isActive={team.isActive}
-                isLoading={isToggling === team._id}
-                onClick={() => onToggleActive(team._id, !team.isActive)}
-              />
-            </div>
-    
-            {/* Account Info */}
-            <div className="mb-4">
-              <div className="flex items-center gap-2 mb-1">
-                <FaEnvelope className={`flex-shrink-0 ${
-                  team.isActive 
-                    ? 'text-blue-500 dark:text-blue-400' 
-                    : 'text-red-500 dark:text-red-400'
-                }`} />
-                <h3 className={`text-lg font-semibold break-all ${
-                  team.isActive 
-                    ? 'text-gray-900 dark:text-white' 
-                    : 'text-red-900 dark:text-red-100'
-                }`}>
-                  {team.gptAccount}
-                </h3>
-              </div>
-              <div className={`ml-7 text-sm capitalize ${
-                team.isActive 
-                  ? 'text-gray-500 dark:text-gray-400' 
-                  : 'text-red-600/70 dark:text-red-400/70'
-              }`}>
-                {team.server}
-              </div>
-            </div>
-    
-            {/* Stats Row */}
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <FaUserFriends className={
-                  team.isActive 
-                    ? 'text-gray-400' 
-                    : 'text-red-400 dark:text-red-500'
-                } />
-                <span className={`text-sm font-medium ${
-                  team.isActive 
-                    ? 'text-gray-600 dark:text-gray-300' 
-                    : 'text-red-700 dark:text-red-300'
-                }`}>
-                  {team.members.length} members
-                </span>
-              </div>
-              <button
-                onClick={() => setIsExpanded(!isExpanded)}
-                className={`
-                  flex items-center gap-2 text-sm font-medium transition-colors
-                  ${team.isActive 
-                    ? 'text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300' 
-                    : 'text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300'
-                  }
-                  focus:outline-none
-                `}
-              >
-                {isExpanded ? (
-                  <>
-                    Hide Members
-                    <FaChevronUp className="w-4 h-4" />
-                  </>
-                ) : (
-                  <>
-                    Show Members
-                    <FaChevronDown className="w-4 h-4" />
-                  </>
-                )}
-              </button>
-            </div>
-          </div>
-    
-          {/* Members List */}
-          {isExpanded && (
-            <div className={`border-t ${
-              team.isActive 
-                ? 'border-gray-200 dark:border-gray-700 bg-gradient-to-b from-gray-50 to-white dark:from-gray-800/50 dark:to-gray-800' 
-                : 'border-red-200 dark:border-red-800/30 bg-gradient-to-b from-red-50/50 to-red-25 dark:from-red-900/30 dark:to-red-900/20'
-            }`}>
-              <div className="p-4 sm:p-6">
-                {/* Members Header with Add Button */}
-                <div className="flex items-center justify-between mb-4">
-                  <h4 className={`text-sm font-semibold ${
-                    team.isActive 
-                      ? 'text-gray-900 dark:text-white' 
-                      : 'text-red-900 dark:text-red-100'
-                  }`}>
-                    Team Members ({team.members.length})
-                  </h4>
-                  
+              
+              <div className="relative z-10">
+                {/* Status Row */}
+                <div className="flex items-center justify-between mb-6">
                   <div className="flex items-center gap-3">
-                    {/* Member Count Badge */}
-                    <span className={`
-                      inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                      ${team.isActive 
-                        ? 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300' 
-                        : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300'
-                      }
-                    `}>
-                      {team.members.length === 1 ? '1 member' : `${team.members.length} members`}
+                    <div className={`w-3 h-3 rounded-full ${team.isActive ? 'bg-green-400' : 'bg-red-300'} animate-pulse`} />
+                    <span className="text-white/90 text-sm font-semibold">
+                      {team.isActive ? 'Active Team' : 'Inactive Team'}
                     </span>
+                  </div>
+                  <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-2">
+                    <ToggleButton
+                      isActive={team.isActive}
+                      isLoading={isToggling === team._id}
+                      onClick={() => onToggleActive(team._id, !team.isActive)}
+                    />
+                  </div>
+                </div>
 
-                    {/* Add Member Button */}
+                {/* Account Info */}
+                <div className="mb-6">
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="bg-white/20 p-3 rounded-xl backdrop-blur-sm">
+                      <FaEnvelope className="text-white text-lg" />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center gap-2">
+                        <h3 className="text-xl font-bold text-white truncate">
+                          {team.gptAccount}
+                        </h3>
+                        <button
+                          onClick={handleCopyEmail}
+                          className="flex-shrink-0 p-2 bg-white/20 hover:bg-white/30 rounded-lg transition-all duration-200 backdrop-blur-sm group/copy"
+                          title="Copy email"
+                        >
+                          {copied ? (
+                            <FaCheck className="text-green-300 text-sm" />
+                          ) : (
+                            <FaCopy className="text-white text-sm group-hover/copy:scale-110 transition-transform" />
+                          )}
+                        </button>
+                      </div>
+                      <p className="text-white/80 text-sm font-medium">GPT Account</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center gap-2 text-white/70 ml-16">
+                    <FaServer className="text-sm" />
+                    <span className="text-sm font-medium capitalize">{team.server}</span>
+                  </div>
+                </div>
+
+                {/* Stats Section */}
+                <div className="flex items-center justify-between">
+                  <div className="bg-white/20 backdrop-blur-sm rounded-2xl px-4 py-3">
+                    <div className="flex items-center gap-2">
+                      <FaUserFriends className="text-white text-lg" />
+                      <div>
+                        <div className="text-2xl font-bold text-white">{team.members.length}</div>
+                        <div className="text-white/80 text-xs font-medium">Members</div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <button
+                    onClick={() => setIsExpanded(!isExpanded)}
+                    className="flex items-center gap-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-2xl px-4 py-3 transition-all duration-200 text-white font-medium"
+                  >
+                    {isExpanded ? (
+                      <>
+                        <span className="text-sm">Hide Members</span>
+                        <FaChevronUp className="text-sm" />
+                      </>
+                    ) : (
+                      <>
+                        <span className="text-sm">Show Members</span>
+                        <FaChevronDown className="text-sm" />
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Members Section */}
+            {isExpanded && (
+              <div className="p-8">
+                <div className="flex items-center justify-between mb-6">
+                  <h4 className="text-xl font-bold text-gray-900">Team Members</h4>
+                  <div className="flex items-center gap-3">
+                    <div className={`px-3 py-1 rounded-full text-sm font-medium ${
+                      team.isActive 
+                        ? 'bg-blue-100 text-blue-700' 
+                        : 'bg-red-100 text-red-700'
+                    }`}>
+                      {team.members.length} {team.members.length === 1 ? 'member' : 'members'}
+                    </div>
                     <button
                       onClick={handleAddMemberClick}
-                      className={`
-                        inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 hover:scale-105
-                        ${team.isActive 
-                          ? 'bg-green-100 text-green-700 hover:bg-green-200 dark:bg-green-900/30 dark:text-green-300 dark:hover:bg-green-900/50' 
-                          : 'bg-red-100 text-red-700 hover:bg-red-200 dark:bg-red-900/30 dark:text-red-300 dark:hover:bg-red-900/50'
-                        }
-                        focus:outline-none focus:ring-2 focus:ring-green-500/20
-                      `}
-                      title="Add new members"
+                      className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 ${
+                        team.isActive 
+                          ? 'bg-green-500 hover:bg-green-600 text-white shadow-lg shadow-green-500/25' 
+                          : 'bg-red-500 hover:bg-red-600 text-white shadow-lg shadow-red-500/25'
+                      }`}
                     >
-                      <FaPlus className="w-3 h-3" />
+                      <FaPlus className="text-xs" />
                       Add Members
                     </button>
                   </div>
                 </div>
 
-                {/* Members Grid */}
+                {/* Members List */}
                 {team.members.length > 0 ? (
-                  <div className="space-y-3">
+                  <div className="grid gap-4">
                     {team.members.map((member, index) => (
-                      <Member 
+                      <div
                         key={`${team._id}-${index}-${member}`}
-                        index={index}
-                        team={team}
-                        member={member}
-                        onRemoveMember={handleRemoveMember}
-                      />
+                        className="transform transition-all duration-200"
+                        style={{ animationDelay: `${index * 50}ms` }}
+                      >
+                        <Member 
+                          index={index}
+                          team={team}
+                          member={member}
+                          onRemoveMember={handleRemoveMember}
+                        />
+                      </div>
                     ))}
                   </div>
                 ) : (
-                  <div className={`text-center py-8 ${
-                    team.isActive 
-                      ? 'text-gray-500 dark:text-gray-400' 
-                      : 'text-red-600 dark:text-red-400'
-                  }`}>
-                    <FaUserFriends className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                    <p className="text-sm mb-3">No members in this team</p>
-                    <button
-                      onClick={handleAddMemberClick}
-                      className={`
-                        inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105
-                        ${team.isActive 
-                          ? 'bg-green-600 text-white hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800' 
-                          : 'bg-red-600 text-white hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800'
-                        }
-                        focus:outline-none focus:ring-2 focus:ring-green-500/20
-                      `}
-                    >
-                      <FaUserPlus className="w-4 h-4" />
-                      Add First Member
-                    </button>
+                  <div className="text-center py-12">
+                    <div className="bg-gray-100 rounded-3xl p-8 max-w-sm mx-auto">
+                      <FaUserFriends className="w-16 h-16 mx-auto mb-4 text-gray-400" />
+                      <h4 className="text-lg font-semibold text-gray-900 mb-2">No Team Members</h4>
+                      <p className="text-gray-600 mb-6">Get started by adding your first team member</p>
+                      <button
+                        onClick={handleAddMemberClick}
+                        className={`flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold transition-all duration-200 hover:scale-105 mx-auto ${
+                          team.isActive 
+                            ? 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-lg shadow-green-500/25' 
+                            : 'bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white shadow-lg shadow-red-500/25'
+                        }`}
+                      >
+                        <FaUserPlus className="text-sm" />
+                        Add First Member
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>
-            </div>
-          )}
+            )}
+          </div>
+
+          {/* Hover Glow Effect */}
+          <div className={`absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10 blur-xl ${
+            team.isActive 
+              ? 'bg-gradient-to-br from-blue-400/20 to-purple-400/20' 
+              : 'bg-gradient-to-br from-red-400/20 to-red-600/20'
+          }`}></div>
         </div>
 
         {/* Add Members Modal */}
         {showAddModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-lg w-full mx-4 max-h-[90vh] overflow-hidden">
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-hidden">
               {/* Modal Header */}
-              <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-green-100 dark:bg-green-900/30 rounded-lg flex items-center justify-center">
-                    <FaUserPlus className="w-5 h-5 text-green-600 dark:text-green-400" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                      Add Members
-                    </h3>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                      To {team.gptAccount}
-                    </p>
-                  </div>
+              <div className="bg-gradient-to-r from-green-600 to-blue-600 p-8 text-white relative overflow-hidden">
+                <div className="absolute inset-0 opacity-10">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-white rounded-full -translate-y-16 translate-x-16"></div>
+                  <div className="absolute bottom-0 left-0 w-24 h-24 bg-white rounded-full translate-y-12 -translate-x-12"></div>
                 </div>
-                <button
-                  onClick={handleCloseAddModal}
-                  className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors p-1 rounded-lg hover:bg-white/50 dark:hover:bg-gray-700/50"
-                >
-                  <FaTimes className="w-5 h-5" />
-                </button>
+                
+                <div className="relative z-10 flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="bg-white/20 p-4 rounded-2xl backdrop-blur-sm">
+                      <FaUserPlus className="text-2xl text-white" />
+                    </div>
+                    <div>
+                      <h3 className="text-2xl font-bold text-white mb-1">Add Team Members</h3>
+                      <p className="text-white/80 font-medium">To {team.gptAccount}</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={handleCloseAddModal}
+                    className="p-3 bg-white/20 hover:bg-white/30 rounded-2xl transition-all duration-200 backdrop-blur-sm"
+                  >
+                    <FaTimes className="text-xl text-white" />
+                  </button>
+                </div>
               </div>
 
               {/* Modal Body */}
-              <div className="p-6 max-h-[60vh] overflow-y-auto">
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-900 dark:text-white mb-2">
+              <div className="p-8 max-h-[60vh] overflow-y-auto">
+                {/* Reference Selection */}
+                <div className="mb-6">
+                  <label className="block text-sm font-bold text-gray-900 mb-3">
+                    Select Reference (Optional)
+                  </label>
+                  <select 
+                    name="reference" 
+                    id="reference"
+                    value={selectedReference}
+                    onChange={(e) => setSelectedReference(e.target.value)}
+                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50 font-medium transition-all duration-200"
+                  >
+                    <option value="">Select Reference</option>
+                    {references.map((reference) => (
+                      <option key={reference._id} value={reference._id}>{reference.username}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Email Input */}
+                <div className="mb-6">
+                  <label className="block text-sm font-bold text-gray-900 mb-3">
                     Member Email Addresses
                   </label>
                   <textarea
                     value={emailsText}
                     onChange={(e) => setEmailsText(e.target.value)}
                     placeholder="Enter email addresses (one per line or separated by commas):&#10;&#10;john@example.com&#10;jane@example.com&#10;admin@company.com"
-                    className="w-full h-32 px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500/20 focus:border-green-500 dark:bg-gray-700 dark:text-white resize-none"
-                    rows={6}
+                    className="w-full h-40 px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50 resize-none font-medium transition-all duration-200"
+                    rows={8}
                   />
-                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+                  <p className="text-sm text-gray-600 mt-3 font-medium">
                     You can enter multiple emails separated by commas, semicolons, spaces, or on separate lines.
                   </p>
                 </div>
 
                 {/* Email Preview */}
                 {emailsText.trim() && (
-                  <div className="mb-4">
-                    <h4 className="text-sm font-medium text-gray-900 dark:text-white mb-2">
-                      Preview ({validateAndParseEmails(emailsText).validEmails.length} valid emails)
+                  <div className="mb-6">
+                    <h4 className="text-sm font-bold text-gray-900 mb-3">
+                      Email Preview ({validateAndParseEmails(emailsText).validEmails.length} valid emails)
                     </h4>
-                    <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-3 max-h-24 overflow-y-auto">
-                      <div className="flex flex-wrap gap-1">
+                    <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-2xl p-4 border border-green-200">
+                      <div className="flex flex-wrap gap-2">
                         {validateAndParseEmails(emailsText).validEmails.map((email, index) => (
                           <span
                             key={index}
-                            className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300"
+                            className="inline-flex items-center px-3 py-2 rounded-xl text-sm font-bold bg-gradient-to-r from-green-500 to-green-600 text-white shadow-sm"
                           >
                             {email}
                           </span>
@@ -340,14 +383,14 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
 
                 {/* Errors */}
                 {emailErrors.length > 0 && (
-                  <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/30 rounded-lg">
-                    <h4 className="text-sm font-medium text-red-800 dark:text-red-200 mb-2">
+                  <div className="mb-6 p-4 bg-gradient-to-r from-red-50 to-red-100 border-2 border-red-200 rounded-2xl">
+                    <h4 className="text-sm font-bold text-red-800 mb-3">
                       Please fix the following errors:
                     </h4>
-                    <ul className="text-sm text-red-700 dark:text-red-300 space-y-1">
+                    <ul className="text-sm text-red-700 space-y-2">
                       {emailErrors.map((error, index) => (
-                        <li key={index} className="flex items-start gap-2">
-                          <span className="text-red-500 mt-0.5">•</span>
+                        <li key={index} className="flex items-start gap-2 font-medium">
+                          <span className="text-red-500 mt-0.5 font-bold">•</span>
                           {error}
                         </li>
                       ))}
@@ -357,18 +400,18 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
               </div>
 
               {/* Modal Footer */}
-              <div className="flex items-center justify-end gap-3 p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
+              <div className="flex items-center justify-end gap-4 p-8 border-t border-gray-200 bg-gray-50">
                 <button
                   onClick={handleCloseAddModal}
                   disabled={isAdding}
-                  className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                  className="px-6 py-3 text-sm font-bold text-gray-700 bg-white border-2 border-gray-300 rounded-xl hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleAddMembers}
                   disabled={isAdding || !emailsText.trim() || validateAndParseEmails(emailsText).validEmails.length === 0}
-                  className="px-4 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center gap-2 min-w-[140px] justify-center"
+                  className="px-6 py-3 text-sm font-bold text-white bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center gap-2 min-w-[180px] justify-center shadow-lg shadow-green-500/25"
                 >
                   {isAdding ? (
                     <>
@@ -377,7 +420,7 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
                     </>
                   ) : (
                     <>
-                      <FaUserPlus className="w-3 h-3" />
+                      <FaUserPlus className="text-sm" />
                       Add {validateAndParseEmails(emailsText).validEmails.length} Members
                     </>
                   )}
@@ -390,4 +433,4 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
     );
   };
 
-  export default TeamCard
+export default TeamCard

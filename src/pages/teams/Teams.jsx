@@ -1,33 +1,14 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import handleApi from '../../libs/handleAPi';
-import { FaUserFriends, FaEnvelope, FaChevronDown, FaChevronUp, FaExclamationCircle, FaSearch } from 'react-icons/fa';
+import { FaExclamationCircle, FaSearch } from 'react-icons/fa';
 import { toast } from 'react-toastify';
-import TeamCard from './components/TeamCard';
 
-
-const EmptyState = ({ message, icon: Icon, type = 'default' }) => (
-  <div className="flex flex-col items-center justify-center py-12">
-    <div className={`rounded-full p-4 mb-4 ${
-      type === 'error' 
-        ? 'bg-red-100 dark:bg-red-900/20 text-red-600 dark:text-red-400'
-        : 'bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400'
-    }`}>
-      <Icon className="w-8 h-8" />
-    </div>
-    <p className={`text-lg font-medium mb-2 ${
-      type === 'error'
-        ? 'text-red-600 dark:text-red-400'
-        : 'text-gray-900 dark:text-white'
-    }`}>
-      {message}
-    </p>
-    {type !== 'error' && (
-      <p className="text-sm text-gray-500 dark:text-gray-400">
-        Try adjusting your search or filter to find what you're looking for.
-      </p>
-    )}
-  </div>
-);
+// Import our new components
+import SearchBar from './components/SearchBar';
+import TeamStats from './components/TeamStats';
+import EmptyState from './components/EmptyState';
+import LoadingGrid from './components/LoadingGrid';
+import TeamGrid from './components/TeamGrid';
 
 const Teams = () => {
   const [data, setData] = useState([]);
@@ -56,7 +37,6 @@ const Teams = () => {
       const response = await handleApi(`/gptTeam/team?search=${searchTerm}`, 'GET');
       
       if (response.success) {
-        // The data is in response.data
         setData(response.data || []);
       } else {
         setError(response.message || 'Failed to fetch teams');
@@ -125,15 +105,16 @@ const Teams = () => {
     } catch (err) {
       toast.error('An error occurred while removing member');
       console.error('Error removing member:', err);
-      throw err; // Re-throw to handle in Member component
+      throw err;
     }
   };
 
   // Handle adding multiple members
-  const handleAddMembers = async (teamId, emailArray) => {
+  const handleAddMembers = async (teamId, emailArray, reference) => {
     try {
       const response = await handleApi(`/gptTeam/team/${teamId}/members`, 'POST', {
-        members: emailArray
+        members: emailArray,
+        reference
       });
       
       if (response.success) {
@@ -141,7 +122,6 @@ const Teams = () => {
           if (!Array.isArray(prevData)) return [];
           const updatedData = prevData.map(team => {
             if (team._id === teamId) {
-              // Add new members to existing members array, avoiding duplicates
               const existingMembers = team.members || [];
               const newMembers = emailArray.filter(email => !existingMembers.includes(email));
               return { ...team, members: [...existingMembers, ...newMembers] };
@@ -160,7 +140,7 @@ const Teams = () => {
     } catch (err) {
       toast.error('An error occurred while adding members');
       console.error('Error adding members:', err);
-      throw err; // Re-throw to handle in TeamCard component
+      throw err;
     }
   };
 
@@ -197,16 +177,7 @@ const Teams = () => {
 
   const renderContent = () => {
     if (isLoading) {
-      return (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {[1, 2, 3, 4, 5, 6].map((item) => (
-            <div
-              key={item}
-              className="bg-gray-100 dark:bg-gray-800 h-48 rounded-xl animate-pulse"
-            />
-          ))}
-        </div>
-      );
+      return <LoadingGrid count={6} />;
     }
 
     if (error) {
@@ -214,52 +185,85 @@ const Teams = () => {
     }
 
     if (!Array.isArray(sortedTeams) || sortedTeams.length === 0) {
-      return <EmptyState message="No teams found" icon={FaSearch} />;
+      const emptyType = search ? 'search' : 'default';
+      const emptyMessage = search ? 'No teams found' : 'No teams available';
+      
+      return <EmptyState message={emptyMessage} icon={FaSearch} type={emptyType} />;
     }
 
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {sortedTeams.map((team) => (
-          <TeamCard 
-            key={team._id} 
-            team={team} 
-            onToggleActive={handleToggleActive}
-            onRemoveMember={handleRemoveMember}
-            onAddMembers={handleAddMembers}
-            isToggling={togglingTeam === team._id}
-          />
-        ))}
-      </div>
+      <TeamGrid 
+        teams={sortedTeams}
+        onToggleActive={handleToggleActive}
+        onRemoveMember={handleRemoveMember}
+        onAddMembers={handleAddMembers}
+        togglingTeam={togglingTeam}
+      />
     );
   };
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 py-8">
-      {/* Search Input */}
-      <div className="mb-8">
-        <div className="max-w-md mx-auto">
-          <label htmlFor="search" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-            Search GPT Teams
-          </label>
-          <div className="relative">
-            <input
-              id="search"
-              type="text"
-              placeholder="Search by GPT account or member email..."
-              value={search}
-              onChange={handleSearchChange}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white"
-            />
-            <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500" />
-          </div>
-        </div>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        {/* Search Section */}
+        <SearchBar 
+          search={search}
+          onSearchChange={handleSearchChange}
+          isLoading={isLoading}
+        />
 
-      {/* Content Area */}
-      <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700">
-        <div className="p-6">
+        {/* Stats Section */}
+        {!isLoading && !error && (
+          <TeamStats teams={data} />
+        )}
+
+        {/* Results Info */}
+        {!isLoading && !error && sortedTeams.length > 0 && (
+          <div className="mb-8">
+            <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+              <div className="flex flex-col sm:flex-row items-center justify-between">
+                <div className="text-center sm:text-left mb-4 sm:mb-0">
+                  <h2 className="text-xl font-bold text-gray-900">
+                    {search ? 'Search Results' : 'All Teams'}
+                  </h2>
+                  <p className="text-gray-600 mt-1">
+                    {search ? (
+                      <>Showing <span className="font-semibold">{sortedTeams.length}</span> teams for "<span className="font-semibold">{search}</span>"</>
+                    ) : (
+                      <>Managing <span className="font-semibold">{sortedTeams.length}</span> teams total</>
+                    )}
+                  </p>
+                </div>
+                {search && (
+                  <button
+                    onClick={() => setSearch('')}
+                    className="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl hover:from-blue-600 hover:to-purple-600 transition-all duration-200 font-medium shadow-lg"
+                  >
+                    Clear Search
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Content Area */}
+        <div className="relative">
           {renderContent()}
         </div>
+
+        {/* Footer */}
+        {!isLoading && !error && sortedTeams.length > 0 && (
+          <div className="mt-12 text-center">
+            <div className="inline-flex items-center gap-2 bg-white rounded-full px-6 py-3 shadow-md border border-gray-100">
+              <div className="h-2 w-2 bg-blue-500 rounded-full animate-pulse"></div>
+              <span className="text-sm text-gray-600 font-medium">
+                Last updated: {new Date().toLocaleString()}
+              </span>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

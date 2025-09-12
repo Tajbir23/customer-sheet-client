@@ -127,12 +127,12 @@ const AddCustomerForm = ({ setIsOpen, className }) => {
                   className="form-input"
                 >
                   <option value="">Select platform</option>
-                  <option value="WhatsApp">WhatsApp</option>
-                  <option value="Facebook">Facebook</option>
-                  <option value="Instagram">Instagram</option>
-                  <option value="Telegram">Telegram</option>
-                  <option value="Website">Website</option>
-                  <option value="Other">Other</option>
+                  <option value="whatsapp">WhatsApp</option>
+                  <option value="facebook">Facebook</option>
+                  <option value="instagram">Instagram</option>
+                  <option value="telegram">Telegram</option>
+                  <option value="website">Website</option>
+                  <option value="other">Other</option>
                 </select>
               </div>
 
@@ -242,10 +242,10 @@ const AddCustomerForm = ({ setIsOpen, className }) => {
                   className="form-input"
                 >
                   <option value="">Select status</option>
-                  <option value="Paid">Paid</option>
-                  <option value="Pending">Pending</option>
-                  <option value="Failed">Failed</option>
-                  <option value="Refunded">Refunded</option>
+                  <option value="paid">Paid</option>
+                  <option value="pending">Pending</option>
+                  <option value="failed">Failed</option>
+                  <option value="refunded">Refunded</option>
                 </select>
               </div>
 
@@ -256,11 +256,11 @@ const AddCustomerForm = ({ setIsOpen, className }) => {
                   className="form-input"
                 >
                   <option value="">Select method</option>
-                  <option value="Credit Card">Credit Card</option>
-                  <option value="PayPal">PayPal</option>
-                  <option value="Bank Transfer">Bank Transfer</option>
-                  <option value="Cash">Cash</option>
-                  <option value="Crypto">Cryptocurrency</option>
+                  <option value="creditCard">Credit Card</option>
+                  <option value="payPal">PayPal</option>
+                  <option value="bankTransfer">Bank Transfer</option>
+                  <option value="cash">Cash</option>
+                  <option value="crypto">Cryptocurrency</option>
                 </select>
               </div>
 

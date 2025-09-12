@@ -20,7 +20,7 @@ const Customers = () => {
   }, [search])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Modal Overlay */}
       {isOpen && (
         <AddCustomerForm 
@@ -29,97 +29,89 @@ const Customers = () => {
         />
       )}
 
-      {/* Main Content */}
-      <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
-        {/* Header Section */}
-        <div className="mb-8">
-          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
-            {/* Title and Description */}
-            <div className="space-y-2">
-              <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 tracking-tight">
-                Customer Management
-              </h1>
-              <p className="text-gray-600 text-lg">
-                Manage and track your customer database with ease
-              </p>
-            </div>
+      {/* Header Section */}
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-8">
+        <div>
+          <h1 className="text-3xl font-bold text-gray-900 mb-2">Customer Management</h1>
+          <p className="text-gray-600">Manage and track your customer database with ease</p>
+        </div>
+        <button 
+          onClick={() => setIsOpen(true)} 
+          className="mt-4 = sm:mt-0 inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md  bg-blue bg-blue-600 cursor-pointer focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue transition-colors duration-200"
+        >
+          <FaUserPlus className="-ml-1 mr-2 h-4 w-4" />
+          Add New Customer
+        </button>
+      </div>
 
-            {/* Add Customer Button */}
+      {/* Search Section */}
+      <div className="bg-white rounded-lg shadow border border-gray-200 p-6 mb-6">
+        <div className="flex flex-col lg:flex-row gap-4">
+          {/* Search Input */}
+          <div className="flex-1">
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <FaSearch className="h-4 w-4 text-gray-400" />
+              </div>
+              <input
+                type="text"
+                placeholder="Search customers by name, email, or phone..."
+                className="focus:ring-blue focus:border-blue block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg text-sm"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
+          </div>
+
+          {/* Date Filter */}
+          <div className="lg:w-80">
+            <div className="relative">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <FaCalendarAlt className="h-4 w-4 text-gray-400" />
+              </div>
+              <input
+                type="date"
+                placeholder="Filter by subscription end date"
+                className="focus:ring-blue focus:border-blue block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg text-sm"
+                value={searchSubscriptionEndDate}
+                onChange={(e) => setSearchSubscriptionEndDate(e.target.value)}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Results Summary */}
+      {(search || searchSubscriptionEndDate) && (
+        <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+          <div className="flex items-center justify-between">
+            <p className="text-blue-800 font-medium">
+              {search && `Searching for: "${search}"`}
+              {search && searchSubscriptionEndDate && " • "}
+              {searchSubscriptionEndDate && `End date: ${searchSubscriptionEndDate}`}
+            </p>
             <button 
-              onClick={() => setIsOpen(true)} 
-              className="group flex items-center gap-3 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5 font-medium"
+              onClick={() => {
+                setSearch('')
+                setSearchSubscriptionEndDate('')
+              }}
+              className="text-blue hover:text-blue-600 font-medium text-sm underline"
             >
-              <FaUserPlus className="text-lg group-hover:scale-110 transition-transform duration-200" />
-              <span>Add New Customer</span>
+              Clear filters
             </button>
           </div>
         </div>
+      )}
 
-        {/* Search Section */}
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 mb-8">
-          <div className="flex flex-col lg:flex-row gap-4">
-            {/* Search Input */}
-            <div className="flex-1">
-              <div className="relative group">
-                <input
-                  type="text"
-                  placeholder="Search customers by name, email, or phone..."
-                  className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-50 transition-all duration-200 text-gray-700 placeholder-gray-400 group-hover:border-gray-300"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                />
-                <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-hover:text-gray-600 transition-colors duration-200" />
-              </div>
-            </div>
-
-            {/* Date Filter */}
-            <div className="lg:w-80">
-              <div className="relative group">
-                <input
-                  type="date"
-                  placeholder="Filter by subscription end date"
-                  className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-blue-500 focus:ring-4 focus:ring-blue-50 transition-all duration-200 text-gray-700 group-hover:border-gray-300"
-                  value={searchSubscriptionEndDate}
-                  onChange={(e) => setSearchSubscriptionEndDate(e.target.value)}
-                />
-                <FaCalendarAlt className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-hover:text-gray-600 transition-colors duration-200" />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Results Summary */}
-        {(search || searchSubscriptionEndDate) && (
-          <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-xl">
-            <div className="flex items-center justify-between">
-              <p className="text-blue-800 font-medium">
-                {search && `Searching for: "${search}"`}
-                {search && searchSubscriptionEndDate && " • "}
-                {searchSubscriptionEndDate && `End date: ${searchSubscriptionEndDate}`}
-              </p>
-              <button 
-                onClick={() => {
-                  setSearch('')
-                  setSearchSubscriptionEndDate('')
-                }}
-                className="text-blue-600 hover:text-blue-800 font-medium text-sm underline"
-              >
-                Clear filters
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Customer Table Container */}
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
-          <CustomerTable 
-            className={`${isOpen ? 'opacity-50 pointer-events-none' : 'opacity-100'} transition-all duration-300`}
-            setIsLoading={setIsLoading} 
-            isLoading={isLoading} 
-            search={debouncedSearch} 
-            searchSubscriptionEndDate={searchSubscriptionEndDate} 
-          />
-        </div>
+      {/* Customer Table Container */}
+      <div className="bg-white rounded-lg shadow border border-gray-200 overflow-hidden">
+        <CustomerTable 
+          className={`${isOpen ? 'opacity-50 pointer-events-none' : 'opacity-100'} transition-all duration-300`}
+          setIsLoading={setIsLoading} 
+          isLoading={isLoading} 
+          search={debouncedSearch} 
+          searchSubscriptionEndDate={searchSubscriptionEndDate} 
+        />
       </div>
     </div>
   )

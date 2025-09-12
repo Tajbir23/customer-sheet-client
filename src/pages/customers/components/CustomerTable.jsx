@@ -24,18 +24,18 @@ const TableSkeleton = () => {
     return (
         <div className="animate-pulse">
             {/* Header Skeleton */}
-            <div className="h-14 bg-gradient-to-r from-gray-200 to-gray-300 rounded-t-xl mb-1" />
+            <div className="h-12 bg-gray-200 rounded-t-lg mb-1" />
             
             {/* Row Skeletons */}
             {[1, 2, 3, 4, 5].map((item) => (
                 <div key={item} className="flex space-x-4 p-4 border-b border-gray-100">
-                    <div className="h-12 bg-gradient-to-r from-gray-200 to-gray-300 rounded-lg w-1/6" />
-                    <div className="h-12 bg-gradient-to-r from-gray-200 to-gray-300 rounded-lg w-1/5" />
-                    <div className="h-12 bg-gradient-to-r from-gray-200 to-gray-300 rounded-lg w-1/6" />
-                    <div className="h-12 bg-gradient-to-r from-gray-200 to-gray-300 rounded-lg w-1/6" />
-                    <div className="h-12 bg-gradient-to-r from-gray-200 to-gray-300 rounded-lg w-1/6" />
-                    <div className="h-12 bg-gradient-to-r from-gray-200 to-gray-300 rounded-lg w-1/6" />
-                    <div className="h-12 bg-gradient-to-r from-gray-200 to-gray-300 rounded-lg w-1/5" />
+                    <div className="h-10 bg-gray-200 rounded w-1/6" />
+                    <div className="h-10 bg-gray-200 rounded w-1/5" />
+                    <div className="h-10 bg-gray-200 rounded w-1/6" />
+                    <div className="h-10 bg-gray-200 rounded w-1/6" />
+                    <div className="h-10 bg-gray-200 rounded w-1/6" />
+                    <div className="h-10 bg-gray-200 rounded w-1/6" />
+                    <div className="h-10 bg-gray-200 rounded w-1/5" />
                 </div>
             ))}
         </div>
@@ -409,7 +409,7 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search, searchSubsc
     if (isLoading) {
         return (
             <div className={`w-full ${className}`}>
-                <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+                <div className="bg-white rounded-lg shadow border border-gray-200 overflow-hidden">
                     <TableSkeleton />
                 </div>
             </div>
@@ -419,13 +419,13 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search, searchSubsc
     return (
         <div className={`w-full ${className}`}>
             {/* Table Controls */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 p-6 bg-white rounded-t-2xl border-b border-gray-100">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-4 p-4 bg-white rounded-t-lg border-b border-gray-200">
                 <div className="flex items-center gap-4">
                     <PageSizeSelector 
                         pageSize={pageSize}
                         onPageSizeChange={handlePageSizeChange}
                     />
-                    <div className="text-sm text-gray-600 bg-gray-50 px-3 py-2 rounded-lg font-medium">
+                    <div className="text-sm text-gray-600 bg-gray-50 px-3 py-2 rounded border">
                         Showing {customers.length ? (currentPage - 1) * pageSize + 1 : 0} to {Math.min(currentPage * pageSize, totalItems)} of {totalItems} entries
                     </div>
                 </div>
@@ -436,10 +436,10 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search, searchSubsc
                         <button 
                             onClick={() => setShowExportDropdown(!showExportDropdown)}
                             disabled={isExporting || customers.length === 0}
-                            className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
+                            className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded border transition-colors duration-200 ${
                                 isExporting || customers.length === 0
-                                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                                    : 'text-gray-600 bg-gray-100 hover:bg-gray-200 hover:text-gray-800'
+                                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed border-gray-200'
+                                    : 'text-gray-600 bg-white hover:bg-gray-50 border-gray-300'
                             }`}
                             title={customers.length === 0 ? 'No data to export' : 'Export current page data'}
                         >
@@ -465,13 +465,13 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search, searchSubsc
                         
                         {/* Export Dropdown */}
                         {showExportDropdown && !isExporting && customers.length > 0 && (
-                            <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-200 z-10">
+                            <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 z-10">
                                 <div className="py-2">
                                     <button
                                         onClick={handleExportCSV}
                                         className="flex items-center gap-3 w-full px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-200"
                                     >
-                                        <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg className="w-4 h-4 text-green" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                                         </svg>
                                         <div>
@@ -483,7 +483,7 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search, searchSubsc
                                         onClick={handleExportPDF}
                                         className="flex items-center gap-3 w-full px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-200"
                                     >
-                                        <svg className="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <svg className="w-4 h-4 text-red" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
                                         </svg>
                                         <div>
@@ -517,12 +517,12 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search, searchSubsc
                     </div>
                 ) : (
                     <div className="overflow-x-auto">
-                        <table className="min-w-full divide-y divide-gray-100">
+                        <table className="min-w-full divide-y divide-gray-200">
                             <TableHeader 
                                 sortConfig={sortConfig}
                                 onSort={handleSort}
                             />
-                            <tbody className="bg-white divide-y divide-gray-50">
+                            <tbody className="bg-white divide-y divide-gray-100">
                                 {customers?.map((item, index) => (
                                     <TableRow
                                         key={item._id}
@@ -549,7 +549,7 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search, searchSubsc
 
             {/* Pagination */}
             {customers.length > 0 && (
-                <div className="bg-white p-6 rounded-b-2xl border-t border-gray-100">
+                <div className="bg-white p-4 rounded-b-lg border-t border-gray-200">
                     <Pagination
                         currentPage={currentPage}
                         totalPages={totalPages}

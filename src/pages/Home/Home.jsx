@@ -1,25 +1,33 @@
 import React, { useEffect, useState } from 'react'
 import handleApi from '../../libs/handleAPi'
-import { FaCalendarAlt, FaMoneyBillWave, FaShoppingCart, FaUserClock } from 'react-icons/fa';
+import { FaCalendarAlt, FaMoneyBillWave, FaShoppingCart, FaUserClock, FaClock } from 'react-icons/fa';
 import DashboardCharts from './components/DashboardCharts';
 import CountdownTimer from './components/CountdownTimer';
 
 const StatCard = ({ icon: Icon, title, value, subValue, colorClass }) => (
-  <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 hover:border-gray-300 dark:hover:border-gray-600 transition-colors">
-    <div className="flex items-center justify-between">
-      <div>
-        <p className="text-sm font-medium text-gray-500 dark:text-gray-400">{title}</p>
-        <p className={`text-2xl font-bold mt-2 ${colorClass}`}>
-          {value}
-        </p>
-        {subValue && (
-          <p className="text-sm font-medium text-gray-500 dark:text-gray-400 mt-1">
-            {subValue}
+  <div className="card hover:shadow-md transition-shadow">
+    <div className="card-body">
+      <div className="flex items-center justify-between">
+        <div className="flex-1">
+          <p className="text-sm font-medium text-gray-500 mb-1">{title}</p>
+          <p className={`text-2xl font-bold ${colorClass}`}>
+            {value}
           </p>
-        )}
-      </div>
-      <div className={`p-3 rounded-lg ${colorClass.replace('text-', 'bg-').replace('dark:text-', 'dark:bg-')} bg-opacity-10`}>
-        <Icon className={`w-6 h-6 ${colorClass}`} />
+          {subValue && (
+            <p className="text-sm text-gray-500 mt-1">
+              {subValue}
+            </p>
+          )}
+        </div>
+        <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${
+          colorClass === 'text-blue' ? 'bg-blue-50 text-blue' :
+          colorClass === 'text-green' ? 'bg-green-50 text-green' :
+          colorClass === 'text-orange' ? 'bg-orange-50 text-orange' :
+          colorClass === 'text-primary' ? 'bg-gray-50 text-primary' :
+          'bg-gray-50 text-primary'
+        }`}>
+          <Icon className="w-6 h-6" />
+        </div>
       </div>
     </div>
   </div>
@@ -41,31 +49,52 @@ const NextSubscriptionCard = ({ data }) => {
   };
 
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 hover:border-gray-300 dark:hover:border-gray-600 transition-colors">
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Next Subscription Ending</h3>
-        <span className="text-sm font-medium px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300">
-          {formatDate(data.subscriptionEnd)}
-        </span>
+    <div className="card">
+      <div className="card-header">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <div className="w-10 h-10 bg-orange-50 rounded-lg flex items-center justify-center">
+              <FaClock className="w-5 h-5 text-orange" />
+            </div>
+            <h3 className="text-lg font-semibold text-gray-700">Next Subscription Ending</h3>
+          </div>
+          <span className="text-sm font-medium px-3 py-1 rounded-full bg-red-50 text-red">
+            {formatDate(data.subscriptionEnd)}
+          </span>
+        </div>
       </div>
       
-      {/* Countdown Timer */}
-      <div className="mb-6">
-        <CountdownTimer endDate={data.subscriptionEnd} />
-      </div>
+      <div className="card-body">
+        {/* Countdown Timer */}
+        <div className="mb-6">
+          <CountdownTimer endDate={data.subscriptionEnd} />
+        </div>
 
-      {/* GPT Account Info */}
-      <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
-        <div className="flex items-center justify-between">
-          <span className="text-sm font-medium text-gray-500 dark:text-gray-400">GPT Account</span>
-          <span className="text-sm font-semibold text-gray-900 dark:text-white break-all">
-            {data.gptAccount}
-          </span>
+        {/* GPT Account Info */}
+        <div className="p-3 bg-gray-50 rounded-lg">
+          <div className="flex items-center justify-between">
+            <span className="text-sm font-medium text-gray-500">GPT Account</span>
+            <span className="text-sm font-semibold text-gray-700 break-all">
+              {data.gptAccount}
+            </span>
+          </div>
         </div>
       </div>
     </div>
   );
 };
+
+const LoadingSkeleton = () => (
+  <div className="space-y-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {[1, 2, 3, 4].map(i => (
+        <div key={i} className="skeleton h-32"></div>
+      ))}
+    </div>
+    <div className="skeleton h-64"></div>
+    <div className="skeleton h-48"></div>
+  </div>
+);
 
 const Home = () => {
   const [data, setData] = useState(null)
@@ -82,60 +111,67 @@ const Home = () => {
 
   if (isLoading) {
     return (
-      <div className="p-6">
-        <div className="animate-pulse space-y-4">
-          <div className="h-32 bg-gray-200 dark:bg-gray-700 rounded-xl"></div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            {[1, 2, 3, 4].map(i => (
-              <div key={i} className="h-32 bg-gray-200 dark:bg-gray-700 rounded-xl"></div>
-            ))}
-          </div>
+      <div className="space-y-6">
+        <div className="mb-6">
+          <h1 className="text-3xl font-bold text-gray-800">Dashboard</h1>
+          <p className="text-gray-600">Welcome back! Here's what's happening with your business.</p>
         </div>
+        <LoadingSkeleton />
       </div>
     );
   }
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-8">
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-800 mb-2">Dashboard</h1>
+        <p className="text-gray-600">Welcome back! Here's what's happening with your business.</p>
+      </div>
+
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard
           icon={FaShoppingCart}
           title="Total Orders"
           value={data?.orderSummery?.totalOrder || 0}
-          colorClass="text-blue-600 dark:text-blue-500"
+          colorClass="text-blue"
         />
         <StatCard
           icon={FaMoneyBillWave}
           title="Total Revenue"
           value={`${data?.orderSummery?.totalRevenue?.toLocaleString() || 0} TK`}
-          colorClass="text-green-600 dark:text-green-500"
+          colorClass="text-green"
         />
         <StatCard
           icon={FaUserClock}
           title="Pending Orders"
           value={data?.orderSummery?.totalPending || 0}
           subValue={`${data?.orderSummery?.totalPaid || 0} orders paid`}
-          colorClass="text-yellow-600 dark:text-yellow-500"
+          colorClass="text-orange"
         />
         <StatCard
           icon={FaMoneyBillWave}
           title="My Revenue"
           value={`${data?.orderSummery?.myRevenue?.toLocaleString() || 0} TK`}
           subValue={`${data?.orderSummery?.totalMyOrder || 0} personal orders`}
-          colorClass="text-purple-600 dark:text-purple-500"
+          colorClass="text-primary"
         />
       </div>
 
       {/* Charts */}
       {data?.orderSummery && (
-        <DashboardCharts data={data.orderSummery} />
+        <div>
+          <DashboardCharts data={data.orderSummery} />
+        </div>
       )}
 
       {/* Next Subscription Card */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <NextSubscriptionCard data={data?.nextSubsEnding} />
-      </div>
+      {data?.nextSubsEnding && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <NextSubscriptionCard data={data?.nextSubsEnding} />
+        </div>
+      )}
     </div>
   )
 }

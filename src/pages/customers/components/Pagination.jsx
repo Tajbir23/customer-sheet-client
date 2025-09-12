@@ -45,14 +45,14 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
     };
 
     return (
-        <div className="flex justify-center items-center space-x-2 mt-4 mb-6">
+        <div className="flex justify-center items-center space-x-2">
             <button
                 onClick={() => onPageChange(currentPage - 1)}
                 disabled={currentPage === 1}
-                className={`px-3 py-1 rounded-md ${
+                className={`px-3 py-2 text-sm border rounded transition-colors duration-200 ${
                     currentPage === 1
-                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                    : 'bg-blue-600 text-white hover:bg-blue-700'
+                    ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
+                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
                 }`}
             >
                 Previous
@@ -61,17 +61,17 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
             <div className="flex space-x-1">
                 {getPageNumbers().map((page, index) => (
                     page === '...' ? (
-                        <span key={`ellipsis-${index}`} className="px-3 py-1">
+                        <span key={`ellipsis-${index}`} className="px-3 py-2 text-sm text-gray-500">
                             {page}
                         </span>
                     ) : (
                         <button
                             key={`page-${page}`}
                             onClick={() => onPageChange(page)}
-                            className={`px-3 py-1 rounded-md ${
+                            className={`px-3 py-2 text-sm border rounded transition-colors duration-200 ${
                                 currentPage === page
-                                ? 'bg-blue-600 text-white'
-                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                                ? 'bg-blue-500 text-white border-blue-500 font-medium'
+                                : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
                             }`}
                         >
                             {page}
@@ -83,10 +83,10 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
             <button
                 onClick={() => onPageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className={`px-3 py-1 rounded-md ${
+                className={`px-3 py-2 text-sm border rounded transition-colors duration-200 ${
                     currentPage === totalPages
-                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                    : 'bg-blue-600 text-white hover:bg-blue-700'
+                    ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
+                    : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'
                 }`}
             >
                 Next

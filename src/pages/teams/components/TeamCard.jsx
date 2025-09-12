@@ -1,436 +1,469 @@
-import React, { useState, useEffect } from "react";
-import ToggleButton from "./ToggleButton";
-import { FaUserFriends, FaEnvelope, FaChevronUp, FaChevronDown, FaPlus, FaTimes, FaUserPlus, FaServer, FaCopy, FaCheck } from "react-icons/fa";
-import Member from "./Member";
-import handleApi from "../../../libs/handleAPi";
+import React, { useState } from 'react';
+import { FaCheckCircle, FaTimesCircle, FaPlus, FaUsers, FaToggleOn, FaToggleOff, FaChevronDown, FaChevronUp, FaUserPlus, FaTrash, FaTimes, FaExclamationTriangle } from 'react-icons/fa';
+import { toast } from 'react-toastify';
+import handleApi from '../../../libs/handleAPi';
 
-const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembers }) => {
-    const [isExpanded, setIsExpanded] = useState(false);
-    const [showAddModal, setShowAddModal] = useState(false);
-    const [emailsText, setEmailsText] = useState('');
+const DeleteConfirmModal = ({ isOpen, onClose, onConfirm, memberEmail, isDeleting }) => {
+    if (!isOpen) return null;
+
+    return (
+        <div className="modal-backdrop fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div className="modal-content max-w-md w-full">
+                <div className="card-header bg-red-50 border-b border-red-200">
+                    <div className="flex items-center space-x-3">
+                        <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
+                            <FaExclamationTriangle className="text-red text-lg" />
+                        </div>
+                        <div>
+                            <h3 className="text-lg font-semibold text-red">Remove Member</h3>
+                            <p className="text-sm text-gray-600">This action cannot be undone</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="card-body">
+                    <p className="text-gray-700 mb-4">
+                        Are you sure you want to remove <span className="font-medium text-gray-900">{memberEmail}</span> from this team?
+                    </p>
+                    <p className="text-sm text-gray-500">
+                        The member will lose access to this team and all related resources.
+                    </p>
+                </div>
+
+                <div className="card-footer">
+                    <div className="flex items-center justify-end space-x-3">
+                        <button
+                            onClick={onClose}
+                            disabled={isDeleting}
+                            className="btn btn-secondary"
+                        >
+                            Cancel
+                        </button>
+                        <button
+                            onClick={onConfirm}
+                            disabled={isDeleting}
+                            className={`btn border-red flex items-center space-x-2 transition-all duration-200 bg-red-800 ${
+                                isDeleting 
+                                    ? 'bg-gray-400 border-gray-400 text-gray-200 opacity-50 cursor-not-allowed' 
+                                    : 'bg-red text-white hover:bg-red hover:text-yellow-100 hover:shadow-md transform hover:scale-105'
+                            }`}
+                        >
+                            {isDeleting ? (
+                                <>
+                                    <div className="animate-spin w-4 h-4 border-2 border-white border-t-transparent rounded-full"></div>
+                                    <span>Removing...</span>
+                                </>
+                            ) : (
+                                <>
+                                    <FaTrash size={14} />
+                                    <span>Remove Member</span>
+                                </>
+                            )}
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const TeamCard = ({ team, onTeamUpdate, onToggleStatus }) => {
     const [isAdding, setIsAdding] = useState(false);
-    const [emailErrors, setEmailErrors] = useState([]);
-    const [references, setReferences] = useState([]);
-    const [selectedReference, setSelectedReference] = useState('');
-    const [copied, setCopied] = useState(false);
+    const [showMembers, setShowMembers] = useState(false);
+    const [showAddForm, setShowAddForm] = useState(false);
+    const [newMemberEmail, setNewMemberEmail] = useState('');
+    const [deletingMember, setDeletingMember] = useState(null);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [memberToDelete, setMemberToDelete] = useState(null);
 
-    useEffect(() => {
-        const fetchReferences = async () => {
-            const response = await handleApi('/references')
-            setReferences(response.data)
-        }
-        fetchReferences()
-    }, [])
-
-    const handleCopyEmail = async () => {
-        try {
-            await navigator.clipboard.writeText(team.gptAccount)
-            setCopied(true)
-            setTimeout(() => setCopied(false), 2000)
-        } catch (err) {
-            console.error('Failed to copy email:', err)
-        }
-    }
-  
-    const handleRemoveMember = async (teamId, member, memberIndex) => {
-        if (onRemoveMember) {
-            await onRemoveMember(teamId, member, memberIndex);
-        }
-    };
-
-    const handleAddMemberClick = () => {
-        setShowAddModal(true);
-        setEmailsText('');
-        setEmailErrors([]);
-        setSelectedReference('');
-    };
-
-    const handleCloseAddModal = () => {
-        setShowAddModal(false);
-        setEmailsText('');
-        setEmailErrors([]);
-        setSelectedReference('');
-    };
-
-    // Validate and parse emails
-    const validateAndParseEmails = (text) => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        const lines = text.split('\n').map(line => line.trim()).filter(line => line.length > 0);
-        const validEmails = [];
-        const errors = [];
-
-        lines.forEach((line, index) => {
-            // Split by comma, semicolon, or space and clean up
-            const emails = line.split(/[,;\s]+/).map(email => email.trim()).filter(email => email.length > 0);
-            
-            emails.forEach(email => {
-                if (emailRegex.test(email)) {
-                    if (!validEmails.includes(email)) {
-                        validEmails.push(email);
-                    }
-                } else if (email.length > 0) {
-                    errors.push(`Line ${index + 1}: "${email}" is not a valid email`);
-                }
-            });
-        });
-
-        return { validEmails, errors };
-    };
-
-    const handleAddMembers = async () => {
-        const { validEmails, errors } = validateAndParseEmails(emailsText);
-        
-        if (errors.length > 0) {
-            setEmailErrors(errors);
+    const handleAddToTeam = async () => {
+        if (!newMemberEmail.trim()) {
+            toast.error('Please enter an email address');
             return;
         }
 
-        if (validEmails.length === 0) {
-            setEmailErrors(['Please enter at least one valid email address']);
+        // Email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(newMemberEmail.trim())) {
+            toast.error('Please enter a valid email address');
             return;
         }
 
         setIsAdding(true);
-        setEmailErrors([]);
-
         try {
-            if (onAddMembers) {
-                await onAddMembers(team._id, validEmails, selectedReference);
-                handleCloseAddModal();
+            // Try different API endpoints that might work
+            let response;
+            
+            // First try the original endpoint
+            try {
+                response = await handleApi(`/gptTeam/addToTeam/${team._id}`, 'POST', {
+                    email: newMemberEmail.trim()
+                });
+            } catch (error) {
+                console.log('First endpoint failed, trying alternative...');
+                
+                // Try alternative endpoint with members array
+                response = await handleApi(`/gptTeam/team/${team._id}/members`, 'POST', {
+                    members: [newMemberEmail.trim()]
+                });
+            }
+
+            if (response && response.success) {
+                toast.success('Member added successfully!');
+                setNewMemberEmail('');
+                setShowAddForm(false);
+                if (onTeamUpdate) {
+                    onTeamUpdate();
+                }
+            } else {
+                toast.error(response?.message || 'Failed to add member');
             }
         } catch (error) {
-            console.error('Error adding members:', error);
-            setEmailErrors(['Failed to add members. Please try again.']);
+            console.error('Error adding member:', error);
+            
+            // Try one more alternative endpoint
+            try {
+                const fallbackResponse = await handleApi(`/gptTeam/${team._id}/addMember`, 'POST', {
+                    memberEmail: newMemberEmail.trim()
+                });
+                
+                if (fallbackResponse && fallbackResponse.success) {
+                    toast.success('Member added successfully!');
+                    setNewMemberEmail('');
+                    setShowAddForm(false);
+                    if (onTeamUpdate) {
+                        onTeamUpdate();
+                    }
+                } else {
+                    toast.error('Failed to add member. Please try again.');
+                }
+            } catch (fallbackError) {
+                console.error('All endpoints failed:', fallbackError);
+                toast.error('Unable to add member at this time. Please check your connection and try again.');
+            }
         } finally {
             setIsAdding(false);
         }
     };
 
-    return (
-      <>
-        <div className="group relative">
-          {/* Main Card */}
-          <div className={`
-            relative overflow-hidden rounded-3xl transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl
-            ${team.isActive 
-              ? 'bg-white shadow-xl border border-gray-100' 
-              : 'bg-gradient-to-br from-red-50 to-red-100 shadow-lg border border-red-200'
-            }
-          `}>
+    const openDeleteModal = (member, memberIndex) => {
+        setMemberToDelete({ member, memberIndex });
+        setShowDeleteModal(true);
+    };
+
+    const closeDeleteModal = () => {
+        setShowDeleteModal(false);
+        setMemberToDelete(null);
+        setDeletingMember(null);
+    };
+
+    const handleRemoveMember = async () => {
+        if (!memberToDelete) return;
+
+        const { member, memberIndex } = memberToDelete;
+        setDeletingMember(memberIndex);
+
+        try {
+            // Try different API endpoints for removing members
+            let response;
             
-            {/* Header Section */}
-            <div className={`
-              relative p-8 overflow-hidden
-              ${team.isActive 
-                ? 'bg-gradient-to-br from-blue-600 via-blue-700 to-purple-700' 
-                : 'bg-gradient-to-br from-red-500 via-red-600 to-red-700'
-              }
-            `}>
-              {/* Background Pattern */}
-              <div className="absolute inset-0 opacity-10">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-white rounded-full -translate-y-16 translate-x-16"></div>
-                <div className="absolute bottom-0 left-0 w-24 h-24 bg-white rounded-full translate-y-12 -translate-x-12"></div>
-              </div>
-              
-              <div className="relative z-10">
-                {/* Status Row */}
-                <div className="flex items-center justify-between mb-6">
-                  <div className="flex items-center gap-3">
-                    <div className={`w-3 h-3 rounded-full ${team.isActive ? 'bg-green-400' : 'bg-red-300'} animate-pulse`} />
-                    <span className="text-white/90 text-sm font-semibold">
-                      {team.isActive ? 'Active Team' : 'Inactive Team'}
-                    </span>
-                  </div>
-                  <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-2">
-                    <ToggleButton
-                      isActive={team.isActive}
-                      isLoading={isToggling === team._id}
-                      onClick={() => onToggleActive(team._id, !team.isActive)}
-                    />
-                  </div>
-                </div>
-
-                {/* Account Info */}
-                <div className="mb-6">
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="bg-white/20 p-3 rounded-xl backdrop-blur-sm">
-                      <FaEnvelope className="text-white text-lg" />
-                    </div>
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-2">
-                        <h3 className="text-xl font-bold text-white truncate">
-                          {team.gptAccount}
-                        </h3>
-                        <button
-                          onClick={handleCopyEmail}
-                          className="flex-shrink-0 p-2 bg-white/20 hover:bg-white/30 rounded-lg transition-all duration-200 backdrop-blur-sm group/copy"
-                          title="Copy email"
-                        >
-                          {copied ? (
-                            <FaCheck className="text-green-300 text-sm" />
-                          ) : (
-                            <FaCopy className="text-white text-sm group-hover/copy:scale-110 transition-transform" />
-                          )}
-                        </button>
-                      </div>
-                      <p className="text-white/80 text-sm font-medium">GPT Account</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center gap-2 text-white/70 ml-16">
-                    <FaServer className="text-sm" />
-                    <span className="text-sm font-medium capitalize">{team.server}</span>
-                  </div>
-                </div>
-
-                {/* Stats Section */}
-                <div className="flex items-center justify-between">
-                  <div className="bg-white/20 backdrop-blur-sm rounded-2xl px-4 py-3">
-                    <div className="flex items-center gap-2">
-                      <FaUserFriends className="text-white text-lg" />
-                      <div>
-                        <div className="text-2xl font-bold text-white">{team.members.length}</div>
-                        <div className="text-white/80 text-xs font-medium">Members</div>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <button
-                    onClick={() => setIsExpanded(!isExpanded)}
-                    className="flex items-center gap-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-2xl px-4 py-3 transition-all duration-200 text-white font-medium"
-                  >
-                    {isExpanded ? (
-                      <>
-                        <span className="text-sm">Hide Members</span>
-                        <FaChevronUp className="text-sm" />
-                      </>
-                    ) : (
-                      <>
-                        <span className="text-sm">Show Members</span>
-                        <FaChevronDown className="text-sm" />
-                      </>
-                    )}
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Members Section */}
-            {isExpanded && (
-              <div className="p-8">
-                <div className="flex items-center justify-between mb-6">
-                  <h4 className="text-xl font-bold text-gray-900">Team Members</h4>
-                  <div className="flex items-center gap-3">
-                    <div className={`px-3 py-1 rounded-full text-sm font-medium ${
-                      team.isActive 
-                        ? 'bg-blue-100 text-blue-700' 
-                        : 'bg-red-100 text-red-700'
-                    }`}>
-                      {team.members.length} {team.members.length === 1 ? 'member' : 'members'}
-                    </div>
-                    <button
-                      onClick={handleAddMemberClick}
-                      className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 ${
-                        team.isActive 
-                          ? 'bg-green-500 hover:bg-green-600 text-white shadow-lg shadow-green-500/25' 
-                          : 'bg-red-500 hover:bg-red-600 text-white shadow-lg shadow-red-500/25'
-                      }`}
-                    >
-                      <FaPlus className="text-xs" />
-                      Add Members
-                    </button>
-                  </div>
-                </div>
-
-                {/* Members List */}
-                {team.members.length > 0 ? (
-                  <div className="grid gap-4">
-                    {team.members.map((member, index) => (
-                      <div
-                        key={`${team._id}-${index}-${member}`}
-                        className="transform transition-all duration-200"
-                        style={{ animationDelay: `${index * 50}ms` }}
-                      >
-                        <Member 
-                          index={index}
-                          team={team}
-                          member={member}
-                          onRemoveMember={handleRemoveMember}
-                        />
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-12">
-                    <div className="bg-gray-100 rounded-3xl p-8 max-w-sm mx-auto">
-                      <FaUserFriends className="w-16 h-16 mx-auto mb-4 text-gray-400" />
-                      <h4 className="text-lg font-semibold text-gray-900 mb-2">No Team Members</h4>
-                      <p className="text-gray-600 mb-6">Get started by adding your first team member</p>
-                      <button
-                        onClick={handleAddMemberClick}
-                        className={`flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold transition-all duration-200 hover:scale-105 mx-auto ${
-                          team.isActive 
-                            ? 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-lg shadow-green-500/25' 
-                            : 'bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white shadow-lg shadow-red-500/25'
-                        }`}
-                      >
-                        <FaUserPlus className="text-sm" />
-                        Add First Member
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-
-          {/* Hover Glow Effect */}
-          <div className={`absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10 blur-xl ${
-            team.isActive 
-              ? 'bg-gradient-to-br from-blue-400/20 to-purple-400/20' 
-              : 'bg-gradient-to-br from-red-400/20 to-red-600/20'
-          }`}></div>
-        </div>
-
-        {/* Add Members Modal */}
-        {showAddModal && (
-          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-hidden">
-              {/* Modal Header */}
-              <div className="bg-gradient-to-r from-green-600 to-blue-600 p-8 text-white relative overflow-hidden">
-                <div className="absolute inset-0 opacity-10">
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-white rounded-full -translate-y-16 translate-x-16"></div>
-                  <div className="absolute bottom-0 left-0 w-24 h-24 bg-white rounded-full translate-y-12 -translate-x-12"></div>
-                </div>
+            // First try the original endpoint
+            try {
+                response = await handleApi(`/gptTeam/team/${team._id}/member`, 'DELETE', {
+                    member: member
+                });
+            } catch (error) {
+                console.log('First delete endpoint failed, trying alternative...');
                 
-                <div className="relative z-10 flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <div className="bg-white/20 p-4 rounded-2xl backdrop-blur-sm">
-                      <FaUserPlus className="text-2xl text-white" />
-                    </div>
-                    <div>
-                      <h3 className="text-2xl font-bold text-white mb-1">Add Team Members</h3>
-                      <p className="text-white/80 font-medium">To {team.gptAccount}</p>
-                    </div>
-                  </div>
-                  <button
-                    onClick={handleCloseAddModal}
-                    className="p-3 bg-white/20 hover:bg-white/30 rounded-2xl transition-all duration-200 backdrop-blur-sm"
-                  >
-                    <FaTimes className="text-xl text-white" />
-                  </button>
+                // Try alternative endpoint
+                response = await handleApi(`/gptTeam/team/${team._id}/removeMember`, 'POST', {
+                    memberEmail: member
+                });
+            }
+
+            if (response && response.success) {
+                toast.success('Member removed successfully!');
+                closeDeleteModal();
+                if (onTeamUpdate) {
+                    onTeamUpdate();
+                }
+            } else {
+                toast.error(response?.message || 'Failed to remove member');
+            }
+        } catch (error) {
+            console.error('Error removing member:', error);
+            
+            // Try one more alternative endpoint
+            try {
+                const fallbackResponse = await handleApi(`/gptTeam/${team._id}/member/${memberIndex}`, 'DELETE');
+                
+                if (fallbackResponse && fallbackResponse.success) {
+                    toast.success('Member removed successfully!');
+                    closeDeleteModal();
+                    if (onTeamUpdate) {
+                        onTeamUpdate();
+                    }
+                } else {
+                    toast.error('Failed to remove member. Please try again.');
+                }
+            } catch (fallbackError) {
+                console.error('All delete endpoints failed:', fallbackError);
+                toast.error('Unable to remove member at this time. Please try again.');
+            }
+        } finally {
+            setDeletingMember(null);
+        }
+    };
+
+    const toggleMembersView = () => {
+        setShowMembers(!showMembers);
+    };
+
+    const cancelAddMember = () => {
+        setShowAddForm(false);
+        setNewMemberEmail('');
+    };
+
+    const renderMemberItem = (member, index, showDelete = true) => (
+        <div 
+            key={index} 
+            className="flex items-center justify-between p-2 bg-gray-50 rounded hover:bg-gray-100 transition-colors"
+        >
+            <div className="flex items-center space-x-2 flex-1 min-w-0">
+                <div className="w-8 h-8 bg-blue-50 rounded-full flex items-center justify-center flex-shrink-0">
+                    <span className="text-xs font-medium text-blue">
+                        {member.charAt(0).toUpperCase()}
+                    </span>
                 </div>
-              </div>
-
-              {/* Modal Body */}
-              <div className="p-8 max-h-[60vh] overflow-y-auto">
-                {/* Reference Selection */}
-                <div className="mb-6">
-                  <label className="block text-sm font-bold text-gray-900 mb-3">
-                    Select Reference (Optional)
-                  </label>
-                  <select 
-                    name="reference" 
-                    id="reference"
-                    value={selectedReference}
-                    onChange={(e) => setSelectedReference(e.target.value)}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50 font-medium transition-all duration-200"
-                  >
-                    <option value="">Select Reference</option>
-                    {references.map((reference) => (
-                      <option key={reference._id} value={reference._id}>{reference.username}</option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Email Input */}
-                <div className="mb-6">
-                  <label className="block text-sm font-bold text-gray-900 mb-3">
-                    Member Email Addresses
-                  </label>
-                  <textarea
-                    value={emailsText}
-                    onChange={(e) => setEmailsText(e.target.value)}
-                    placeholder="Enter email addresses (one per line or separated by commas):&#10;&#10;john@example.com&#10;jane@example.com&#10;admin@company.com"
-                    className="w-full h-40 px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50 resize-none font-medium transition-all duration-200"
-                    rows={8}
-                  />
-                  <p className="text-sm text-gray-600 mt-3 font-medium">
-                    You can enter multiple emails separated by commas, semicolons, spaces, or on separate lines.
-                  </p>
-                </div>
-
-                {/* Email Preview */}
-                {emailsText.trim() && (
-                  <div className="mb-6">
-                    <h4 className="text-sm font-bold text-gray-900 mb-3">
-                      Email Preview ({validateAndParseEmails(emailsText).validEmails.length} valid emails)
-                    </h4>
-                    <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-2xl p-4 border border-green-200">
-                      <div className="flex flex-wrap gap-2">
-                        {validateAndParseEmails(emailsText).validEmails.map((email, index) => (
-                          <span
-                            key={index}
-                            className="inline-flex items-center px-3 py-2 rounded-xl text-sm font-bold bg-gradient-to-r from-green-500 to-green-600 text-white shadow-sm"
-                          >
-                            {email}
-                          </span>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {/* Errors */}
-                {emailErrors.length > 0 && (
-                  <div className="mb-6 p-4 bg-gradient-to-r from-red-50 to-red-100 border-2 border-red-200 rounded-2xl">
-                    <h4 className="text-sm font-bold text-red-800 mb-3">
-                      Please fix the following errors:
-                    </h4>
-                    <ul className="text-sm text-red-700 space-y-2">
-                      {emailErrors.map((error, index) => (
-                        <li key={index} className="flex items-start gap-2 font-medium">
-                          <span className="text-red-500 mt-0.5 font-bold">•</span>
-                          {error}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
-
-              {/* Modal Footer */}
-              <div className="flex items-center justify-end gap-4 p-8 border-t border-gray-200 bg-gray-50">
-                <button
-                  onClick={handleCloseAddModal}
-                  disabled={isAdding}
-                  className="px-6 py-3 text-sm font-bold text-gray-700 bg-white border-2 border-gray-300 rounded-xl hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleAddMembers}
-                  disabled={isAdding || !emailsText.trim() || validateAndParseEmails(emailsText).validEmails.length === 0}
-                  className="px-6 py-3 text-sm font-bold text-white bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center gap-2 min-w-[180px] justify-center shadow-lg shadow-green-500/25"
-                >
-                  {isAdding ? (
-                    <>
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                      Adding Members...
-                    </>
-                  ) : (
-                    <>
-                      <FaUserPlus className="text-sm" />
-                      Add {validateAndParseEmails(emailsText).validEmails.length} Members
-                    </>
-                  )}
-                </button>
-              </div>
+                <span className="text-sm text-gray-700 truncate">{member}</span>
             </div>
-          </div>
-        )}
-      </>
+            
+            {showDelete && (
+                <button
+                    onClick={() => openDeleteModal(member, index)}
+                    className="cursor-pointer ml-2 p-1.5 text-red bg-red-50 hover:bg-red-100 rounded transition-colors flex-shrink-0 border border-red-200 hover:border-red-300"
+                    title="Remove member"
+                >
+                    Remove
+                </button>
+            )}
+        </div>
     );
-  };
 
-export default TeamCard
+    return (
+        <>
+            <div className="card hover:shadow-md transition-shadow">
+                {/* Header */}
+                <div className={`card-header ${
+                    team.isActive 
+                        ? 'bg-gray-50 border-b border-gray-200' 
+                        : 'bg-red-50 border-b border-red-200'
+                }`}>
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center space-x-3">
+                            <div className={`w-12 h-12 rounded-lg flex items-center justify-center ${
+                                team.isActive 
+                                    ? 'bg-blue text-white' 
+                                    : 'bg-red text-white'
+                            }`}>
+                                <FaUsers size={20} />
+                            </div>
+                            <div>
+                                <h3 className="font-semibold text-gray-700">
+                                    {team.gptAccount}
+                                </h3>
+                                <p className="text-sm text-gray-500">
+                                    GPT Account
+                                </p>
+                            </div>
+                        </div>
+                        
+                        <div className={`flex items-center space-x-2 px-3 py-1 rounded-full text-sm font-medium ${
+                            team.isActive
+                                ? 'bg-green-50 text-green'
+                                : 'bg-red-50 text-red'
+                        }`}>
+                            {team.isActive ? (
+                                <>
+                                    <FaCheckCircle size={14} />
+                                    <span>Active</span>
+                                </>
+                            ) : (
+                                <>
+                                    <FaTimesCircle size={14} />
+                                    <span>Inactive</span>
+                                </>
+                            )}
+                        </div>
+                    </div>
+                </div>
+
+                {/* Body */}
+                <div className="card-body">
+                    <div className="space-y-4">
+                        {/* Members Section Header */}
+                        <div>
+                            <div className="flex items-center justify-between mb-2">
+                                <div className="flex items-center space-x-2">
+                                    <h4 className="font-medium text-gray-700">Team Members</h4>
+                                    <span className="text-sm text-gray-500">
+                                        ({team.members?.length || 0})
+                                    </span>
+                                </div>
+                                
+                                {/* Toggle Button */}
+                                {team.members && team.members.length > 0 && (
+                                    <button
+                                        onClick={toggleMembersView}
+                                        className="btn btn-secondary text-sm px-3 py-1 flex items-center space-x-1"
+                                    >
+                                        <span>{showMembers ? 'Hide' : 'Show'}</span>
+                                        {showMembers ? <FaChevronUp size={12} /> : <FaChevronDown size={12} />}
+                                    </button>
+                                )}
+                            </div>
+                            
+                            {/* Add Member Form */}
+                            {showAddForm && (
+                                <div className="mb-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
+                                    <div className="flex items-center space-x-2 mb-2">
+                                        <FaUserPlus className="text-blue" size={16} />
+                                        <span className="text-sm font-medium text-blue">Add New Member</span>
+                                    </div>
+                                    <div className="flex items-center space-x-2">
+                                        <input
+                                            type="email"
+                                            placeholder="Enter email address"
+                                            value={newMemberEmail}
+                                            onChange={(e) => setNewMemberEmail(e.target.value)}
+                                            className="form-input flex-1 text-sm"
+                                            disabled={isAdding}
+                                            onKeyPress={(e) => {
+                                                if (e.key === 'Enter') {
+                                                    handleAddToTeam();
+                                                }
+                                            }}
+                                        />
+                                        <button
+                                            onClick={handleAddToTeam}
+                                            disabled={isAdding || !newMemberEmail.trim()}
+                                            className="btn btn-primary text-sm px-3 py-1"
+                                        >
+                                            {isAdding ? (
+                                                <div className="animate-spin w-3 h-3 border border-white border-t-transparent rounded-full"></div>
+                                            ) : (
+                                                'Add'
+                                            )}
+                                        </button>
+                                        <button
+                                            onClick={cancelAddMember}
+                                            disabled={isAdding}
+                                            className="btn btn-secondary text-sm px-3 py-1"
+                                        >
+                                            Cancel
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+                            
+                            {/* Members List */}
+                            {team.members && team.members.length > 0 ? (
+                                <div>
+                                    {/* Always show first 2 members */}
+                                    <div className="space-y-1">
+                                        {team.members.slice(0, 2).map((member, index) => 
+                                            renderMemberItem(member, index, true)
+                                        )}
+                                    </div>
+
+                                    {/* Show remaining members if toggle is on */}
+                                    {showMembers && team.members.length > 2 && (
+                                        <div className="mt-2 space-y-1 border-t border-gray-200 pt-2">
+                                            {team.members.slice(2).map((member, index) => 
+                                                renderMemberItem(member, index + 2, true)
+                                            )}
+                                        </div>
+                                    )}
+
+                                    {/* Show count if not showing all */}
+                                    {!showMembers && team.members.length > 2 && (
+                                        <div className="text-xs text-gray-500 text-center py-2 bg-gray-50 rounded mt-2 cursor-pointer" onClick={toggleMembersView}>
+                                            +{team.members.length - 2} more members (click to view)
+                                        </div>
+                                    )}
+                                </div>
+                            ) : (
+                                <div className="text-center py-6">
+                                    <FaUsers className="text-gray-400 mx-auto mb-2" size={24} />
+                                    <p className="text-sm text-gray-500">No members yet</p>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* Stats */}
+                        <div className="grid grid-cols-2 gap-4 pt-4 border-t border-gray-200">
+                            <div className="text-center">
+                                <div className="text-lg font-semibold text-gray-700">
+                                    {team.totalMembers || team.members?.length || 0}
+                                </div>
+                                <div className="text-xs text-gray-500">Total</div>
+                            </div>
+                            <div className="text-center">
+                                <div className="text-lg font-semibold text-gray-700">
+                                    {team.activeMembers || 0}
+                                </div>
+                                <div className="text-xs text-gray-500">Active</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Footer */}
+                <div className="card-footer">
+                    <div className="flex items-center justify-between">
+                        <button
+                            onClick={() => onToggleStatus(team._id, !team.isActive)}
+                            className={`btn btn-outline flex items-center space-x-2 ${
+                                team.isActive ? 'text-red border-red hover:bg-red' : 'text-green border-green hover:bg-green'
+                            }`}
+                        >
+                            {team.isActive ? (
+                                <>
+                                    <FaToggleOff size={16} />
+                                    <span>Deactivate</span>
+                                </>
+                            ) : (
+                                <>
+                                    <FaToggleOn size={16} />
+                                    <span>Activate</span>
+                                </>
+                            )}
+                        </button>
+
+                        <button
+                            onClick={() => setShowAddForm(!showAddForm)}
+                            disabled={isAdding}
+                            className={`btn btn-primary flex items-center space-x-2 ${
+                                showAddForm ? 'bg-gray-500 hover:bg-gray-600' : ''
+                            }`}
+                        >
+                            <FaPlus size={14} />
+                            <span>{showAddForm ? 'Cancel' : 'Add Member'}</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            {/* Delete Confirmation Modal */}
+            <DeleteConfirmModal
+                isOpen={showDeleteModal}
+                onClose={closeDeleteModal}
+                onConfirm={handleRemoveMember}
+                memberEmail={memberToDelete?.member}
+                isDeleting={deletingMember !== null}
+            />
+        </>
+    );
+};
+
+export default TeamCard;

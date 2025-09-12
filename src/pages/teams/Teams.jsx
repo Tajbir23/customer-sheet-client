@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import handleApi from '../../libs/handleAPi';
-import { FaExclamationCircle, FaSearch } from 'react-icons/fa';
+import { FaExclamationCircle, FaSearch, FaTimes } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 
 // Import our new components
@@ -79,69 +79,9 @@ const Teams = () => {
     }
   };
 
-  // Handle member removal
-  const handleRemoveMember = async (teamId, member, memberIndex) => {
-    try {
-      const response = await handleApi(`/gptTeam/team/${teamId}/member`, 'DELETE', {
-        member: member
-      });
-      
-      if (response.success) {
-        setData(prevData => {
-          if (!Array.isArray(prevData)) return [];
-          const updatedData = prevData.map(team => {
-            if (team._id === teamId) {
-              const updatedMembers = team.members.filter((_, index) => index !== memberIndex);
-              return { ...team, members: updatedMembers };
-            }
-            return team;
-          });
-          return updatedData;
-        });
-        toast.success('Member removed successfully');
-      } else {
-        toast.error(response.message || 'Failed to remove member');
-      }
-    } catch (err) {
-      toast.error('An error occurred while removing member');
-      console.error('Error removing member:', err);
-      throw err;
-    }
-  };
-
-  // Handle adding multiple members
-  const handleAddMembers = async (teamId, emailArray, reference) => {
-    try {
-      const response = await handleApi(`/gptTeam/team/${teamId}/members`, 'POST', {
-        members: emailArray,
-        reference
-      });
-      
-      if (response.success) {
-        setData(prevData => {
-          if (!Array.isArray(prevData)) return [];
-          const updatedData = prevData.map(team => {
-            if (team._id === teamId) {
-              const existingMembers = team.members || [];
-              const newMembers = emailArray.filter(email => !existingMembers.includes(email));
-              return { ...team, members: [...existingMembers, ...newMembers] };
-            }
-            return team;
-          });
-          return updatedData;
-        });
-        
-        const addedCount = emailArray.length;
-        toast.success(`${addedCount} member${addedCount === 1 ? '' : 's'} added successfully`);
-      } else {
-        toast.error(response.message || 'Failed to add members');
-        throw new Error(response.message || 'Failed to add members');
-      }
-    } catch (err) {
-      toast.error('An error occurred while adding members');
-      console.error('Error adding members:', err);
-      throw err;
-    }
+  // Handle team update (refresh data)
+  const handleTeamUpdate = () => {
+    fetchData(debouncedSearch);
   };
 
   // Debounce search
@@ -195,76 +135,118 @@ const Teams = () => {
       <TeamGrid 
         teams={sortedTeams}
         onToggleActive={handleToggleActive}
-        onRemoveMember={handleRemoveMember}
-        onAddMembers={handleAddMembers}
+        onTeamUpdate={handleTeamUpdate}
         togglingTeam={togglingTeam}
       />
     );
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        
-        {/* Search Section */}
-        <SearchBar 
-          search={search}
-          onSearchChange={handleSearchChange}
-          isLoading={isLoading}
-        />
+    <div className="space-y-8">
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-gray-800 mb-2">Teams Management</h1>
+        <p className="text-gray-600">Manage your GPT teams and members</p>
+      </div>
 
-        {/* Stats Section */}
-        {!isLoading && !error && (
-          <TeamStats teams={data} />
-        )}
+      {/* Search Section */}
+      <SearchBar 
+        search={search}
+        onSearchChange={handleSearchChange}
+        isLoading={isLoading}
+      />
 
-        {/* Results Info */}
-        {!isLoading && !error && sortedTeams.length > 0 && (
-          <div className="mb-8">
-            <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
-              <div className="flex flex-col sm:flex-row items-center justify-between">
-                <div className="text-center sm:text-left mb-4 sm:mb-0">
-                  <h2 className="text-xl font-bold text-gray-900">
-                    {search ? 'Search Results' : 'All Teams'}
-                  </h2>
-                  <p className="text-gray-600 mt-1">
-                    {search ? (
-                      <>Showing <span className="font-semibold">{sortedTeams.length}</span> teams for "<span className="font-semibold">{search}</span>"</>
-                    ) : (
-                      <>Managing <span className="font-semibold">{sortedTeams.length}</span> teams total</>
-                    )}
-                  </p>
+      {/* Stats Section */}
+      {!isLoading && !error && (
+        <TeamStats teams={data} />
+      )}
+
+      {/* Results Info */}
+      {!isLoading && !error && sortedTeams.length > 0 && (
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+          <div className="bg-white px-6 py-4 border-b border-gray-200">
+            <div className="flex flex-col sm:flex-row items-center justify-between">
+              <div className="text-center sm:text-left mb-4 sm:mb-0">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-blue rounded-lg flex items-center justify-center shadow-sm">
+                    <FaSearch className="text-white text-sm" />
+                  </div>
+                  <div>
+                    <h2 className="text-lg font-semibold text-gray-800">
+                      {search ? 'Search Results' : 'All Teams'}
+                    </h2>
+                    <p className="text-sm text-gray-600">
+                      {search ? (
+                        <>Found <span className="font-semibold text-blue">{sortedTeams.length}</span> teams matching "<span className="font-semibold text-blue">{search}</span>"</>
+                      ) : (
+                        <>Currently managing <span className="font-semibold text-blue">{sortedTeams.length}</span> teams</>
+                      )}
+                    </p>
+                  </div>
                 </div>
+              </div>
+              
+              <div className="flex items-center space-x-3">
                 {search && (
                   <button
                     onClick={() => setSearch('')}
-                    className="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl hover:from-blue-600 hover:to-purple-600 transition-all duration-200 font-medium shadow-lg"
+                    className="inline-flex items-center px-4 py-2 text-sm font-medium text-red bg-white rounded-lg border border-red-200 hover:bg-red-50 transition-colors duration-200 shadow-sm"
                   >
+                    <FaTimes className="mr-2 text-xs" />
                     Clear Search
                   </button>
                 )}
+                
+                <div className="hidden sm:flex items-center space-x-2 text-sm text-gray-500">
+                  <div className="w-2 h-2 bg-green rounded-full animate-pulse"></div>
+                  <span>Live results</span>
+                </div>
               </div>
             </div>
           </div>
-        )}
-
-        {/* Content Area */}
-        <div className="relative">
-          {renderContent()}
-        </div>
-
-        {/* Footer */}
-        {!isLoading && !error && sortedTeams.length > 0 && (
-          <div className="mt-12 text-center">
-            <div className="inline-flex items-center gap-2 bg-white rounded-full px-6 py-3 shadow-md border border-gray-100">
-              <div className="h-2 w-2 bg-blue-500 rounded-full animate-pulse"></div>
-              <span className="text-sm text-gray-600 font-medium">
-                Last updated: {new Date().toLocaleString()}
-              </span>
+          
+          {/* Quick Stats Bar */}
+          <div className="px-6 py-3 bg-white border-b border-gray-200">
+            <div className="flex items-center justify-center space-x-8 text-sm">
+              <div className="flex items-center space-x-2">
+                <div className="w-3 h-3 bg-green rounded-full"></div>
+                <span className="text-gray-600">
+                  <span className="font-medium text-green">{sortedTeams.filter(t => t.isActive).length}</span> Active
+                </span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <div className="w-3 h-3 bg-red rounded-full"></div>
+                <span className="text-gray-600">
+                  <span className="font-medium text-red">{sortedTeams.filter(t => !t.isActive).length}</span> Inactive
+                </span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <div className="w-3 h-3 bg-blue rounded-full"></div>
+                <span className="text-gray-600">
+                  <span className="font-medium text-blue">{sortedTeams.reduce((acc, team) => acc + (team.members?.length || 0), 0)}</span> Total Members
+                </span>
+              </div>
             </div>
           </div>
-        )}
+        </div>
+      )}
+
+      {/* Content Area */}
+      <div className="relative">
+        {renderContent()}
       </div>
+
+      {/* Footer */}
+      {!isLoading && !error && sortedTeams.length > 0 && (
+        <div className="text-center">
+          <div className="inline-flex items-center gap-2 bg-white rounded-full px-4 py-2 shadow-sm border border-gray-200">
+            <div className="h-2 w-2 bg-blue rounded-full animate-pulse"></div>
+            <span className="text-sm text-gray-500">
+              Last updated: {new Date().toLocaleString()}
+            </span>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

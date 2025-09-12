@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import handleApi from '../../libs/handleAPi';
 import { useNavigate } from 'react-router-dom';
+import { FaUser, FaLock, FaSignInAlt } from 'react-icons/fa';
 
 const Login = () => {
   const navigate = useNavigate()
@@ -8,6 +9,7 @@ const Login = () => {
     username: '',
     password: ''
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -19,6 +21,8 @@ const Login = () => {
 
   const handleSubmit = async(e) => {
     e.preventDefault();
+    setIsLoading(true);
+    
     try {
       const response = await handleApi("/login", "POST", formData, navigate)
       console.log('Login response:', response)
@@ -34,56 +38,91 @@ const Login = () => {
       }
     } catch (error) {
       console.error('Login error:', error)
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-lg shadow-lg">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Sign in to your account
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-6">
+      <div className="card w-full max-w-md">
+        <div className="card-header text-center">
+          <div className="w-16 h-16 bg-blue text-white rounded-lg flex items-center justify-center mx-auto mb-4">
+            <FaUser className="text-2xl" />
+          </div>
+          <h2 className="text-2xl font-semibold text-gray-700">
+            Welcome Back
           </h2>
+          <p className="text-gray-500 mt-2">
+            Sign in to your account
+          </p>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="rounded-md shadow-sm -space-y-px">
-            <div>
-              <label htmlFor="username" className="sr-only">Username</label>
+
+        <div className="card-body">
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="form-group">
+              <label htmlFor="username" className="form-label">
+                <FaUser className="inline mr-2" />
+                Username
+              </label>
               <input
                 id="username"
                 name="username"
                 type="text"
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Username"
+                className="form-input"
+                placeholder="Enter your username"
                 value={formData.username}
                 onChange={handleChange}
+                disabled={isLoading}
               />
             </div>
-            <div>
-              <label htmlFor="password" className="sr-only">Password</label>
+
+            <div className="form-group">
+              <label htmlFor="password" className="form-label">
+                <FaLock className="inline mr-2" />
+                Password
+              </label>
               <input
                 id="password"
                 name="password"
                 type="password"
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Password"
+                className="form-input"
+                placeholder="Enter your password"
                 value={formData.password}
                 onChange={handleChange}
+                disabled={isLoading}
               />
             </div>
-          </div>
 
-          <div>
             <button
               type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              disabled={isLoading}
+              className={`btn btn-primary w-full py-3 ${
+                isLoading ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
             >
-              Sign in
+              {isLoading ? (
+                <>
+                  <div className="animate-spin inline-block w-4 h-4 border-2 border-white border-t-transparent rounded-full mr-2"></div>
+                  Signing in...
+                </>
+              ) : (
+                <>
+                  <FaSignInAlt className="mr-2" />
+                  Sign In
+                </>
+              )}
             </button>
-          </div>
-        </form>
+          </form>
+        </div>
+
+        <div className="card-footer text-center">
+          <p className="text-xs text-gray-500">
+            © 2024 Customer Sheet. All rights reserved.
+          </p>
+        </div>
       </div>
     </div>
   );

@@ -1,9 +1,12 @@
 import React, { useState } from 'react'
-import { FaTimes, FaEdit, FaUser, FaEnvelope, FaCalendarAlt, FaDollarSign, FaCreditCard, FaStickyNote, FaBell, FaCheckCircle, FaClock, FaExclamationTriangle } from 'react-icons/fa';
+import { FaTimes, FaEdit, FaUser, FaEnvelope, FaCalendarAlt, FaDollarSign, FaCreditCard, FaStickyNote, FaBell, FaCheckCircle, FaClock, FaExclamationTriangle, FaFilePdf } from 'react-icons/fa';
+import { toast } from 'react-toastify';
+import jsPDF from 'jspdf';
 import EditCustomerModal from './EditCustomerModal';
 
 const CustomerDetailsModal = ({ customer, onClose, formatDate, onUpdate }) => {
     const [showEditModal, setShowEditModal] = useState(false);
+    const [isExporting, setIsExporting] = useState(false);
 
     if (!customer) return null;
 
@@ -41,6 +44,163 @@ const CustomerDetailsModal = ({ customer, onClose, formatDate, onUpdate }) => {
         }
     };
 
+    const handleExportPDF = () => {
+        setIsExporting(true);
+        
+        try {
+            const doc = new jsPDF('p', 'mm', 'a4'); // Portrait orientation
+            
+            // Colors
+            const primaryColor = [59, 130, 246]; // Blue
+            const darkColor = [31, 41, 55]; // Dark gray
+            const lightColor = [107, 114, 128]; // Light gray
+            
+            // Header with customer name
+            doc.setFillColor(...primaryColor);
+            doc.rect(0, 0, 210, 40, 'F');
+            
+            doc.setTextColor(255, 255, 255);
+            doc.setFontSize(24);
+            doc.setFont('helvetica', 'bold');
+            doc.text('Customer Report', 20, 25);
+            
+            doc.setFontSize(12);
+            doc.setFont('helvetica', 'normal');
+            doc.text(customer.customerName || 'Unknown Customer', 20, 33);
+            
+            // Generation date
+            doc.setTextColor(...lightColor);
+            doc.setFontSize(10);
+            const now = new Date();
+            doc.text(`Generated on ${now.toLocaleDateString()} at ${now.toLocaleTimeString()}`, 130, 33);
+            
+            let currentY = 60;
+            
+            // Customer Basic Info Section
+            doc.setTextColor(...darkColor);
+            doc.setFontSize(16);
+            doc.setFont('helvetica', 'bold');
+            doc.text('Personal Information', 20, currentY);
+            currentY += 10;
+            
+            doc.setFontSize(11);
+            doc.setFont('helvetica', 'normal');
+            
+            // Personal details
+            const personalData = [
+                ['Full Name:', customer.customerName || 'Not provided'],
+                ['Email Address:', customer.email || 'Not provided'],
+                ['Contact ID:', customer.waOrFbId || 'Not provided'],
+                ['Order From:', customer.orderFrom || 'Not provided']
+            ];
+            
+            personalData.forEach(([label, value]) => {
+                doc.setFont('helvetica', 'bold');
+                doc.text(label, 25, currentY);
+                doc.setFont('helvetica', 'normal');
+                doc.text(value, 70, currentY);
+                currentY += 8;
+            });
+            
+            currentY += 10;
+            
+            // Subscription Details Section
+            doc.setFontSize(16);
+            doc.setFont('helvetica', 'bold');
+            doc.text('Subscription Details', 20, currentY);
+            currentY += 10;
+            
+            doc.setFontSize(11);
+            doc.setFont('helvetica', 'normal');
+            
+            const subscriptionData = [
+                ['GPT Account:', customer.gptAccount || 'Not assigned'],
+                ['Order Date:', formatDate(customer.orderDate) || 'Not provided'],
+                ['Subscription End:', formatDate(customer.subscriptionEnd) || 'Not provided'],
+                ['Status:', new Date(customer.subscriptionEnd) < new Date() ? 'Expired' : 'Active']
+            ];
+            
+            subscriptionData.forEach(([label, value]) => {
+                doc.setFont('helvetica', 'bold');
+                doc.text(label, 25, currentY);
+                doc.setFont('helvetica', 'normal');
+                doc.text(value, 70, currentY);
+                currentY += 8;
+            });
+            
+            currentY += 10;
+            
+            // Payment Information Section
+            doc.setFontSize(16);
+            doc.setFont('helvetica', 'bold');
+            doc.text('Payment Information', 20, currentY);
+            currentY += 10;
+            
+            doc.setFontSize(11);
+            doc.setFont('helvetica', 'normal');
+            
+            const paymentData = [
+                ['Payment Status:', customer.paymentStatus || 'Not specified'],
+                ['Payment Method:', customer.paymentMethod || 'Not specified'],
+                ['Amount Paid:', customer.paidAmount ? `$${customer.paidAmount}` : 'Not specified'],
+                ['Payment Date:', customer.paymentDate ? formatDate(customer.paymentDate) : 'Not specified']
+            ];
+            
+            paymentData.forEach(([label, value]) => {
+                doc.setFont('helvetica', 'bold');
+                doc.text(label, 25, currentY);
+                doc.setFont('helvetica', 'normal');
+                doc.text(value, 70, currentY);
+                currentY += 8;
+            });
+            
+            currentY += 20;
+            
+            // Customer Summary Box
+            doc.setDrawColor(...primaryColor);
+            doc.setLineWidth(0.5);
+            doc.rect(20, currentY, 170, 30);
+            
+            doc.setFillColor(248, 250, 252);
+            doc.rect(20, currentY, 170, 30, 'F');
+            
+            doc.setTextColor(...primaryColor);
+            doc.setFontSize(14);
+            doc.setFont('helvetica', 'bold');
+            doc.text('Customer Summary', 25, currentY + 8);
+            
+            doc.setTextColor(...darkColor);
+            doc.setFontSize(10);
+            doc.setFont('helvetica', 'normal');
+            
+            const summaryText = `Customer ${customer.customerName} is a ${customer.orderFrom || 'unknown'} customer with ${customer.paymentStatus || 'unknown'} payment status. ` +
+                               `Subscription ${new Date(customer.subscriptionEnd) < new Date() ? 'has expired' : 'is active'} ` +
+                               `${customer.gptAccount ? `and assigned to GPT account: ${customer.gptAccount}` : 'with no GPT account assigned'}.`;
+            
+            const splitText = doc.splitTextToSize(summaryText, 160);
+            doc.text(splitText, 25, currentY + 18);
+            
+            currentY += 50;
+            
+            // Footer
+            doc.setFontSize(8);
+            doc.setTextColor(...lightColor);
+            doc.text(`Customer ID: ${customer._id}`, 20, doc.internal.pageSize.height - 15);
+            doc.text(`Report generated on ${now.toLocaleDateString()}`, 130, doc.internal.pageSize.height - 15);
+            
+            // Save the PDF
+            const filename = `customer-${customer.customerName?.replace(/[^a-zA-Z0-9]/g, '-') || 'unknown'}-${now.toISOString().split('T')[0]}.pdf`;
+            doc.save(filename);
+            
+            toast.success('Customer details exported to PDF successfully!');
+        } catch (error) {
+            console.error('Error exporting PDF:', error);
+            toast.error('Failed to export PDF. Please try again.');
+        } finally {
+            setIsExporting(false);
+        }
+    };
+
     const statusConfig = getStatusConfig(customer.paymentStatus);
     const StatusIcon = statusConfig.icon;
 
@@ -67,6 +227,18 @@ const CustomerDetailsModal = ({ customer, onClose, formatDate, onUpdate }) => {
                                 </div>
                             </div>
                             <div className="flex items-center space-x-3">
+                                <button
+                                    onClick={handleExportPDF}
+                                    disabled={isExporting}
+                                    className="group p-3 bg-white/20 hover:bg-white/30 rounded-xl transition-all duration-200 backdrop-blur-sm disabled:opacity-50 disabled:cursor-not-allowed"
+                                    title="Export to PDF"
+                                >
+                                    {isExporting ? (
+                                        <div className="w-5 h-5 animate-spin border-2 border-white border-t-transparent rounded-full"></div>
+                                    ) : (
+                                        <FaFilePdf className="w-5 h-5 text-white group-hover:scale-110 transition-transform" />
+                                    )}
+                                </button>
                                 <button
                                     onClick={() => setShowEditModal(true)}
                                     className="group p-3 bg-white/20 hover:bg-white/30 rounded-xl transition-all duration-200 backdrop-blur-sm"
@@ -230,6 +402,23 @@ const CustomerDetailsModal = ({ customer, onClose, formatDate, onUpdate }) => {
                             Customer ID: {customer._id}
                         </div>
                         <div className="flex items-center space-x-3">
+                            <button
+                                onClick={handleExportPDF}
+                                disabled={isExporting}
+                                className="flex items-center gap-2 px-6 py-3 bg-red text-white font-medium rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-red-600"
+                            >
+                                {isExporting ? (
+                                    <>
+                                        <div className="w-4 h-4 animate-spin border-2 border-white border-t-transparent rounded-full"></div>
+                                        <span>Exporting...</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <FaFilePdf className="w-4 h-4" />
+                                        Export PDF
+                                    </>
+                                )}
+                            </button>
                             <button
                                 onClick={() => setShowEditModal(true)}
                                 className="flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl transition-all duration-200 transform hover:-translate-y-0.5 shadow-lg hover:shadow-xl"

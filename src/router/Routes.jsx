@@ -10,6 +10,7 @@ import GptAccounts from "../pages/gptAccounts/gptAccounts";
 import DropboxPolicy from "../pages/dropboxPolicy/page";
 import Asocks from "../pages/asocks/Asocks";
 import MemberChecklist from "../pages/memberCheckList/MemberChecklist";
+import RemovedMembers from "../pages/removedMembers/removedMembers";
 
 const Routes = createBrowserRouter([
     {
@@ -39,6 +40,10 @@ const Routes = createBrowserRouter([
             {
                 path: "/member-check-list",
                 element: <MemberChecklist />
+            },
+            {
+                path: "/removed-members",
+                element: <RemovedMembers />
             }
         ],
     },

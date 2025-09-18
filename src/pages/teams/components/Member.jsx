@@ -52,8 +52,8 @@ const Member = ({ index, team, member, onRemoveMember }) => {
             <div className={`
                 relative p-4 rounded-lg border transition-all duration-200 group hover:shadow-md
                 ${team?.isActive 
-                    ? 'bg-white dark:bg-gray-700/50 border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700' 
-                    : 'bg-red-50/50 dark:bg-red-900/10 border-red-200 dark:border-red-800/30 hover:bg-red-50 dark:hover:bg-red-900/20'
+                    ? 'bg-white border-gray-200 hover:bg-blue-50 hover:border-blue-200' 
+                    : 'bg-white/95 border-white/50 hover:bg-white shadow-sm backdrop-blur-sm'
                 }
             `}>
                 <div className="flex items-center gap-3">
@@ -75,18 +75,12 @@ const Member = ({ index, team, member, onRemoveMember }) => {
                     {/* Member Info */}
                     <div className="flex-grow min-w-0">
                         <div className="flex items-center gap-2 mb-1">
-                            <FaEnvelope className={`w-3 h-3 flex-shrink-0 ${
+                            <FaEnvelope className={`w-4 h-4 flex-shrink-0 ${
                                 team?.isActive 
-                                    ? 'text-gray-400 dark:text-gray-500' 
-                                    : 'text-red-400 dark:text-red-500'
+                                    ? 'text-gray-400' 
+                                    : 'text-gray-600'
                             }`} />
-                            <span className={`
-                                font-medium text-sm truncate
-                                ${team?.isActive
-                                    ? 'text-gray-900 dark:text-gray-100'
-                                    : 'text-red-900 dark:text-red-100'
-                                }
-                            `}>
+                            <span className="text-sm truncate font-semibold text-gray-900">
                                 {member}
                             </span>
                         </div>
@@ -94,13 +88,13 @@ const Member = ({ index, team, member, onRemoveMember }) => {
                         {/* Status Badge */}
                         <div className="flex items-center gap-2">
                             <span className={`
-                                inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium
+                                inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold
                                 ${team?.isActive
-                                    ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
-                                    : 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300'
+                                    ? 'bg-green-100 text-green-800'
+                                    : 'bg-white text-red-700 shadow-sm'
                                 }
                             `}>
-                                <div className={`w-1.5 h-1.5 rounded-full ${
+                                <div className={`w-2 h-2 rounded-full ${
                                     team?.isActive ? 'bg-green-500' : 'bg-red-500'
                                 }`} />
                                 {team?.isActive ? 'Active' : 'Inactive'}

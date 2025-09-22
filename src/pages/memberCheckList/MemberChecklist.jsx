@@ -18,6 +18,7 @@ const MemberChecklist = () => {
         try {
             setLoading(true)
             const response = await handleApi(`/gpt-account/member-checklist?page=${page}&email=${searchEmail}`)
+            console.log(response)
             if (response.memberChecklist) {
                 setData(response.memberChecklist)
                 setTotalPages(response.pagination?.totalPages || 1)

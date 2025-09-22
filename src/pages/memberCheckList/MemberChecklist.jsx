@@ -10,6 +10,8 @@ const MemberChecklist = () => {
     const [currentPage, setCurrentPage] = useState(1)
     const [totalPages, setTotalPages] = useState(1)
     const [totalItems, setTotalItems] = useState(0)
+    const [totalGptAccounts, setTotalGptAccounts] = useState(0)
+    const [totalMembers, setTotalMembers] = useState(0)
     const [isSearching, setIsSearching] = useState(false)
 
     const fetchData = useCallback(async (searchEmail = '', page = 1) => {
@@ -21,6 +23,8 @@ const MemberChecklist = () => {
                 setTotalPages(response.pagination?.totalPages || 1)
                 setTotalItems(response.pagination?.totalItems || 0)
                 setCurrentPage(response.pagination?.currentPage || page)
+                setTotalGptAccounts(response.pagination?.totalGptAccounts || 0)
+                setTotalMembers(response.pagination?.totalMembers || 0)
             }
         } catch (error) {
             console.error('Error fetching data:', error)
@@ -62,8 +66,8 @@ const MemberChecklist = () => {
     }
 
     // Calculate stats
-    const totalMembers = data.reduce((sum, account) => sum + account.members.length, 0)
-    const activeAccounts = data.filter(account => account.members.length > 0).length
+    
+    const activeAccounts = totalGptAccounts
 
     // Pagination Component
     const Pagination = ({ currentPage, totalPages, onPageChange }) => {
@@ -195,7 +199,7 @@ const MemberChecklist = () => {
                                     <FaChartBar className="h-4 w-4 text-blue" />
                                     <div>
                                         <p className="text-xs text-gray-600">Total Accounts</p>
-                                        <p className="text-lg font-semibold text-gray-900">{data.length}</p>
+                                        <p className="text-lg font-semibold text-gray-900">{totalGptAccounts}</p>
                                     </div>
                                 </div>
                             </div>

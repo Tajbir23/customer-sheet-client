@@ -21,6 +21,8 @@ const Teams = () => {
   const [currentPage, setCurrentPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const [totalTeams, setTotalTeams] = useState(0)
+  const [admins, setAdmins] = useState([])
+  const [filter, setFilter] = useState('')
   // Sort teams with inactive first
   const sortedTeams = useMemo(() => {
     if (!Array.isArray(data)) return [];
@@ -32,12 +34,20 @@ const Teams = () => {
     });
   }, [data]);
 
+
+  const fetchAdmins = useCallback(async () => {
+    const response = await handleApi('/references', 'GET')
+    if (response.success) {
+      setAdmins(response.data || [])
+    }
+  }, [])
+
   // Fetch data with proper error handling
   const fetchData = useCallback(async (searchTerm = '', pageNum = 1) => {
     try {
       setIsLoading(true);
       setError(null);
-      const response = await handleApi(`/gptTeam/team?search=${searchTerm}&page=${pageNum}`, 'GET');
+      const response = await handleApi(`/gptTeam/team?search=${searchTerm}&page=${pageNum}&admin=${filter}`, 'GET');
       
       if (response.success) {
         setData(response.data || []);
@@ -55,7 +65,7 @@ const Teams = () => {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [filter]);
 
   // Handle page change
   const handlePageChange = (newPage) => {
@@ -66,6 +76,10 @@ const Teams = () => {
     }
   };
 
+
+  useEffect(() => {
+    fetchAdmins()
+  }, [])
   // Pagination Component
   const Pagination = ({ currentPage, totalPages, onPageChange }) => {
     if (totalPages <= 1) return null;
@@ -267,18 +281,38 @@ const Teams = () => {
   useEffect(() => {
     let isSubscribed = true;
 
-    const getData = async () => {
-      if (isSubscribed) {
-        await fetchData(debouncedSearch, currentPage);
+    const fetchTeams = async () => {
+      try {
+        setIsLoading(true);
+        const response = await handleApi(`/gptTeam/team?search=${debouncedSearch}&page=${currentPage}&admin=${filter}`, 'GET');
+        
+        if (isSubscribed) {
+          if (response.success) {
+            setData(response.data || []);
+            setTotalTeams(response.pagination?.totalTeams || 0);
+            setTotalPages(response.pagination?.totalPages || 1);
+          } else {
+            setError('Failed to fetch teams');
+          }
+        }
+      } catch (error) {
+        if (isSubscribed) {
+          setError(error.message);
+          setData([]);
+        }
+      } finally {
+        if (isSubscribed) {
+          setIsLoading(false);
+        }
       }
     };
 
-    getData();
+    fetchTeams();
 
     return () => {
       isSubscribed = false;
     };
-  }, [debouncedSearch, currentPage, fetchData]);
+  }, [debouncedSearch, currentPage, filter]); // Added filter as dependency
 
   const handleSearchChange = (e) => {
     setSearch(e.target.value);
@@ -322,6 +356,24 @@ const Teams = () => {
           onSearchChange={handleSearchChange}
           isLoading={isLoading}
         />
+
+        {/* filter */}
+        <div className="relative inline-block">
+          <select 
+            onChange={(e) => setFilter(e.target.value)}
+            className="appearance-none bg-white border border-gray-200 text-gray-700 py-2.5 pl-4 pr-10 rounded-lg font-medium hover:border-blue-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200"
+          >
+            <option value="">Filter by Admin</option>
+            {admins.map((admin) => (
+              <option key={admin._id} value={admin._id}>{admin.username}</option>
+            ))}
+          </select>
+          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+            <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+              <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+            </svg>
+          </div>
+        </div>
 
         {/* Stats Section */}
         {!isLoading && !error && (

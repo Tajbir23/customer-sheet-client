@@ -1,21 +1,13 @@
-import React, { useEffect, useState } from 'react'
-import handleApi from '../../../libs/handleAPi'
+import React, { useState } from 'react'
 import { toast } from 'react-toastify'
 import { FaUser, FaShoppingCart, FaCreditCard, FaStickyNote, FaTimes, FaCheck, FaSpinner } from 'react-icons/fa'
+import handleApi from '../../../libs/handleAPi'
+import removeDataFromCheckList from './removeDataFromChecklist'
 
-const AddCustomerForm = ({ setIsOpen, className }) => {
-  const [references, setReferences] = useState([])
+const AddMember = ({member, gptAccount, setIsOpen, className, reference, memberData, setData }) => {
+  console.log(memberData)
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  useEffect(() => {
-    const fetchReferences = async () => {
-      const response = await handleApi("/references", "GET")
-      if (response?.success) {
-        setReferences(response.data)
-      }
-    }
-    fetchReferences()
-  }, [])
 
   const calculateSubscriptionEndDate = (orderDate, durationInDays) => {
     const date = new Date(orderDate);
@@ -40,7 +32,7 @@ const AddCustomerForm = ({ setIsOpen, className }) => {
       note: formData.note.value,
       reminderDate: formData.reminderDate.value,
       reminderNote: formData.reminderNote.value,
-      reference: formData.reference.value,
+      reference: reference,
       paidAmount: formData.paidAmount.value,
       paymentMethod: formData.paymentMethod.value,
       paymentDate: formData.paymentDate.value
@@ -52,6 +44,7 @@ const AddCustomerForm = ({ setIsOpen, className }) => {
       if (response?.success) {
         e.target.reset()
         toast.success("Customer added successfully")
+        await removeDataFromCheckList(gptAccount, member.email, memberData, setData)
         setIsOpen(false)
       }
     } catch (error) {
@@ -111,11 +104,11 @@ const AddCustomerForm = ({ setIsOpen, className }) => {
               <div className="space-y-2">
                 <label className="block text-sm font-medium text-gray-700">Email Address *</label>
                 <input
+                  value={member?.email}
                   type="email"
                   name="email"
-                  required
+                  disabled
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue focus:ring-opacity-20 focus:border-blue transition-colors"
-                  placeholder="customer@example.com"
                 />
               </div>
 
@@ -125,10 +118,8 @@ const AddCustomerForm = ({ setIsOpen, className }) => {
                   name="reference"
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue focus:ring-opacity-20 focus:border-blue transition-colors"
                 >
-                  <option value="">Select reference</option>
-                  {references.map((reference) => (
                     <option key={reference._id} value={reference._id}>{reference.username}</option>
-                  ))}
+                  
                 </select>
               </div>
             </div>
@@ -185,8 +176,10 @@ const AddCustomerForm = ({ setIsOpen, className }) => {
                 <input
                   type="text"
                   name="gptAccount"
+                  value={gptAccount}
+                  disabled
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue focus:ring-opacity-20 focus:border-blue transition-colors"
-                  placeholder="GPT account identifier"
+                  
                 />
               </div>
 
@@ -348,4 +341,4 @@ const AddCustomerForm = ({ setIsOpen, className }) => {
   )
 }   
 
-export default AddCustomerForm
+export default AddMember

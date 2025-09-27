@@ -13,6 +13,7 @@ const MemberChecklist = () => {
     const [totalGptAccounts, setTotalGptAccounts] = useState(0)
     const [totalMembers, setTotalMembers] = useState(0)
     const [isSearching, setIsSearching] = useState(false)
+    console.log(data)
 
     const fetchData = useCallback(async (searchEmail = '', page = 1) => {
         try {
@@ -419,7 +420,7 @@ const MemberChecklist = () => {
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                             {data.map((account) => (
                                 <div key={account._id} className="fade-in">
-                                    <GptAccountCard accountData={account} />
+                                    <GptAccountCard accountData={account} data={data} setData={setData} />
                                 </div>
                             ))}
                         </div>

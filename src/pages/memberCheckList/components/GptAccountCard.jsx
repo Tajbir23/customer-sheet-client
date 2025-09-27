@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import MemberItem from './MemberItem'
 import { FaEnvelope, FaUsers, FaClock, FaCalendarAlt, FaCopy, FaCheck } from 'react-icons/fa'
 
-const GptAccountCard = ({ accountData }) => {
+const GptAccountCard = ({ accountData, data, setData }) => {
   const { gptAccount, members, createdAt } = accountData
   const [copied, setCopied] = useState(false)
   
@@ -140,7 +140,7 @@ const GptAccountCard = ({ accountData }) => {
                     animationDelay: `${index * 50}ms`
                   }}
                 >
-                  <MemberItem member={member} />
+                  <MemberItem member={member} gptAccount={gptAccount} data={data} setData={setData} />
                 </div>
               ))
             )}

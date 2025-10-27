@@ -11,6 +11,7 @@ import DropboxPolicy from "../pages/dropboxPolicy/page";
 import Asocks from "../pages/asocks/Asocks";
 import MemberChecklist from "../pages/memberCheckList/MemberChecklist";
 import RemovedMembers from "../pages/removedMembers/removedMembers";
+import QrCode from "../pages/qrCode/QrCode";
 
 const Routes = createBrowserRouter([
     {
@@ -44,6 +45,10 @@ const Routes = createBrowserRouter([
             {
                 path: "/removed-members",
                 element: <RemovedMembers />
+            },
+            {
+                path: "/qr-code",
+                element: <QrCode />
             }
         ],
     },

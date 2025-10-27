@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { FaHome, FaUsers, FaRobot, FaPaypal, FaTeamspeak, FaList, FaTrash } from 'react-icons/fa'
+import { FaHome, FaUsers, FaRobot, FaPaypal, FaTeamspeak, FaList, FaTrash, FaQrcode } from 'react-icons/fa'
 import { BiWorld } from 'react-icons/bi'
 import { HiX } from 'react-icons/hi'
 import { HiMenuAlt3 } from 'react-icons/hi'
@@ -15,7 +15,8 @@ const Navbar = ({ isOpen, setIsOpen }) => {
     { name: 'ChatGPT accounts', path: '/chatgpt-accounts', icon: <FaRobot size={20} /> },
     { name: 'Member Check list', path: '/member-check-list', icon: <FaList size={20} /> },
     { name: 'Removed Members', path: '/removed-members', icon: <FaTrash size={20} /> },
-    { name: 'Asocks', path: '/asocks', icon: <BiWorld size={20} /> }
+    { name: 'Asocks', path: '/asocks', icon: <BiWorld size={20} /> },
+    { name: 'QR Code', path: '/qr-code', icon: <FaQrcode size={20} /> }
   ]
 
   return (

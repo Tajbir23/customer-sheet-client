@@ -36,9 +36,8 @@ const UpdateMember = ({ member, gptAccount, setIsOpen, memberData, setData }) =>
         setIsSubmitting(true);
         
         try {
-            const response = await handleApi(`/customers/edit/${member?._id}`, 'PUT', formData, navigate);
+            const response = await handleApi(`/customers/edit/${member?.customerId}`, 'PUT', formData, navigate);
             if (response.success) {
-                onUpdate(response.data);
                 toast.success('Customer updated successfully');
                 await removeDataFromCheckList(gptAccount, member.email, memberData, setData)
                 setIsOpen(false)

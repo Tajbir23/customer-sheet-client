@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 const CountdownTimer = ({ endDate }) => {
-    const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
-
-    function calculateTimeLeft() {
+    const calculateTimeLeft = useCallback(() => {
         const difference = new Date(endDate) - new Date();
         let timeLeft = {};
 
@@ -17,7 +15,9 @@ const CountdownTimer = ({ endDate }) => {
         }
 
         return timeLeft;
-    }
+    }, [endDate]);
+
+    const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
 
     useEffect(() => {
         const timer = setInterval(() => {
@@ -25,7 +25,7 @@ const CountdownTimer = ({ endDate }) => {
         }, 1000);
 
         return () => clearInterval(timer);
-    }, [endDate]);
+    }, [calculateTimeLeft]);
 
     const timeBlocks = [
         { label: 'Days', value: timeLeft.days },

@@ -1,20 +1,29 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import handleApi from '../../../libs/handleAPi'
 import { toast } from 'react-toastify'
 import { FaUser, FaShoppingCart, FaCreditCard, FaStickyNote, FaTimes, FaCheck, FaSpinner } from 'react-icons/fa'
 
 const AddCustomerForm = ({ setIsOpen, className }) => {
+  const isMountedRef = useRef(true)
   const [references, setReferences] = useState([])
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   useEffect(() => {
+    let isMounted = true
+    
     const fetchReferences = async () => {
       const response = await handleApi("/references", "GET")
-      if (response?.success) {
+      if (isMounted && response?.success) {
         setReferences(response.data)
       }
     }
+    
     fetchReferences()
+    
+    return () => {
+      isMounted = false
+      isMountedRef.current = false
+    }
   }, [])
 
   const calculateSubscriptionEndDate = (orderDate, durationInDays) => {
@@ -49,16 +58,20 @@ const AddCustomerForm = ({ setIsOpen, className }) => {
     try {
       const response = await handleApi("/customers/add", "POST", data)
       
-      if (response?.success) {
+      if (isMountedRef.current && response?.success) {
         e.target.reset()
         toast.success("Customer added successfully")
         setIsOpen(false)
       }
     } catch (error) {
       console.error("Error adding customer:", error)
-      toast.error("Failed to add customer")
+      if (isMountedRef.current) {
+        toast.error("Failed to add customer")
+      }
     } finally {
-      setIsSubmitting(false)
+      if (isMountedRef.current) {
+        setIsSubmitting(false)
+      }
     }
   }
 

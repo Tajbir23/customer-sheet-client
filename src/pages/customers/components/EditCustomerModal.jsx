@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { FaTimes, FaUser, FaCalendarAlt, FaCreditCard, FaStickyNote, FaCheck, FaSpinner } from 'react-icons/fa';
 import handleApi from '../../../libs/handleAPi';
 import { useNavigate } from 'react-router-dom';
@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 
 const EditCustomerModal = ({ customer, onClose, onUpdate }) => {
     const navigate = useNavigate();
+    const isMountedRef = useRef(true);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [formData, setFormData] = useState({
         subscriptionEnd: customer.subscriptionEnd?.split('T')[0] || '',
@@ -21,6 +22,12 @@ const EditCustomerModal = ({ customer, onClose, onUpdate }) => {
         paymentMethod: customer.paymentMethod || ''
     });
 
+    useEffect(() => {
+        return () => {
+            isMountedRef.current = false;
+        };
+    }, []);
+
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({
@@ -35,16 +42,20 @@ const EditCustomerModal = ({ customer, onClose, onUpdate }) => {
         
         try {
             const response = await handleApi(`/customers/edit/${customer?._id}`, 'PUT', formData, navigate);
-            if (response.success) {
+            if (isMountedRef.current && response.success) {
                 onUpdate(response.data);
                 toast.success('Customer updated successfully');
                 onClose();
             }
         } catch (error) {
             console.error('Error updating customer:', error);
-            toast.error('Failed to update customer');
+            if (isMountedRef.current) {
+                toast.error('Failed to update customer');
+            }
         } finally {
-            setIsSubmitting(false);
+            if (isMountedRef.current) {
+                setIsSubmitting(false);
+            }
         }
     };
 

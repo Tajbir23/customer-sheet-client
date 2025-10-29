@@ -9,13 +9,24 @@ const QrCode = () => {
     const canvasRef = useRef(null)
 
     useEffect(() => {
+        let isMounted = true
+        
         const fetchCode = async () => {
+            if (!isMounted) return
+            
             setLoading(true)
-            const response = await handleApi('/customers/qr-code', 'GET')
-            if(response.success){
-                setCode(response.qrCode.whatsappQr)
+            try {
+                const response = await handleApi('/customers/qr-code', 'GET')
+                if (isMounted && response.success) {
+                    setCode(response.qrCode.whatsappQr)
+                }
+            } catch (error) {
+                console.error('Error fetching QR code:', error)
+            } finally {
+                if (isMounted) {
+                    setLoading(false)
+                }
             }
-            setLoading(false)
         }
         
         fetchCode()
@@ -24,7 +35,10 @@ const QrCode = () => {
             fetchCode()
         }, 7000)
         
-        return () => clearInterval(interval)
+        return () => {
+            isMounted = false
+            clearInterval(interval)
+        }
     }, [])
 
     useEffect(() => {

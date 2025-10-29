@@ -58,11 +58,36 @@ const UploadGptAccount = ({ setIsOpen }) => {
     }, [formData.secret])
 
     useEffect(() => {
-        window.addEventListener('paste', handlePaste)
-        return () => {
-            window.removeEventListener('paste', handlePaste)
+        const handlePasteEvent = async (e) => {
+            const items = e.clipboardData.items
+            const imageItem = Array.from(items).find(item => item.type.indexOf('image') !== -1)
+
+            if (imageItem) {
+                const file = imageItem.getAsFile()
+                setSelectedFile(file)
+                
+                try {
+                    const result = await QrScanner.scanImage(file)
+                    parseOtpAuthUrl(result)
+                } catch (error) {
+                    setError('Failed to scan QR code from image.')
+                    console.log(error)
+                }
+
+                const dataTransfer = new DataTransfer()
+                dataTransfer.items.add(file)
+                const fileInput = document.querySelector('input[type="file"]')
+                if (fileInput) {
+                    fileInput.files = dataTransfer.files
+                }
+            }
         }
-    }, [])
+
+        window.addEventListener('paste', handlePasteEvent)
+        return () => {
+            window.removeEventListener('paste', handlePasteEvent)
+        }
+    }, [formData.secret])
 
     const parseOtpAuthUrl = (url) => {
         try {
@@ -101,30 +126,6 @@ const UploadGptAccount = ({ setIsOpen }) => {
         }
     }
 
-    const handlePaste = async (e) => {
-        const items = e.clipboardData.items
-        const imageItem = Array.from(items).find(item => item.type.indexOf('image') !== -1)
-
-        if (imageItem) {
-            const file = imageItem.getAsFile()
-            setSelectedFile(file)
-            
-            try {
-                const result = await QrScanner.scanImage(file)
-                parseOtpAuthUrl(result)
-            } catch (error) {
-                setError('Failed to scan QR code from image.')
-                console.log(error)
-            }
-
-            const dataTransfer = new DataTransfer()
-            dataTransfer.items.add(file)
-            const fileInput = document.querySelector('input[type="file"]')
-            if (fileInput) {
-                fileInput.files = dataTransfer.files
-            }
-        }
-    }
 
     const handleChange = (e) => {
         const { name, value } = e.target

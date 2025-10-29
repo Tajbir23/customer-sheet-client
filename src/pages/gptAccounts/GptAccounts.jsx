@@ -28,23 +28,39 @@ const GptAccounts = () => {
   }, [search])
 
   useEffect(() => {
+    let isMounted = true
+    
     const fetchData = async () => {
+      if (!isMounted) return
+      
       setIsLoading(true)
       try {
         const response = await handleApi(`/gpt-account/get?search=${debouncedSearch}&page=${page}`, 'GET')
         console.log(response)
-        setData(response.data)
-        setTotalPages(response.pagination?.totalPages || 1)
-        setTotalItems(response.pagination?.totalItems || 0)
-        setCurrentPage(response.pagination?.currentPage || page)
+        
+        if (isMounted) {
+          setData(response.data)
+          setTotalPages(response.pagination?.totalPages || 1)
+          setTotalItems(response.pagination?.totalItems || 0)
+          setCurrentPage(response.pagination?.currentPage || page)
+        }
       } catch (error) {
         console.error(error)
-        setData([])
+        if (isMounted) {
+          setData([])
+        }
       } finally {
-        setIsLoading(false)
+        if (isMounted) {
+          setIsLoading(false)
+        }
       }
     }
+    
     fetchData()
+    
+    return () => {
+      isMounted = false
+    }
   }, [debouncedSearch, page])
 
   // Handle page change

@@ -40,7 +40,18 @@ const MemberChecklist = () => {
     }, [])
 
     useEffect(() => {
-        fetchData()
+        let isMounted = true
+        
+        const loadData = async () => {
+            if (!isMounted) return
+            await fetchData()
+        }
+        
+        loadData()
+        
+        return () => {
+            isMounted = false
+        }
     }, [fetchData])
 
     const handleSearch = useCallback((searchValue) => {

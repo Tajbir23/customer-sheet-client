@@ -22,11 +22,20 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
         fetchReferences()
     }, [])
 
+    useEffect(() => {
+        let timeoutId
+        if (copied) {
+            timeoutId = setTimeout(() => setCopied(false), 2000)
+        }
+        return () => {
+            if (timeoutId) clearTimeout(timeoutId)
+        }
+    }, [copied])
+
     const handleCopyEmail = async () => {
         try {
             await navigator.clipboard.writeText(team.gptAccount)
             setCopied(true)
-            setTimeout(() => setCopied(false), 2000)
         } catch (err) {
             console.error('Failed to copy email:', err)
         }

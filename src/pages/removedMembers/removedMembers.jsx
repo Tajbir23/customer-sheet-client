@@ -38,7 +38,7 @@ const RemovedMembers = () => {
                 // If we get exactly itemsPerPage items, there might be more pages
                 if (response.data.length === itemsPerPage) {
                     // There might be more pages, so we show at least current + 1
-                    setTotalPages(Math.max(page + 1, totalPages));
+                    setTotalPages(prevPages => Math.max(page + 1, prevPages));
                 } else {
                     // This is the last page
                     setTotalPages(page);
@@ -56,7 +56,7 @@ const RemovedMembers = () => {
             setLoading(false);
             setIsSearching(false);
         }
-    }, [navigate, itemsPerPage]);
+    }, [navigate]);
 
     useEffect(() => {
         fetchMembers();

@@ -22,7 +22,7 @@ const QrCode = () => {
         
         const interval = setInterval(() => {
             fetchCode()
-        }, 5000)
+        }, 7000)
         
         return () => clearInterval(interval)
     }, [])
@@ -37,7 +37,7 @@ const QrCode = () => {
                 if (error) console.error('Error generating QR code:', error)
             })
         }
-    }, [code])
+    }, [code, loading])
 
     console.log(code)
 

@@ -17,7 +17,14 @@ const QrCode = () => {
             }
             setLoading(false)
         }
+        
         fetchCode()
+        
+        const interval = setInterval(() => {
+            fetchCode()
+        }, 5000)
+        
+        return () => clearInterval(interval)
     }, [])
 
     useEffect(() => {

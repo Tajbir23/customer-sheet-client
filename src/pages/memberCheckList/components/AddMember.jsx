@@ -218,7 +218,7 @@ const AddMember = ({member, gptAccount, setIsOpen, className, reference, memberD
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue focus:ring-opacity-20 focus:border-blue transition-colors"
                 >
                   <option value="paid">Paid</option>
-                  <option value="pending">Pending</option>
+                  <option selected value="pending">Pending</option>
                 </select>
               </div>
 

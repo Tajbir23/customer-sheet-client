@@ -12,6 +12,8 @@ import Asocks from "../pages/asocks/Asocks";
 import MemberChecklist from "../pages/memberCheckList/MemberChecklist";
 import RemovedMembers from "../pages/removedMembers/removedMembers";
 import QrCode from "../pages/qrCode/QrCode";
+import Invoice from "../pages/invoice/Invoice";
+import SearchInvoice from "../pages/invoice/SearchInvoice";
 
 const Routes = createBrowserRouter([
     {
@@ -59,6 +61,14 @@ const Routes = createBrowserRouter([
     {
         path: "/dropbox-policy",
         element: <DropboxPolicy />
+    },
+    {
+        path: "/search-invoice",
+        element: <SearchInvoice />,
+    },
+    {
+        path: "/invoice/:id",
+        element: <Invoice />
     }
 ])
 

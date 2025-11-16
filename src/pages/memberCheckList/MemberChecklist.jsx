@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react'
 import handleApi from '../../libs/handleAPi'
 import GptAccountCard from './components/GptAccountCard'
 import { FaSearch, FaTimes, FaUsers, FaChartBar, FaFilter, FaDownload, FaCog } from 'react-icons/fa'
+import { Helmet } from 'react-helmet'
 
 const MemberChecklist = () => {
     const [data, setData] = useState([])
@@ -188,6 +189,9 @@ const MemberChecklist = () => {
 
     return (
         <div className="min-h-screen bg-gray-50">
+            <Helmet>
+                <title>Member Checklist</title>
+            </Helmet>
             {/* Page Header */}
             <div className="bg-white shadow-sm">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">

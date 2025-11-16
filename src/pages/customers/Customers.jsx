@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import CustomerTable from './components/CustomerTable'
 import { FaSearch, FaUserPlus, FaCalendarAlt } from 'react-icons/fa'
 import AddCustomerForm from './components/AddCustomerForm'
+import { Helmet } from 'react-helmet'
 
 const Customers = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -21,6 +22,9 @@ const Customers = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+      <Helmet>
+        <title>Customers</title>
+      </Helmet>
       {/* Modal Overlay */}
       {isOpen && (
         <AddCustomerForm 

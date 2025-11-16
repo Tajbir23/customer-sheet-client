@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import ProxyUploadForm from './components/ProxyUploadForm'
 import Proxies from './components/Proxies'
 import { FaPlus } from 'react-icons/fa'
+import { Helmet } from 'react-helmet'
 
 const Asocks = () => {
   const [isUploadFormOpen, setIsUploadFormOpen] = useState(false)
@@ -10,6 +11,9 @@ const Asocks = () => {
 
   return (
     <div className="p-4 sm:p-6 h-screen relative overflow-auto bg-gray-50">
+      <Helmet>
+        <title>Asocks</title>
+      </Helmet>
       {/* Upload Form Modal */}
       {isUploadFormOpen && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">

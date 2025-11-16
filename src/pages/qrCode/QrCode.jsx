@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 import QRCode from 'qrcode'
 import handleApi from '../../libs/handleAPi'
+import { Helmet } from 'react-helmet'
 
 const QrCode = () => {
     const [code, setCode] = useState('')
@@ -57,6 +58,9 @@ const QrCode = () => {
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-4">
+            <Helmet>
+                <title>WhatsApp QR Code</title>
+            </Helmet>
             <div className="bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
                 <h1 className="text-3xl font-bold text-center mb-6 text-gray-800">
                     WhatsApp QR Code

@@ -10,6 +10,7 @@ import MemberCard from './components/MemberCard';
 import LoadingSkeleton from './components/LoadingSkeleton';
 import EmptyState from './components/EmptyState';
 import Pagination from './components/Pagination';
+import { Helmet } from 'react-helmet';
 
 const RemovedMembers = () => {
     const navigate = useNavigate();
@@ -85,6 +86,9 @@ const RemovedMembers = () => {
 
     return (
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <Helmet>
+                <title>Removed Members</title>
+            </Helmet>
             <PageHeader />
             
             <SearchSection

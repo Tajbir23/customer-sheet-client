@@ -3,6 +3,7 @@ import handleApi from '../../libs/handleAPi'
 import { FaCalendarAlt, FaMoneyBillWave, FaShoppingCart, FaUserClock } from 'react-icons/fa';
 import DashboardCharts from './components/DashboardCharts';
 import CountdownTimer from './components/CountdownTimer';
+import { Helmet } from 'react-helmet';
 
 const StatCard = ({ icon: Icon, title, value, subValue, colorClass }) => (
   <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 p-6 hover:border-gray-300 dark:hover:border-gray-600 transition-colors">
@@ -83,6 +84,9 @@ const Home = () => {
   if (isLoading) {
     return (
       <div className="p-6">
+        <Helmet>
+          <title>Loading...</title>
+        </Helmet>
         <div className="animate-pulse space-y-4">
           <div className="h-32 bg-gray-200 dark:bg-gray-700 rounded-xl"></div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -96,7 +100,10 @@ const Home = () => {
   }
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-6">\
+    <Helmet>
+      <title>Home</title>
+    </Helmet>
       {/* Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <StatCard

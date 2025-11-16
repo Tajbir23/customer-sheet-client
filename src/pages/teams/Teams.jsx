@@ -9,6 +9,7 @@ import TeamStats from './components/TeamStats';
 import EmptyState from './components/EmptyState';
 import LoadingGrid from './components/LoadingGrid';
 import TeamGrid from './components/TeamGrid';
+import { Helmet } from 'react-helmet';
 
 const Teams = () => {
   const [data, setData] = useState([]);
@@ -127,6 +128,9 @@ const Teams = () => {
 
     return (
       <div className="flex items-center justify-center gap-2 mt-8">
+        <Helmet>
+          <title>Teams</title>
+        </Helmet>
         <button
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}

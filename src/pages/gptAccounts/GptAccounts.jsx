@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import UploadGptAccount from './components/UploadGptAccount'
 import handleApi from '../../libs/handleAPi'
 import GptAccountCard from './components/GptAccountCard'
+import { Helmet } from 'react-helmet'
 
 const GptAccounts = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -118,6 +119,9 @@ const GptAccounts = () => {
 
     return (
       <div className="flex items-center justify-center gap-2 mt-8">
+        <Helmet>
+          <title>GPT Accounts</title>
+        </Helmet>
         <button
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}

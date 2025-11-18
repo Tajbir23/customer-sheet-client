@@ -14,6 +14,7 @@ import RemovedMembers from "../pages/removedMembers/removedMembers";
 import QrCode from "../pages/qrCode/QrCode";
 import Invoice from "../pages/invoice/Invoice";
 import SearchInvoice from "../pages/invoice/SearchInvoice";
+import FacebookTermsConditions from "../pages/facebookTermsConditions/FacebookTermsConditions";
 
 const Routes = createBrowserRouter([
     {
@@ -69,6 +70,10 @@ const Routes = createBrowserRouter([
     {
         path: "/invoice/:id",
         element: <Invoice />
+    },
+    {
+        path: "/facebook-terms-conditions",
+        element: <FacebookTermsConditions />
     }
 ])
 

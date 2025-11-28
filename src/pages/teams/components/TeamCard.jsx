@@ -2,10 +2,12 @@ import React, { useState, useEffect } from "react";
 import ToggleButton from "./ToggleButton";
 import { FaUserFriends, FaEnvelope, FaChevronUp, FaChevronDown, FaPlus, FaTimes, FaUserPlus, FaServer, FaCopy, FaCheck } from "react-icons/fa";
 import Member from "./Member";
+import RdpInfo from "./RdpInfo";
 import handleApi from "../../../libs/handleAPi";
 
 const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembers }) => {
     const [isExpanded, setIsExpanded] = useState(false);
+    const [showRdp, setShowRdp] = useState(false);
     const [showAddModal, setShowAddModal] = useState(false);
     const [emailsText, setEmailsText] = useState('');
     const [isAdding, setIsAdding] = useState(false);
@@ -13,6 +15,7 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
     const [references, setReferences] = useState([]);
     const [selectedReference, setSelectedReference] = useState('');
     const [copied, setCopied] = useState(false);
+    const [openOnList, setOpenOnList] = useState(team.openOn || []);
 
     useEffect(() => {
         const fetchReferences = async () => {
@@ -115,6 +118,27 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
         }
     };
 
+    // Handle RDP open/close actions
+    const handleRdpOpen = (hostname) => {
+        console.log('handleRdpOpen called with:', hostname)
+        console.log('Current openOnList:', openOnList)
+        if (!openOnList.includes(hostname)) {
+            const newList = [...openOnList, hostname]
+            console.log('Adding to list, new list:', newList)
+            setOpenOnList(newList);
+        } else {
+            console.log('Hostname already in list')
+        }
+    };
+
+    const handleRdpClose = (hostname) => {
+        console.log('handleRdpClose called with:', hostname)
+        console.log('Current openOnList:', openOnList)
+        const newList = openOnList.filter(item => item !== hostname)
+        console.log('After filtering, new list:', newList)
+        setOpenOnList(newList);
+    };
+
     return (
       <>
         <div className="group relative">
@@ -143,7 +167,7 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
               
               <div className="relative z-10">
                 {/* Status Row */}
-                <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center justify-between ">
                   <div className="flex items-center gap-3">
                     <div className={`w-3 h-3 rounded-full ${team.isActive ? 'bg-green-400' : 'bg-red-300'} animate-pulse`} />
                     <span className="text-white/90 text-sm font-semibold">
@@ -159,6 +183,22 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
                   </div>
                 </div>
 
+                {/* Open On Badges */}
+                {openOnList && openOnList.length > 0 && (
+                  <div className="flex flex-wrap items-center gap-2 my-3">
+                    {openOnList.map((openOn, index) => (
+                      <div 
+                        key={index}
+                        className="inline-flex items-center gap-2 bg-white text-gray-900 rounded-lg px-4 py-2 shadow-lg border-2 border-white/50 hover:shadow-xl transition-all duration-200 hover:scale-105"
+                      >
+                        <div className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse shadow-sm"></div>
+                        <span className="text-sm font-bold">
+                          {openOn}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
                 {/* Account Info */}
                 <div className="mb-6">
                   <div className="flex items-center gap-3 mb-3">
@@ -204,29 +244,56 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
                     </div>
                   </div>
                   
-                  <button
-                    onClick={() => setIsExpanded(!isExpanded)}
-                    className="flex items-center gap-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-2xl px-4 py-3 transition-all duration-200 text-white font-medium"
-                  >
-                    {isExpanded ? (
-                      <>
-                        <span className="text-sm">Hide Members</span>
-                        <FaChevronUp className="text-sm" />
-                      </>
-                    ) : (
-                      <>
-                        <span className="text-sm">Show Members</span>
-                        <FaChevronDown className="text-sm" />
-                      </>
-                    )}
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setShowRdp(!showRdp)}
+                      className="flex items-center gap-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-2xl px-4 py-3 transition-all duration-200 text-white font-medium"
+                    >
+                      <FaServer className="text-sm" />
+                      {showRdp ? (
+                        <>
+                          <span className="text-sm">Hide RDP</span>
+                          <FaChevronUp className="text-sm" />
+                        </>
+                      ) : (
+                        <>
+                          <span className="text-sm">Show RDP</span>
+                          <FaChevronDown className="text-sm" />
+                        </>
+                      )}
+                    </button>
+                    
+                    <button
+                      onClick={() => setIsExpanded(!isExpanded)}
+                      className="flex items-center gap-2 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-2xl px-4 py-3 transition-all duration-200 text-white font-medium"
+                    >
+                      {isExpanded ? (
+                        <>
+                          <span className="text-sm">Hide Members</span>
+                          <FaChevronUp className="text-sm" />
+                        </>
+                      ) : (
+                        <>
+                          <span className="text-sm">Show Members</span>
+                          <FaChevronDown className="text-sm" />
+                        </>
+                      )}
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
 
+            {/* RDP Section */}
+            {showRdp && (
+              <div className="p-8 border-t-2 border-gray-200">
+                <RdpInfo team={team} onRdpOpen={handleRdpOpen} onRdpClose={handleRdpClose} />
+              </div>
+            )}
+
             {/* Members Section */}
             {isExpanded && (
-              <div className="p-8">
+              <div className="p-8 border-t-2 border-gray-200">
                 <div className="flex items-center justify-between mb-6">
                   <h4 className="text-xl font-bold text-gray-900">Team Members</h4>
                   <div className="flex items-center gap-3">

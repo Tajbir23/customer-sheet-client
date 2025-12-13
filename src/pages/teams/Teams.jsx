@@ -22,6 +22,7 @@ import { Helmet } from "react-helmet";
 const DuplicateMembersCard = ({ duplicateMembers }) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const [copied, setCopied] = useState(false);
+  const [copiedEmail, setCopiedEmail] = useState(null);
 
   const handleCopyAll = () => {
     const emailsText = duplicateMembers.join("\n");
@@ -29,6 +30,13 @@ const DuplicateMembersCard = ({ duplicateMembers }) => {
     setCopied(true);
     toast.success("Duplicate emails copied to clipboard!");
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleCopyEmail = (email, index) => {
+    navigator.clipboard.writeText(email);
+    setCopiedEmail(index);
+    toast.success("Email copied!");
+    setTimeout(() => setCopiedEmail(null), 1500);
   };
 
   const displayMembers = isExpanded
@@ -85,11 +93,22 @@ const DuplicateMembersCard = ({ duplicateMembers }) => {
                   </span>
                 </div>
                 <span
-                  className="text-gray-700 text-sm font-medium truncate"
+                  className="text-gray-700 text-sm font-medium truncate flex-1"
                   title={email}
                 >
                   {email}
                 </span>
+                <button
+                  onClick={() => handleCopyEmail(email, index)}
+                  className={`flex-shrink-0 p-1.5 rounded-md transition-all duration-200 ${
+                    copiedEmail === index
+                      ? "bg-green-500 text-white"
+                      : "text-gray-400 hover:text-amber-600 hover:bg-amber-50"
+                  }`}
+                  title="Copy email"
+                >
+                  <FaCopy className="text-xs" />
+                </button>
               </div>
             ))}
           </div>

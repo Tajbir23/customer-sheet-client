@@ -9,6 +9,8 @@ import {
   FaList,
   FaTrash,
   FaQrcode,
+  FaFileInvoice,
+  FaSubscript,
 } from "react-icons/fa";
 import { BiWorld } from "react-icons/bi";
 import { HiX } from "react-icons/hi";
@@ -39,10 +41,15 @@ const Navbar = ({ isOpen, setIsOpen }) => {
     {
       name: "Subscription End Members",
       path: "/subscription-end-members",
-      icon: <FaPaypal size={20} />,
+      icon: <FaSubscript size={20} />,
     },
     { name: "Asocks", path: "/asocks", icon: <BiWorld size={20} /> },
     { name: "QR Code", path: "/qr-code", icon: <FaQrcode size={20} /> },
+    {
+      name: "Search Invoice",
+      path: "/search-invoice",
+      icon: <FaFileInvoice size={20} />,
+    },
   ];
 
   return (

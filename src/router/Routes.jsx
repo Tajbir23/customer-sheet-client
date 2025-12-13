@@ -15,6 +15,7 @@ import QrCode from "../pages/qrCode/QrCode";
 import Invoice from "../pages/invoice/Invoice";
 import SearchInvoice from "../pages/invoice/SearchInvoice";
 import FacebookTermsConditions from "../pages/facebookTermsConditions/FacebookTermsConditions";
+import SubscriptionEndMembers from "../pages/subscriptionEndMembers/subscriptionEndMembers";
 
 const Routes = createBrowserRouter([
   {
@@ -55,9 +56,7 @@ const Routes = createBrowserRouter([
       },
       {
         path: "/subscription-end-members",
-        element: React.lazy(() =>
-          import("../pages/subscriptionEndMembers/subscriptionEndMembers")
-        ),
+        element: <SubscriptionEndMembers />,
       },
       {
         path: "/qr-code",

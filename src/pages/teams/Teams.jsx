@@ -1,29 +1,140 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import handleApi from '../../libs/handleAPi';
-import { FaExclamationCircle, FaSearch } from 'react-icons/fa';
-import { toast } from 'react-toastify';
+import React, { useState, useEffect, useCallback, useMemo } from "react";
+import handleApi from "../../libs/handleAPi";
+import {
+  FaExclamationCircle,
+  FaSearch,
+  FaExclamationTriangle,
+  FaCopy,
+  FaChevronDown,
+  FaChevronUp,
+} from "react-icons/fa";
+import { toast } from "react-toastify";
 
 // Import our new components
-import SearchBar from './components/SearchBar';
-import TeamStats from './components/TeamStats';
-import EmptyState from './components/EmptyState';
-import LoadingGrid from './components/LoadingGrid';
-import TeamGrid from './components/TeamGrid';
-import { Helmet } from 'react-helmet';
+import SearchBar from "./components/SearchBar";
+import TeamStats from "./components/TeamStats";
+import EmptyState from "./components/EmptyState";
+import LoadingGrid from "./components/LoadingGrid";
+import TeamGrid from "./components/TeamGrid";
+import { Helmet } from "react-helmet";
+
+// Duplicate Members Card Component
+const DuplicateMembersCard = ({ duplicateMembers }) => {
+  const [isExpanded, setIsExpanded] = useState(true);
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyAll = () => {
+    const emailsText = duplicateMembers.join("\n");
+    navigator.clipboard.writeText(emailsText);
+    setCopied(true);
+    toast.success("Duplicate emails copied to clipboard!");
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const displayMembers = isExpanded
+    ? duplicateMembers
+    : duplicateMembers.slice(0, 5);
+  const hasMore = duplicateMembers.length > 5;
+
+  return (
+    <div className="mb-8">
+      <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl shadow-sm overflow-hidden">
+        {/* Header */}
+        <div className="bg-gradient-to-r from-amber-100 to-orange-100 px-6 py-4 border-b border-amber-200">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-amber-500 rounded-lg">
+                <FaExclamationTriangle className="text-white text-lg" />
+              </div>
+              <div>
+                <h3 className="text-lg font-bold text-amber-800">
+                  Duplicate Members Detected
+                </h3>
+                <p className="text-sm text-amber-600">
+                  {duplicateMembers.length} member
+                  {duplicateMembers.length !== 1 ? "s" : ""} found in multiple
+                  teams
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={handleCopyAll}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                copied
+                  ? "bg-green-500 text-white"
+                  : "bg-white text-amber-700 hover:bg-amber-50 border border-amber-300"
+              }`}
+            >
+              <FaCopy className="text-sm" />
+              {copied ? "Copied!" : "Copy All"}
+            </button>
+          </div>
+        </div>
+
+        {/* Members List */}
+        <div className="p-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
+            {displayMembers.map((email, index) => (
+              <div
+                key={index}
+                className="group flex items-center gap-3 bg-white rounded-lg px-4 py-3 border border-amber-100 hover:border-amber-300 hover:shadow-md transition-all duration-200"
+              >
+                <div className="flex-shrink-0 w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center">
+                  <span className="text-amber-600 font-semibold text-sm">
+                    {index + 1}
+                  </span>
+                </div>
+                <span
+                  className="text-gray-700 text-sm font-medium truncate"
+                  title={email}
+                >
+                  {email}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          {/* Show More/Less Button */}
+          {hasMore && (
+            <div className="mt-4 text-center">
+              <button
+                onClick={() => setIsExpanded(!isExpanded)}
+                className="inline-flex items-center gap-2 px-4 py-2 text-amber-700 hover:text-amber-800 font-medium transition-colors duration-200"
+              >
+                {isExpanded ? (
+                  <>
+                    <FaChevronUp className="text-sm" />
+                    Show Less
+                  </>
+                ) : (
+                  <>
+                    <FaChevronDown className="text-sm" />
+                    Show {duplicateMembers.length - 5} More
+                  </>
+                )}
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const Teams = () => {
   const [data, setData] = useState([]);
+  const [duplicateMembers, setDuplicateMembers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [search, setSearch] = useState('');
-  const [debouncedSearch, setDebouncedSearch] = useState('');
+  const [search, setSearch] = useState("");
+  const [debouncedSearch, setDebouncedSearch] = useState("");
   const [error, setError] = useState(null);
   const [togglingTeam, setTogglingTeam] = useState(null);
-  const [page, setPage] = useState(1)
-  const [currentPage, setCurrentPage] = useState(1)
-  const [totalPages, setTotalPages] = useState(1)
-  const [totalTeams, setTotalTeams] = useState(0)
-  const [admins, setAdmins] = useState([])
-  const [filter, setFilter] = useState('')
+  const [page, setPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalTeams, setTotalTeams] = useState(0);
+  const [admins, setAdmins] = useState([]);
+  const [filter, setFilter] = useState("");
   // Sort teams with inactive first
   const sortedTeams = useMemo(() => {
     if (!Array.isArray(data)) return [];
@@ -35,38 +146,44 @@ const Teams = () => {
     });
   }, [data]);
 
-
   const fetchAdmins = useCallback(async () => {
-    const response = await handleApi('/references', 'GET')
+    const response = await handleApi("/references", "GET");
     if (response.success) {
-      setAdmins(response.data || [])
+      setAdmins(response.data || []);
     }
-  }, [])
+  }, []);
 
   // Fetch data with proper error handling
-  const fetchData = useCallback(async (searchTerm = '', pageNum = 1) => {
-    try {
-      setIsLoading(true);
-      setError(null);
-      const response = await handleApi(`/gptTeam/team?search=${searchTerm}&page=${pageNum}&admin=${filter}`, 'GET');
-      
-      if (response.success) {
-        setData(response.data || []);
-        setTotalTeams(response.pagination?.totalTeams || 0);
-        setTotalPages(response.pagination?.totalPages || 1);
-        setCurrentPage(response.pagination?.currentPage || pageNum);
-      } else {
-        setError(response.message || 'Failed to fetch teams');
+  const fetchData = useCallback(
+    async (searchTerm = "", pageNum = 1) => {
+      try {
+        setIsLoading(true);
+        setError(null);
+        const response = await handleApi(
+          `/gptTeam/team?search=${searchTerm}&page=${pageNum}&admin=${filter}`,
+          "GET"
+        );
+
+        if (response.success) {
+          setData(response.data || []);
+          setDuplicateMembers(response.duplicateMembers || []);
+          setTotalTeams(response.pagination?.totalTeams || 0);
+          setTotalPages(response.pagination?.totalPages || 1);
+          setCurrentPage(response.pagination?.currentPage || pageNum);
+        } else {
+          setError(response.message || "Failed to fetch teams");
+          setData([]);
+        }
+      } catch (err) {
+        setError("An error occurred while fetching teams");
+        console.error("Error fetching teams:", err);
         setData([]);
+      } finally {
+        setIsLoading(false);
       }
-    } catch (err) {
-      setError('An error occurred while fetching teams');
-      console.error('Error fetching teams:', err);
-      setData([]);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [filter]);
+    },
+    [filter]
+  );
 
   // Handle page change
   const handlePageChange = (newPage) => {
@@ -77,10 +194,9 @@ const Teams = () => {
     }
   };
 
-
   useEffect(() => {
-    fetchAdmins()
-  }, [])
+    fetchAdmins();
+  }, []);
   // Pagination Component
   const Pagination = ({ currentPage, totalPages, onPageChange }) => {
     if (totalPages <= 1) return null;
@@ -99,24 +215,24 @@ const Teams = () => {
             pages.push(i);
           }
           if (totalPages > 5) {
-            pages.push('...');
+            pages.push("...");
             pages.push(totalPages);
           }
         } else if (currentPage >= totalPages - 2) {
           pages.push(1);
           if (totalPages > 5) {
-            pages.push('...');
+            pages.push("...");
           }
           for (let i = totalPages - 3; i <= totalPages; i++) {
             pages.push(i);
           }
         } else {
           pages.push(1);
-          pages.push('...');
+          pages.push("...");
           for (let i = currentPage - 1; i <= currentPage + 1; i++) {
             pages.push(i);
           }
-          pages.push('...');
+          pages.push("...");
           pages.push(totalPages);
         }
       }
@@ -136,8 +252,8 @@ const Teams = () => {
           disabled={currentPage === 1}
           className={`px-4 py-2 rounded-lg font-medium transition-colors ${
             currentPage === 1
-              ? 'text-gray-400 cursor-not-allowed'
-              : 'text-gray-600 hover:text-blue hover:bg-blue-50'
+              ? "text-gray-400 cursor-not-allowed"
+              : "text-gray-600 hover:text-blue hover:bg-blue-50"
           }`}
         >
           Previous
@@ -145,15 +261,15 @@ const Teams = () => {
 
         {visiblePages.map((page, index) => (
           <React.Fragment key={index}>
-            {page === '...' ? (
+            {page === "..." ? (
               <span className="px-3 py-2 text-gray-400">...</span>
             ) : (
               <button
                 onClick={() => onPageChange(page)}
                 className={`min-w-[40px] h-10 rounded-lg font-medium transition-colors ${
                   currentPage === page
-                    ? 'bg-blue text-white'
-                    : 'text-gray-600 hover:text-blue hover:bg-blue-50'
+                    ? "bg-blue text-white"
+                    : "text-gray-600 hover:text-blue hover:bg-blue-50"
                 }`}
               >
                 {page}
@@ -167,8 +283,8 @@ const Teams = () => {
           disabled={currentPage >= totalPages}
           className={`px-4 py-2 rounded-lg font-medium transition-colors ${
             currentPage >= totalPages
-              ? 'text-gray-400 cursor-not-allowed'
-              : 'text-gray-600 hover:text-blue hover:bg-blue-50'
+              ? "text-gray-400 cursor-not-allowed"
+              : "text-gray-600 hover:text-blue hover:bg-blue-50"
           }`}
         >
           Next
@@ -181,25 +297,31 @@ const Teams = () => {
   const handleToggleActive = async (teamId, newActiveState) => {
     try {
       setTogglingTeam(teamId);
-      const response = await handleApi(`/gptTeam/team/${teamId}/toggle`, 'PUT', {
-        isActive: newActiveState
-      });
-      
+      const response = await handleApi(
+        `/gptTeam/team/${teamId}/toggle`,
+        "PUT",
+        {
+          isActive: newActiveState,
+        }
+      );
+
       if (response.success) {
-        setData(prevData => {
+        setData((prevData) => {
           if (!Array.isArray(prevData)) return [];
-          const updatedData = prevData.map(team => 
+          const updatedData = prevData.map((team) =>
             team._id === teamId ? { ...team, isActive: newActiveState } : team
           );
           return updatedData;
         });
-        toast.success(`Team ${newActiveState ? 'activated' : 'deactivated'} successfully`);
+        toast.success(
+          `Team ${newActiveState ? "activated" : "deactivated"} successfully`
+        );
       } else {
-        toast.error(response.message || 'Failed to update team status');
+        toast.error(response.message || "Failed to update team status");
       }
     } catch (err) {
-      toast.error('An error occurred while updating team status');
-      console.error('Error toggling team status:', err);
+      toast.error("An error occurred while updating team status");
+      console.error("Error toggling team status:", err);
     } finally {
       setTogglingTeam(null);
     }
@@ -208,29 +330,35 @@ const Teams = () => {
   // Handle member removal
   const handleRemoveMember = async (teamId, member, memberIndex) => {
     try {
-      const response = await handleApi(`/gptTeam/team/${teamId}/member`, 'DELETE', {
-        member: member
-      });
-      
+      const response = await handleApi(
+        `/gptTeam/team/${teamId}/member`,
+        "DELETE",
+        {
+          member: member,
+        }
+      );
+
       if (response.success) {
-        setData(prevData => {
+        setData((prevData) => {
           if (!Array.isArray(prevData)) return [];
-          const updatedData = prevData.map(team => {
+          const updatedData = prevData.map((team) => {
             if (team._id === teamId) {
-              const updatedMembers = team.members.filter((_, index) => index !== memberIndex);
+              const updatedMembers = team.members.filter(
+                (_, index) => index !== memberIndex
+              );
               return { ...team, members: updatedMembers };
             }
             return team;
           });
           return updatedData;
         });
-        toast.success('Member removed successfully');
+        toast.success("Member removed successfully");
       } else {
-        toast.error(response.message || 'Failed to remove member');
+        toast.error(response.message || "Failed to remove member");
       }
     } catch (err) {
-      toast.error('An error occurred while removing member');
-      console.error('Error removing member:', err);
+      toast.error("An error occurred while removing member");
+      console.error("Error removing member:", err);
       throw err;
     }
   };
@@ -238,34 +366,44 @@ const Teams = () => {
   // Handle adding multiple members
   const handleAddMembers = async (teamId, emailArray, reference) => {
     try {
-      const response = await handleApi(`/gptTeam/team/${teamId}/members`, 'POST', {
-        members: emailArray,
-        reference
-      });
-      
+      const response = await handleApi(
+        `/gptTeam/team/${teamId}/members`,
+        "POST",
+        {
+          members: emailArray,
+          reference,
+        }
+      );
+
       if (response.success) {
-        setData(prevData => {
+        setData((prevData) => {
           if (!Array.isArray(prevData)) return [];
-          const updatedData = prevData.map(team => {
+          const updatedData = prevData.map((team) => {
             if (team._id === teamId) {
               const existingMembers = team.members || [];
-              const newMembers = emailArray.filter(email => !existingMembers.includes(email));
+              const newMembers = emailArray.filter(
+                (email) => !existingMembers.includes(email)
+              );
               return { ...team, members: [...existingMembers, ...newMembers] };
             }
             return team;
           });
           return updatedData;
         });
-        
+
         const addedCount = emailArray.length;
-        toast.success(`${addedCount} member${addedCount === 1 ? '' : 's'} added successfully`);
+        toast.success(
+          `${addedCount} member${
+            addedCount === 1 ? "" : "s"
+          } added successfully`
+        );
       } else {
-        toast.error(response.message || 'Failed to add members');
-        throw new Error(response.message || 'Failed to add members');
+        toast.error(response.message || "Failed to add members");
+        throw new Error(response.message || "Failed to add members");
       }
     } catch (err) {
-      toast.error('An error occurred while adding members');
-      console.error('Error adding members:', err);
+      toast.error("An error occurred while adding members");
+      console.error("Error adding members:", err);
       throw err;
     }
   };
@@ -288,15 +426,19 @@ const Teams = () => {
     const fetchTeams = async () => {
       try {
         setIsLoading(true);
-        const response = await handleApi(`/gptTeam/team?search=${debouncedSearch}&page=${currentPage}&admin=${filter}`, 'GET');
-        
+        const response = await handleApi(
+          `/gptTeam/team?search=${debouncedSearch}&page=${currentPage}&admin=${filter}`,
+          "GET"
+        );
+
         if (isSubscribed) {
           if (response.success) {
             setData(response.data || []);
+            setDuplicateMembers(response.duplicateMembers || []);
             setTotalTeams(response.pagination?.totalTeams || 0);
             setTotalPages(response.pagination?.totalPages || 1);
           } else {
-            setError('Failed to fetch teams');
+            setError("Failed to fetch teams");
           }
         }
       } catch (error) {
@@ -329,18 +471,22 @@ const Teams = () => {
     }
 
     if (error) {
-      return <EmptyState message={error} icon={FaExclamationCircle} type="error" />;
+      return (
+        <EmptyState message={error} icon={FaExclamationCircle} type="error" />
+      );
     }
 
     if (!Array.isArray(sortedTeams) || sortedTeams.length === 0) {
-      const emptyType = search ? 'search' : 'default';
-      const emptyMessage = search ? 'No teams found' : 'No teams available';
-      
-      return <EmptyState message={emptyMessage} icon={FaSearch} type={emptyType} />;
+      const emptyType = search ? "search" : "default";
+      const emptyMessage = search ? "No teams found" : "No teams available";
+
+      return (
+        <EmptyState message={emptyMessage} icon={FaSearch} type={emptyType} />
+      );
     }
 
     return (
-      <TeamGrid 
+      <TeamGrid
         teams={sortedTeams}
         onToggleActive={handleToggleActive}
         onRemoveMember={handleRemoveMember}
@@ -353,9 +499,8 @@ const Teams = () => {
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        
         {/* Search Section */}
-        <SearchBar 
+        <SearchBar
           search={search}
           onSearchChange={handleSearchChange}
           isLoading={isLoading}
@@ -363,25 +508,34 @@ const Teams = () => {
 
         {/* filter */}
         <div className="relative inline-block">
-          <select 
+          <select
             onChange={(e) => setFilter(e.target.value)}
             className="appearance-none bg-white border border-gray-200 text-gray-700 py-2.5 pl-4 pr-10 rounded-lg font-medium hover:border-blue-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200"
           >
             <option value="">Filter by Admin</option>
             {admins.map((admin) => (
-              <option key={admin._id} value={admin._id}>{admin.username}</option>
+              <option key={admin._id} value={admin._id}>
+                {admin.username}
+              </option>
             ))}
           </select>
           <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
-            <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-              <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+            <svg
+              className="fill-current h-4 w-4"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+            >
+              <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
             </svg>
           </div>
         </div>
 
         {/* Stats Section */}
-        {!isLoading && !error && (
-          <TeamStats teams={data} />
+        {!isLoading && !error && <TeamStats teams={data} />}
+
+        {/* Duplicate Members Warning */}
+        {!isLoading && !error && duplicateMembers.length > 0 && (
+          <DuplicateMembersCard duplicateMembers={duplicateMembers} />
         )}
 
         {/* Results Info */}
@@ -392,13 +546,27 @@ const Teams = () => {
                 <div className="flex flex-col sm:flex-row items-center justify-between">
                   <div className="text-center sm:text-left mb-4 sm:mb-0">
                     <h2 className="text-xl font-bold text-gray-900">
-                      {search ? 'Search Results' : 'All Teams'}
+                      {search ? "Search Results" : "All Teams"}
                     </h2>
                     <p className="text-gray-600 mt-1">
                       {search ? (
-                        <>Showing <span className="font-semibold">{sortedTeams.length}</span> teams for "<span className="font-semibold">{search}</span>"</>
+                        <>
+                          Showing{" "}
+                          <span className="font-semibold">
+                            {sortedTeams.length}
+                          </span>{" "}
+                          teams for "
+                          <span className="font-semibold">{search}</span>"
+                        </>
                       ) : (
-                        <>Showing <span className="font-semibold">{sortedTeams.length}</span> of <span className="font-semibold">{totalTeams}</span> teams</>
+                        <>
+                          Showing{" "}
+                          <span className="font-semibold">
+                            {sortedTeams.length}
+                          </span>{" "}
+                          of <span className="font-semibold">{totalTeams}</span>{" "}
+                          teams
+                        </>
                       )}
                     </p>
                     {totalPages > 1 && (
@@ -409,7 +577,7 @@ const Teams = () => {
                   </div>
                   {search && (
                     <button
-                      onClick={() => setSearch('')}
+                      onClick={() => setSearch("")}
                       className="btn btn-primary"
                     >
                       Clear Search
@@ -422,9 +590,7 @@ const Teams = () => {
         )}
 
         {/* Content Area */}
-        <div className="relative">
-          {renderContent()}
-        </div>
+        <div className="relative">{renderContent()}</div>
 
         {/* Pagination */}
         {!isLoading && !error && sortedTeams.length > 0 && (

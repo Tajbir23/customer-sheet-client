@@ -34,6 +34,11 @@ const Navbar = ({ isOpen, setIsOpen }) => {
       icon: <FaList size={20} />,
     },
     {
+      name: "Paypal accounts",
+      path: "/paypal-accounts",
+      icon: <FaPaypal size={20} />,
+    },
+    {
       name: "Removed Members",
       path: "/removed-members",
       icon: <FaTrash size={20} />,

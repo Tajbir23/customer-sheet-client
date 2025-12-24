@@ -16,6 +16,7 @@ import Invoice from "../pages/invoice/Invoice";
 import SearchInvoice from "../pages/invoice/SearchInvoice";
 import FacebookTermsConditions from "../pages/facebookTermsConditions/FacebookTermsConditions";
 import SubscriptionEndMembers from "../pages/subscriptionEndMembers/subscriptionEndMembers";
+import PaypalAccounts from "../pages/paypal/PaypalAccounts";
 
 const Routes = createBrowserRouter([
   {
@@ -41,6 +42,10 @@ const Routes = createBrowserRouter([
       {
         path: "/chatgpt-accounts",
         element: <GptAccounts />,
+      },
+      {
+        path: "/paypal-accounts",
+        element: <PaypalAccounts />,
       },
       {
         path: "/asocks",

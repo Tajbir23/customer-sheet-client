@@ -120,7 +120,7 @@ const PaypalAccounts = () => {
     return (
       <div className="flex items-center justify-center gap-2 mt-8">
         <Helmet>
-          <title>GPT Accounts</title>
+          <title>Paypal Accounts</title>
         </Helmet>
         <button
           onClick={() => onPageChange(currentPage - 1)}
@@ -176,8 +176,8 @@ const PaypalAccounts = () => {
           <div className="px-6 py-8">
             <div className="flex flex-col sm:flex-row justify-between items-center">
               <div className="mb-4 sm:mb-0">
-                <h1 className="text-3xl font-bold text-gray-900">GPT Accounts</h1>
-                <p className="text-gray-600 mt-1">Manage and monitor all GPT accounts</p>
+                <h1 className="text-3xl font-bold text-gray-900">Paypal Accounts</h1>
+                <p className="text-gray-600 mt-1">Manage and monitor all Paypal accounts</p>
               </div>
               <button 
                 onClick={() => setIsOpen(true)}

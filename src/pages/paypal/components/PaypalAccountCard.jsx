@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import gptSecretToCode from '../../../libs/gptSecretToCode'
 import { toast } from 'react-toastify'
 
-const GptAccountCard = ({account}) => {
+const PaypalAccountCard = ({account}) => {
     const [code, setCode] = useState('')
     const [timeLeft, setTimeLeft] = useState(30)
     const [showPassword, setShowPassword] = useState(false)
@@ -67,8 +67,8 @@ const GptAccountCard = ({account}) => {
             <div className="px-5 pt-5 pb-4 bg-gradient-to-r from-blue-50 to-indigo-50">
                 <div className="flex items-start justify-between gap-3">
                     <div className="min-w-0">
-                        <h2 className="text-base font-semibold text-gray-900 truncate">{account.gptAccount}</h2>
-                        <p className="mt-0.5 text-xs text-gray-500">OpenAI • 2FA enabled</p>
+                        <h2 className="text-base font-semibold text-gray-900 truncate">{account.paypalAccount}</h2>
+                        <p className="mt-0.5 text-xs text-gray-500">Paypal • 2FA enabled</p>
                     </div>
                     <div className="text-xs text-gray-600 bg-white/70 border border-gray-200 rounded-md px-2 py-1">
                         {timeLeft}s
@@ -155,4 +155,4 @@ const GptAccountCard = ({account}) => {
     )
 }
 
-export default GptAccountCard
+export default PaypalAccountCard

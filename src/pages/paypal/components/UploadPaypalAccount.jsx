@@ -4,9 +4,9 @@ import gptSecretToCode from '../../../libs/gptSecretToCode'
 import handleApi from '../../../libs/handleAPi'
 import { toast } from 'react-toastify'
 
-const UploadGptAccount = ({ setIsOpen }) => {
+const UploadPaypalAccount = ({ setIsOpen }) => {
     const [formData, setFormData] = useState({
-        gptAccount: '',
+        paypalAccount: '',
         password: '',
         secret: ''
     })
@@ -94,14 +94,14 @@ const UploadGptAccount = ({ setIsOpen }) => {
             setError('')
 
             if (!url.startsWith('otpauth://totp/')) {
-                throw new Error('Invalid QR code format. Expected Chat gpt QR code')
+                throw new Error('Invalid QR code format. Expected Paypal QR code')
             }
 
             const parsedUrl = new URL(url)
             
             const issuer = parsedUrl.searchParams.get('issuer')
-            if (issuer !== 'OpenAI') {
-                throw new Error('This QR code is not from Chat gpt.')
+            if (issuer !== 'Paypal') {
+                throw new Error('This QR code is not from Paypal.')
             }
 
             const label = decodeURIComponent(parsedUrl.pathname.split('/')[1])
@@ -114,7 +114,7 @@ const UploadGptAccount = ({ setIsOpen }) => {
 
             setFormData(prev => ({
                 ...prev,
-                gptAccount: email,
+                paypalAccount: email,
                 secret: secret
             }))
 
@@ -130,8 +130,8 @@ const UploadGptAccount = ({ setIsOpen }) => {
     const handleChange = (e) => {
         const { name, value } = e.target
         const fieldMap = {
-            'gpt_account_email': 'gptAccount',
-            'gpt_account_pass': 'password'
+            'paypal_account_email': 'paypalAccount',
+            'paypal_account_pass': 'password'
         }
         const formField = fieldMap[name] || name
         setFormData(prev => ({ ...prev, [formField]: value }))
@@ -155,7 +155,7 @@ const UploadGptAccount = ({ setIsOpen }) => {
         const pastedText = e.clipboardData.getData('text')
         if (pastedText.startsWith('otpauth://')) {
             e.preventDefault()
-            parseOtpAuthUrl(pastedText)
+            parseOtpAuthUrl(pastedText) 
         }
     }
 
@@ -163,7 +163,7 @@ const UploadGptAccount = ({ setIsOpen }) => {
         e.preventDefault()
         // TODO: Handle form submission
         try {
-            const response = await handleApi('/gpt-account/add', 'POST', formData)
+            const response = await handleApi('/paypal-account/add', 'POST', formData)
             if(response.success){
                 toast.success('Account added successfully')
                 setIsOpen(false)
@@ -181,7 +181,7 @@ const UploadGptAccount = ({ setIsOpen }) => {
             <div className="bg-white rounded-lg shadow-xl w-full max-w-xl max-h-[90vh] flex flex-col">
                 {/* Modal Header - Fixed */}
                 <div className="flex justify-between items-center p-6 border-b shrink-0">
-                    <h2 className="text-xl font-semibold text-gray-800">Upload GPT Account</h2>
+                    <h2 className="text-xl font-semibold text-gray-800">Upload Paypal Account</h2>
                     <button 
                         onClick={() => setIsOpen(false)}
                         className="text-gray-500 hover:text-gray-700"
@@ -201,10 +201,10 @@ const UploadGptAccount = ({ setIsOpen }) => {
                             </label>
                             <input 
                                 type="text" 
-                                name='gpt_account_email' 
+                                name='paypal_account_email' 
                                 required 
                                 placeholder='Enter your email' 
-                                value={formData.gptAccount} 
+                                value={formData.paypalAccount} 
                                 onChange={handleChange}
                                 onPaste={handleTextPaste}
                                 autoComplete="off"
@@ -218,7 +218,7 @@ const UploadGptAccount = ({ setIsOpen }) => {
                             </label>
                             <input 
                                 type="password" 
-                                name='gpt_account_pass' 
+                                name='paypal_account_pass' 
                                 required 
                                 placeholder='Enter your password' 
                                 value={formData.password} 
@@ -236,7 +236,7 @@ const UploadGptAccount = ({ setIsOpen }) => {
                                 type="text" 
                                 name='secret' 
                                 required 
-                                placeholder='Enter Chat gpt secret' 
+                                placeholder='Enter Paypal secret' 
                                 value={formData.secret} 
                                 onChange={handleChange}
                                 onPaste={handleTextPaste}
@@ -328,4 +328,4 @@ const UploadGptAccount = ({ setIsOpen }) => {
     )
 }
 
-export default UploadGptAccount
+export default UploadPaypalAccount

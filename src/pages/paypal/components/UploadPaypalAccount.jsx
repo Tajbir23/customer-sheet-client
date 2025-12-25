@@ -100,7 +100,7 @@ const UploadPaypalAccount = ({ setIsOpen }) => {
             const parsedUrl = new URL(url)
             
             const issuer = parsedUrl.searchParams.get('issuer')
-            if (issuer !== 'Paypal') {
+            if (issuer !== 'PayPal') {
                 throw new Error('This QR code is not from Paypal.')
             }
 
@@ -108,6 +108,7 @@ const UploadPaypalAccount = ({ setIsOpen }) => {
             const email = label.split(':')[1]
             const secret = parsedUrl.searchParams.get('secret')
 
+            console.log(email, secret)
             if (!email || !secret) {
                 throw new Error('Missing required information in QR code.')
             }

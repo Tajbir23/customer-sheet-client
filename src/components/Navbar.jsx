@@ -11,6 +11,7 @@ import {
   FaQrcode,
   FaFileInvoice,
   FaSubscript,
+  FaUser,
 } from "react-icons/fa";
 import { BiWorld } from "react-icons/bi";
 import { HiX } from "react-icons/hi";
@@ -54,6 +55,11 @@ const Navbar = ({ isOpen, setIsOpen }) => {
       name: "Search Invoice",
       path: "/search-invoice",
       icon: <FaFileInvoice size={20} />,
+    },
+    {
+      name: "Reseller",
+      path: "/reseller",
+      icon: <FaUser size={20} />,
     },
   ];
 

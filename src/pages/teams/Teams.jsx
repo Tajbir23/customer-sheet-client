@@ -67,11 +67,10 @@ const DuplicateMembersCard = ({ duplicateMembers }) => {
             </div>
             <button
               onClick={handleCopyAll}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
-                copied
-                  ? "bg-green-500 text-white"
-                  : "bg-white text-amber-700 hover:bg-amber-50 border border-amber-300"
-              }`}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 ${copied
+                ? "bg-green-500 text-white"
+                : "bg-white text-amber-700 hover:bg-amber-50 border border-amber-300"
+                }`}
             >
               <FaCopy className="text-sm" />
               {copied ? "Copied!" : "Copy All"}
@@ -100,11 +99,10 @@ const DuplicateMembersCard = ({ duplicateMembers }) => {
                 </span>
                 <button
                   onClick={() => handleCopyEmail(email, index)}
-                  className={`flex-shrink-0 p-1.5 rounded-md transition-all duration-200 ${
-                    copiedEmail === index
-                      ? "bg-green-500 text-white"
-                      : "text-gray-400 hover:text-amber-600 hover:bg-amber-50"
-                  }`}
+                  className={`flex-shrink-0 p-1.5 rounded-md transition-all duration-200 ${copiedEmail === index
+                    ? "bg-green-500 text-white"
+                    : "text-gray-400 hover:text-amber-600 hover:bg-amber-50"
+                    }`}
                   title="Copy email"
                 >
                   <FaCopy className="text-xs" />
@@ -216,6 +214,8 @@ const Teams = () => {
   useEffect(() => {
     fetchAdmins();
   }, []);
+
+  console.log(data);
   // Pagination Component
   const Pagination = ({ currentPage, totalPages, onPageChange }) => {
     if (totalPages <= 1) return null;
@@ -269,11 +269,10 @@ const Teams = () => {
         <button
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
-          className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-            currentPage === 1
-              ? "text-gray-400 cursor-not-allowed"
-              : "text-gray-600 hover:text-blue hover:bg-blue-50"
-          }`}
+          className={`px-4 py-2 rounded-lg font-medium transition-colors ${currentPage === 1
+            ? "text-gray-400 cursor-not-allowed"
+            : "text-gray-600 hover:text-blue hover:bg-blue-50"
+            }`}
         >
           Previous
         </button>
@@ -285,11 +284,10 @@ const Teams = () => {
             ) : (
               <button
                 onClick={() => onPageChange(page)}
-                className={`min-w-[40px] h-10 rounded-lg font-medium transition-colors ${
-                  currentPage === page
-                    ? "bg-blue text-white"
-                    : "text-gray-600 hover:text-blue hover:bg-blue-50"
-                }`}
+                className={`min-w-[40px] h-10 rounded-lg font-medium transition-colors ${currentPage === page
+                  ? "bg-blue text-white"
+                  : "text-gray-600 hover:text-blue hover:bg-blue-50"
+                  }`}
               >
                 {page}
               </button>
@@ -300,11 +298,10 @@ const Teams = () => {
         <button
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage >= totalPages}
-          className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-            currentPage >= totalPages
-              ? "text-gray-400 cursor-not-allowed"
-              : "text-gray-600 hover:text-blue hover:bg-blue-50"
-          }`}
+          className={`px-4 py-2 rounded-lg font-medium transition-colors ${currentPage >= totalPages
+            ? "text-gray-400 cursor-not-allowed"
+            : "text-gray-600 hover:text-blue hover:bg-blue-50"
+            }`}
         >
           Next
         </button>
@@ -412,8 +409,7 @@ const Teams = () => {
 
         const addedCount = emailArray.length;
         toast.success(
-          `${addedCount} member${
-            addedCount === 1 ? "" : "s"
+          `${addedCount} member${addedCount === 1 ? "" : "s"
           } added successfully`
         );
       } else {

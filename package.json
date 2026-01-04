@@ -16,6 +16,7 @@
     "buffer": "^6.0.3",
     "jspdf": "^2.5.1",
     "jspdf-autotable": "^3.5.31",
+    "jwt-decode": "^4.0.0",
     "qr-scanner": "^1.4.2",
     "qrcode": "^1.5.4",
     "react": "^19.1.0",

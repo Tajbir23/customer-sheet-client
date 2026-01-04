@@ -16,6 +16,7 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
   const [selectedReference, setSelectedReference] = useState('');
   const [copied, setCopied] = useState(false);
   const [cookieCopied, setCookieCopied] = useState(false);
+  const [cookieLoading, setCookieLoading] = useState(false);
   const [openOnList, setOpenOnList] = useState(team.openOn || []);
 
   useEffect(() => {
@@ -57,11 +58,19 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
 
   const handleCopyCookie = async () => {
     try {
-      const cookiesJson = JSON.stringify(team.cookies, null, 2)
-      await navigator.clipboard.writeText(cookiesJson)
-      setCookieCopied(true)
+      setCookieLoading(true);
+      const response = await handleApi(`/gptTeam/cookies?gptAccount=${team.gptAccount}`, 'GET');
+      if (response.success && response.data) {
+        const cookiesJson = JSON.stringify(response.data, null, 2);
+        await navigator.clipboard.writeText(cookiesJson);
+        setCookieCopied(true);
+      } else {
+        console.error('Failed to fetch cookies:', response.message);
+      }
     } catch (err) {
-      console.error('Failed to copy cookies:', err)
+      console.error('Failed to copy cookies:', err);
+    } finally {
+      setCookieLoading(false);
     }
   }
 
@@ -268,13 +277,21 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
                 <div className="flex items-center gap-2">
                   <button
                     onClick={handleCopyCookie}
+                    disabled={cookieLoading}
                     className={`flex items-center gap-1.5 backdrop-blur-sm rounded-xl px-3 py-2 transition-all duration-200 font-medium ${cookieCopied
                       ? 'bg-green-500 text-white'
-                      : 'bg-white/20 hover:bg-white/30 text-white'
+                      : cookieLoading
+                        ? 'bg-white/30 text-white cursor-wait'
+                        : 'bg-white/20 hover:bg-white/30 text-white'
                       }`}
                     title="Copy cookies"
                   >
-                    {cookieCopied ? (
+                    {cookieLoading ? (
+                      <>
+                        <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                        <span className="text-xs">Loading...</span>
+                      </>
+                    ) : cookieCopied ? (
                       <>
                         <FaCheck className="text-xs" />
                         <span className="text-xs">Copied!</span>

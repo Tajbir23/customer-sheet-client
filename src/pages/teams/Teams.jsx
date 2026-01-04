@@ -140,6 +140,13 @@ const DuplicateMembersCard = ({ duplicateMembers }) => {
 
 const Teams = () => {
   const [data, setData] = useState([]);
+  const [inActiveData, setInActiveData] = useState([]);
+  const [totalCount, setTotalCount] = useState({
+    totalTeams: 0,
+    totalMembers: 0,
+    totalActiveTeams: 0,
+    totalInactiveTeams: 0
+  })
   const [duplicateMembers, setDuplicateMembers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -152,6 +159,7 @@ const Teams = () => {
   const [totalTeams, setTotalTeams] = useState(0);
   const [admins, setAdmins] = useState([]);
   const [filter, setFilter] = useState("");
+  const [inactiveSearch, setInactiveSearch] = useState("");
   // Sort teams with inactive first
   const sortedTeams = useMemo(() => {
     if (!Array.isArray(data)) return [];
@@ -162,6 +170,36 @@ const Teams = () => {
       return a.isActive ? 1 : -1;
     });
   }, [data]);
+
+  // Filter inactive teams based on search (client-side only)
+  // Filters by both main search and inactive-specific search
+  const filteredInactiveData = useMemo(() => {
+    if (!Array.isArray(inActiveData)) return [];
+
+    let filtered = inActiveData;
+
+    // Filter by main search (debouncedSearch)
+    if (debouncedSearch.trim()) {
+      const mainSearchLower = debouncedSearch.toLowerCase().trim();
+      filtered = filtered.filter(team =>
+        team.gptAccount?.toLowerCase().includes(mainSearchLower) ||
+        team.server?.toLowerCase().includes(mainSearchLower) ||
+        team.members?.some(member => member.toLowerCase().includes(mainSearchLower))
+      );
+    }
+
+    // Filter by inactive-specific search
+    if (inactiveSearch.trim()) {
+      const searchLower = inactiveSearch.toLowerCase().trim();
+      filtered = filtered.filter(team =>
+        team.gptAccount?.toLowerCase().includes(searchLower) ||
+        team.server?.toLowerCase().includes(searchLower) ||
+        team.members?.some(member => member.toLowerCase().includes(searchLower))
+      );
+    }
+
+    return filtered;
+  }, [inActiveData, inactiveSearch, debouncedSearch]);
 
   const fetchAdmins = useCallback(async () => {
     const response = await handleApi("/references", "GET");
@@ -183,6 +221,13 @@ const Teams = () => {
 
         if (response.success) {
           setData(response.data || []);
+          setInActiveData(response.gptInActiveData || []);
+          setTotalCount({
+            totalTeams: response.total || 0,
+            totalMembers: response.totalMembers || 0,
+            totalActiveTeams: response.totalActive || 0,
+            totalInactiveTeams: response.totalInactive || 0
+          })
           setDuplicateMembers(response.duplicateMembers || []);
           setTotalTeams(response.pagination?.totalTeams || 0);
           setTotalPages(response.pagination?.totalPages || 1);
@@ -190,11 +235,13 @@ const Teams = () => {
         } else {
           setError(response.message || "Failed to fetch teams");
           setData([]);
+          setInActiveData([]);
         }
       } catch (err) {
         setError("An error occurred while fetching teams");
         console.error("Error fetching teams:", err);
         setData([]);
+        setInActiveData([]);
       } finally {
         setIsLoading(false);
       }
@@ -449,6 +496,13 @@ const Teams = () => {
         if (isSubscribed) {
           if (response.success) {
             setData(response.data || []);
+            setInActiveData(response.gptInActiveData || []);
+            setTotalCount({
+              totalTeams: response.total || 0,
+              totalMembers: response.totalMembers || 0,
+              totalActiveTeams: response.totalActive || 0,
+              totalInactiveTeams: response.totalInactive || 0
+            });
             setDuplicateMembers(response.duplicateMembers || []);
             setTotalTeams(response.pagination?.totalTeams || 0);
             setTotalPages(response.pagination?.totalPages || 1);
@@ -501,13 +555,84 @@ const Teams = () => {
     }
 
     return (
-      <TeamGrid
-        teams={sortedTeams}
-        onToggleActive={handleToggleActive}
-        onRemoveMember={handleRemoveMember}
-        onAddMembers={handleAddMembers}
-        togglingTeam={togglingTeam}
-      />
+      <>
+        {/* Inactive Teams Section - Inside All Teams with Red Theme */}
+        {inActiveData.length > 0 && (
+          <div className="mb-8">
+            {/* Red Header Section */}
+            <div className="bg-gradient-to-r from-red-100 to-rose-100 border border-red-200 rounded-xl px-6 py-4 mb-4">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-red-500 rounded-lg">
+                    <FaExclamationCircle className="text-white text-lg" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-bold text-red-800">
+                      Inactive Teams
+                    </h3>
+                    <p className="text-sm text-red-600">
+                      {inactiveSearch ? (
+                        <>{filteredInactiveData.length} of {inActiveData.length} team{inActiveData.length !== 1 ? "s" : ""} shown</>
+                      ) : (
+                        <>{inActiveData.length} team{inActiveData.length !== 1 ? "s" : ""} currently inactive</>
+                      )}
+                    </p>
+                  </div>
+                </div>
+                {/* Search Input for Inactive Teams */}
+                <div className="relative">
+                  <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-red-400" />
+                  <input
+                    type="text"
+                    placeholder="Search inactive teams..."
+                    value={inactiveSearch}
+                    onChange={(e) => setInactiveSearch(e.target.value)}
+                    className="pl-10 pr-4 py-2 border border-red-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-red-400 bg-white text-sm w-full sm:w-64"
+                  />
+                  {inactiveSearch && (
+                    <button
+                      onClick={() => setInactiveSearch("")}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-red-400 hover:text-red-600"
+                    >
+                      ×
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+            {/* Inactive Teams Grid */}
+            {filteredInactiveData.length > 0 ? (
+              <TeamGrid
+                teams={filteredInactiveData}
+                onToggleActive={handleToggleActive}
+                onRemoveMember={handleRemoveMember}
+                onAddMembers={handleAddMembers}
+                togglingTeam={togglingTeam}
+              />
+            ) : (
+              <div className="text-center py-8 bg-red-50 rounded-xl border border-red-200">
+                <FaSearch className="mx-auto text-red-300 text-3xl mb-3" />
+                <p className="text-red-600 font-medium">No inactive teams match "{inactiveSearch}"</p>
+                <button
+                  onClick={() => setInactiveSearch("")}
+                  className="mt-2 text-sm text-red-500 hover:text-red-700 underline"
+                >
+                  Clear search
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Active Teams Grid */}
+        <TeamGrid
+          teams={sortedTeams}
+          onToggleActive={handleToggleActive}
+          onRemoveMember={handleRemoveMember}
+          onAddMembers={handleAddMembers}
+          togglingTeam={togglingTeam}
+        />
+      </>
     );
   };
 
@@ -546,7 +671,7 @@ const Teams = () => {
         </div>
 
         {/* Stats Section */}
-        {!isLoading && !error && <TeamStats teams={data} />}
+        {!isLoading && !error && <TeamStats totalCount={totalCount} />}
 
         {/* Duplicate Members Warning */}
         {!isLoading && !error && duplicateMembers.length > 0 && (

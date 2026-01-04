@@ -1,11 +1,8 @@
 import React from 'react'
 import { FaUsers, FaCheckCircle, FaTimesCircle, FaEnvelope } from 'react-icons/fa'
 
-const TeamStats = ({ teams }) => {
-  const totalTeams = teams.length
-  const activeTeams = teams.filter(team => team.isActive).length
-  const inactiveTeams = totalTeams - activeTeams
-  const totalMembers = teams.reduce((sum, team) => sum + (team.members?.length || 0), 0)
+const TeamStats = ({ totalCount }) => {
+  const { totalTeams, totalMembers, totalActiveTeams, totalInactiveTeams } = totalCount
 
   const stats = [
     {
@@ -18,7 +15,7 @@ const TeamStats = ({ teams }) => {
     },
     {
       title: 'Active Teams',
-      value: activeTeams,
+      value: totalActiveTeams,
       icon: FaCheckCircle,
       color: 'from-green-500 to-green-600',
       bgColor: 'from-green-50 to-green-100',
@@ -26,7 +23,7 @@ const TeamStats = ({ teams }) => {
     },
     {
       title: 'Inactive Teams',
-      value: inactiveTeams,
+      value: totalInactiveTeams,
       icon: FaTimesCircle,
       color: 'from-red-500 to-red-600',
       bgColor: 'from-red-50 to-red-100',
@@ -58,7 +55,7 @@ const TeamStats = ({ teams }) => {
               <div className="absolute top-0 right-0 w-20 h-20 bg-current rounded-full -translate-y-10 translate-x-10"></div>
               <div className="absolute bottom-0 left-0 w-16 h-16 bg-current rounded-full translate-y-8 -translate-x-8"></div>
             </div>
-            
+
             <div className="relative z-10">
               <div className="flex items-center justify-between mb-4">
                 <div className={`p-3 bg-gradient-to-r ${stat.color} rounded-xl shadow-lg`}>
@@ -70,7 +67,7 @@ const TeamStats = ({ teams }) => {
                   </div>
                 </div>
               </div>
-              
+
               <div>
                 <h3 className={`text-sm font-bold ${stat.textColor} mb-1`}>
                   {stat.title}
@@ -84,7 +81,7 @@ const TeamStats = ({ teams }) => {
               </div>
             </div>
           </div>
-          
+
           {/* Hover Glow Effect */}
           <div className={`absolute inset-0 rounded-2xl bg-gradient-to-r ${stat.color} opacity-0 group-hover:opacity-20 transition-opacity duration-300 -z-10 blur-xl`}></div>
         </div>

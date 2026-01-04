@@ -172,11 +172,18 @@ const Teams = () => {
   }, [data]);
 
   // Filter inactive teams based on search (client-side only)
-  // Filters by both main search and inactive-specific search
+  // Filters by main search, inactive-specific search, and admin filter
   const filteredInactiveData = useMemo(() => {
     if (!Array.isArray(inActiveData)) return [];
 
     let filtered = inActiveData;
+
+    // Filter by admin
+    if (filter) {
+      filtered = filtered.filter(team =>
+        team.reference === filter || team.admin === filter || team.reference?._id === filter
+      );
+    }
 
     // Filter by main search (debouncedSearch)
     if (debouncedSearch.trim()) {
@@ -199,7 +206,7 @@ const Teams = () => {
     }
 
     return filtered;
-  }, [inActiveData, inactiveSearch, debouncedSearch]);
+  }, [inActiveData, inactiveSearch, debouncedSearch, filter]);
 
   const fetchAdmins = useCallback(async () => {
     const response = await handleApi("/references", "GET");

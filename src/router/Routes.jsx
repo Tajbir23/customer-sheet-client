@@ -17,7 +17,9 @@ import SearchInvoice from "../pages/invoice/SearchInvoice";
 import FacebookTermsConditions from "../pages/facebookTermsConditions/FacebookTermsConditions";
 import SubscriptionEndMembers from "../pages/subscriptionEndMembers/subscriptionEndMembers";
 import PaypalAccounts from "../pages/paypal/PaypalAccounts";
-import ResellerPage from "../pages/reseller/page";
+import ResellerPage from "../pages/reseller-info/page";
+import ResellerAuthCheck from "./ResellerAuthCheck";
+import ResellerTeams from "../pages/reseller/teams/ResellerTeams";
 
 const Routes = createBrowserRouter([
   {
@@ -69,8 +71,22 @@ const Routes = createBrowserRouter([
         element: <QrCode />,
       },
       {
-        path: "/reseller",
+        path: "/reseller-info",
         element: <ResellerPage />,
+      },
+    ],
+  },
+  {
+    path: "/reseller",
+    element: (
+      <ResellerAuthCheck>
+        <Layout />
+      </ResellerAuthCheck>
+    ),
+    children: [
+      {
+        index: true,
+        element: <ResellerTeams />,
       },
     ],
   },

@@ -6,6 +6,10 @@ const AuthCheck = ({ children }) => {
     // Check token directly instead of using state
     const token = localStorage.getItem('token');
 
+    if(!token){
+        return <Navigate to="/login" />;
+    }
+
     // Decode token and console log
     try {
         const decoded = jwtDecode(token);

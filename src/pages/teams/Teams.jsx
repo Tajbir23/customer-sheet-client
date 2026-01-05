@@ -51,6 +51,26 @@ const Teams = () => {
     });
   }, [data]);
 
+  // Filter active teams based on search (client-side)
+  const filteredActiveData = useMemo(() => {
+    let filtered = sortedTeams.filter((team) => team.isActive);
+
+    // Filter by main search (debouncedSearch)
+    if (debouncedSearch.trim()) {
+      const searchLower = debouncedSearch.toLowerCase().trim();
+      filtered = filtered.filter(
+        (team) =>
+          team.gptAccount?.toLowerCase().includes(searchLower) ||
+          team.server?.toLowerCase().includes(searchLower) ||
+          team.members?.some((member) =>
+            member.toLowerCase().includes(searchLower)
+          )
+      );
+    }
+
+    return filtered;
+  }, [sortedTeams, debouncedSearch]);
+
   // Filter inactive teams based on search (client-side only)
   const filteredInactiveData = useMemo(() => {
     if (!Array.isArray(inActiveData)) return [];
@@ -297,14 +317,17 @@ const Teams = () => {
             setDuplicateMembers(response.duplicateMembers || []);
             setTotalTeams(response.pagination?.totalTeams || 0);
             setTotalPages(response.pagination?.totalPages || 1);
+            setError(null);
           } else {
-            setError("Failed to fetch teams");
+            // Don't show error if we have results in inactive data (static search)
+            // API might fail but static data might have results
+            setError(null);
           }
         }
       } catch (error) {
         if (isSubscribed) {
-          setError(error.message);
-          setData([]);
+          // Don't clear data or show error - keep existing data for static search
+          setError(null);
         }
       } finally {
         if (isSubscribed) {
@@ -336,7 +359,12 @@ const Teams = () => {
       );
     }
 
-    if (!Array.isArray(sortedTeams) || sortedTeams.length === 0) {
+    // Check if we have any results in either inactive or active data
+    const hasInactiveResults = filteredInactiveData.length > 0;
+    const hasActiveResults = filteredActiveData.length > 0;
+    const hasAnyResults = hasInactiveResults || hasActiveResults;
+
+    if (!hasAnyResults) {
       const emptyType = search ? "search" : "default";
       const emptyMessage = search ? "No teams found" : "No teams available";
 
@@ -364,7 +392,7 @@ const Teams = () => {
 
         {/* Active Teams Grid */}
         <TeamGrid
-          teams={sortedTeams.filter(team => team.isActive)}
+          teams={filteredActiveData}
           onToggleActive={handleToggleActive}
           onRemoveMember={handleRemoveMember}
           onAddMembers={handleAddMembers}

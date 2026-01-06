@@ -2,12 +2,12 @@ import React, { useState } from 'react'
 import { FaTrash, FaTimes, FaUser, FaEnvelope } from 'react-icons/fa'
 
 
-const Member = ({ index, team, member, onRemoveMember }) => {
+const Member = ({ index, team, member, onRemoveMember, isNewlyAdded = false }) => {
     const [showModal, setShowModal] = useState(false)
     const [isRemoving, setIsRemoving] = useState(false)
-    
 
-    
+
+
     const handleRemoveClick = () => {
         setShowModal(true)
     }
@@ -41,7 +41,7 @@ const Member = ({ index, team, member, onRemoveMember }) => {
             hash = email.charCodeAt(i) + ((hash << 5) - hash)
         }
         const colors = [
-            'bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-pink-500', 
+            'bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-pink-500',
             'bg-indigo-500', 'bg-yellow-500', 'bg-red-500', 'bg-teal-500'
         ]
         return colors[Math.abs(hash) % colors.length]
@@ -50,10 +50,12 @@ const Member = ({ index, team, member, onRemoveMember }) => {
     return (
         <>
             <div className={`
-                relative p-4 rounded-lg border transition-all duration-200 group hover:shadow-md
-                ${team?.isActive 
-                    ? 'bg-white border-gray-200 hover:bg-blue-50 hover:border-blue-200' 
-                    : 'bg-white/95 border-white/50 hover:bg-white shadow-sm backdrop-blur-sm'
+                relative p-4 rounded-lg border transition-all duration-300 group hover:shadow-md
+                ${isNewlyAdded
+                    ? 'bg-green-50 border-green-400 shadow-lg shadow-green-100'
+                    : team?.isActive
+                        ? 'bg-white border-gray-200 hover:bg-blue-50 hover:border-blue-200'
+                        : 'bg-white/95 border-white/50 hover:bg-white shadow-sm backdrop-blur-sm'
                 }
             `}>
                 <div className="flex items-center gap-3">
@@ -64,7 +66,7 @@ const Member = ({ index, team, member, onRemoveMember }) => {
                         ${team?.isActive ? '' : 'opacity-75'}
                     `}>
                         {getInitials(member)}
-                        
+
                         {/* Status Indicator */}
                         <div className={`
                             absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white dark:border-gray-700
@@ -75,16 +77,15 @@ const Member = ({ index, team, member, onRemoveMember }) => {
                     {/* Member Info */}
                     <div className="flex-grow min-w-0">
                         <div className="flex items-center gap-2 mb-1">
-                            <FaEnvelope className={`w-4 h-4 flex-shrink-0 ${
-                                team?.isActive 
-                                    ? 'text-gray-400' 
+                            <FaEnvelope className={`w-4 h-4 flex-shrink-0 ${team?.isActive
+                                    ? 'text-gray-400'
                                     : 'text-gray-600'
-                            }`} />
+                                }`} />
                             <span className="text-sm truncate font-semibold text-gray-900">
                                 {member}
                             </span>
                         </div>
-                        
+
                         {/* Status Badge */}
                         <div className="flex items-center gap-2">
                             <span className={`
@@ -94,9 +95,8 @@ const Member = ({ index, team, member, onRemoveMember }) => {
                                     : 'bg-white text-red-700 shadow-sm'
                                 }
                             `}>
-                                <div className={`w-2 h-2 rounded-full ${
-                                    team?.isActive ? 'bg-green-500' : 'bg-red-500'
-                                }`} />
+                                <div className={`w-2 h-2 rounded-full ${team?.isActive ? 'bg-green-500' : 'bg-red-500'
+                                    }`} />
                                 {team?.isActive ? 'Active' : 'Inactive'}
                             </span>
                         </div>
@@ -110,7 +110,7 @@ const Member = ({ index, team, member, onRemoveMember }) => {
                             className={`
                                 opacity-0 group-hover:opacity-100 transition-all duration-200 
                                 p-2 rounded-lg hover:scale-105 active:scale-95
-                                ${team?.isActive 
+                                ${team?.isActive
                                     ? 'hover:bg-red-100 dark:hover:bg-red-900/30 text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300'
                                     : 'hover:bg-red-200 dark:hover:bg-red-800/30 text-red-600 hover:text-red-800 dark:text-red-300 dark:hover:text-red-200'
                                 }
@@ -151,7 +151,7 @@ const Member = ({ index, team, member, onRemoveMember }) => {
                             <p className="text-gray-900 dark:text-white font-medium mb-4">
                                 Are you sure you want to remove this member?
                             </p>
-                            
+
                             {/* Member Preview Card */}
                             <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 mb-4 border border-gray-200 dark:border-gray-600">
                                 <div className="flex items-center gap-3">
@@ -171,7 +171,7 @@ const Member = ({ index, team, member, onRemoveMember }) => {
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800/30 rounded-lg p-3">
                                 <p className="text-sm text-yellow-800 dark:text-yellow-200 flex items-start gap-2">
                                     <span className="text-yellow-600 dark:text-yellow-400 mt-0.5">⚠️</span>

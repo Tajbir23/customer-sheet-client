@@ -11,6 +11,8 @@ const InactiveTeamsSection = ({
     onRemoveMember,
     onAddMembers,
     togglingTeam,
+    recentlyToggledTeam,
+    recentlyAddedMembers,
 }) => {
     if (!inActiveData || inActiveData.length === 0) return null;
 
@@ -69,6 +71,8 @@ const InactiveTeamsSection = ({
                     onRemoveMember={onRemoveMember}
                     onAddMembers={onAddMembers}
                     togglingTeam={togglingTeam}
+                    recentlyToggledTeam={recentlyToggledTeam}
+                    recentlyAddedMembers={recentlyAddedMembers}
                 />
             ) : (
                 <div className="text-center py-8 bg-red-50 rounded-xl border border-red-200">

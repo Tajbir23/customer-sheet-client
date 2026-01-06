@@ -39,6 +39,9 @@ const Teams = () => {
   const [admins, setAdmins] = useState([]);
   const [filter, setFilter] = useState("");
   const [inactiveSearch, setInactiveSearch] = useState("");
+  // Track recently changed teams for visual feedback (optimistic UI)
+  const [recentlyToggledTeam, setRecentlyToggledTeam] = useState(null);
+  const [recentlyAddedMembers, setRecentlyAddedMembers] = useState({ teamId: null, members: [] });
 
   // Sort teams with inactive first
   const sortedTeams = useMemo(() => {
@@ -186,6 +189,7 @@ const Teams = () => {
       });
 
       if (response.success) {
+        // Update local state immediately for optimistic UI
         setData((prevData) => {
           if (!Array.isArray(prevData)) return [];
           const updatedData = prevData.map((team) =>
@@ -193,6 +197,20 @@ const Teams = () => {
           );
           return updatedData;
         });
+
+        // Also update inactive data if team is there
+        setInActiveData((prevData) => {
+          if (!Array.isArray(prevData)) return [];
+          const updatedData = prevData.map((team) =>
+            team._id === teamId ? { ...team, isActive: newActiveState } : team
+          );
+          return updatedData;
+        });
+
+        // Mark team as recently toggled for visual feedback
+        setRecentlyToggledTeam(teamId);
+        setTimeout(() => setRecentlyToggledTeam(null), 2000);
+
         toast.success(
           `Team ${newActiveState ? "activated" : "deactivated"} successfully`
         );
@@ -251,6 +269,7 @@ const Teams = () => {
       );
 
       if (response.success) {
+        // Update local state immediately for optimistic UI
         setData((prevData) => {
           if (!Array.isArray(prevData)) return [];
           const updatedData = prevData.map((team) => {
@@ -265,6 +284,26 @@ const Teams = () => {
           });
           return updatedData;
         });
+
+        // Also update inactive data if team is there
+        setInActiveData((prevData) => {
+          if (!Array.isArray(prevData)) return [];
+          const updatedData = prevData.map((team) => {
+            if (team._id === teamId) {
+              const existingMembers = team.members || [];
+              const newMembers = emailArray.filter(
+                (email) => !existingMembers.includes(email)
+              );
+              return { ...team, members: [...existingMembers, ...newMembers] };
+            }
+            return team;
+          });
+          return updatedData;
+        });
+
+        // Track recently added members for visual feedback
+        setRecentlyAddedMembers({ teamId, members: emailArray });
+        setTimeout(() => setRecentlyAddedMembers({ teamId: null, members: [] }), 3000);
 
         const addedCount = emailArray.length;
         toast.success(
@@ -385,6 +424,8 @@ const Teams = () => {
           onRemoveMember={handleRemoveMember}
           onAddMembers={handleAddMembers}
           togglingTeam={togglingTeam}
+          recentlyToggledTeam={recentlyToggledTeam}
+          recentlyAddedMembers={recentlyAddedMembers}
         />
 
         {/* All Teams Header Section */}
@@ -397,6 +438,8 @@ const Teams = () => {
           onRemoveMember={handleRemoveMember}
           onAddMembers={handleAddMembers}
           togglingTeam={togglingTeam}
+          recentlyToggledTeam={recentlyToggledTeam}
+          recentlyAddedMembers={recentlyAddedMembers}
         />
       </>
     );

@@ -5,7 +5,7 @@ import Member from "./Member";
 import RdpInfo from "./RdpInfo";
 import handleApi from "../../../libs/handleAPi";
 
-const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembers }) => {
+const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembers, justToggled, recentlyAddedMembers = [] }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showRdp, setShowRdp] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
@@ -199,16 +199,23 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
               {/* Status Row */}
               <div className="flex items-center justify-between ">
                 <div className="flex items-center gap-3">
-                  <div className={`w-3 h-3 rounded-full ${team.isActive ? 'bg-green-400' : 'bg-red-300'} animate-pulse`} />
-                  <span className="text-white/90 text-sm font-semibold">
+                  <div className={`w-3 h-3 rounded-full ${team.isActive ? 'bg-green-400' : 'bg-red-300'} ${justToggled ? 'animate-ping' : 'animate-pulse'}`} />
+                  <span className={`text-white/90 text-sm font-semibold transition-all duration-300 ${justToggled ? 'scale-110' : ''}`}>
                     {team.isActive ? 'Active Team' : 'Inactive Team'}
                   </span>
+                  {/* Status change indicator */}
+                  {justToggled && (
+                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-bold bg-white/30 text-white animate-pulse">
+                      ✓ Updated!
+                    </span>
+                  )}
                 </div>
-                <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-2">
+                <div className={`bg-white/20 backdrop-blur-sm rounded-2xl p-2 transition-all duration-300 ${justToggled ? 'ring-4 ring-white/50 scale-110' : ''}`}>
                   <ToggleButton
                     isActive={team.isActive}
                     isLoading={isToggling === team._id}
                     onClick={() => onToggleActive(team._id, !team.isActive)}
+                    justChanged={justToggled}
                   />
                 </div>
               </div>
@@ -361,20 +368,32 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
               {/* Members List */}
               {team.members.length > 0 ? (
                 <div className="grid gap-4">
-                  {team.members.map((member, index) => (
-                    <div
-                      key={`${team._id}-${index}-${member}`}
-                      className="transform transition-all duration-200"
-                      style={{ animationDelay: `${index * 50}ms` }}
-                    >
-                      <Member
-                        index={index}
-                        team={team}
-                        member={member}
-                        onRemoveMember={handleRemoveMember}
-                      />
-                    </div>
-                  ))}
+                  {team.members.map((member, index) => {
+                    const isNewlyAdded = recentlyAddedMembers.includes(member);
+                    return (
+                      <div
+                        key={`${team._id}-${index}-${member}`}
+                        className={`transform transition-all duration-500 ${isNewlyAdded ? 'animate-pulse ring-2 ring-green-400 ring-offset-2 rounded-xl scale-105' : ''}`}
+                        style={{ animationDelay: `${index * 50}ms` }}
+                      >
+                        {/* Newly added indicator */}
+                        {isNewlyAdded && (
+                          <div className="mb-2 flex items-center gap-2">
+                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-green-500 text-white animate-bounce">
+                              ✓ New! Just Added
+                            </span>
+                          </div>
+                        )}
+                        <Member
+                          index={index}
+                          team={team}
+                          member={member}
+                          onRemoveMember={handleRemoveMember}
+                          isNewlyAdded={isNewlyAdded}
+                        />
+                      </div>
+                    );
+                  })}
                 </div>
               ) : (
                 <div className="text-center py-12">

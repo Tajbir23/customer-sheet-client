@@ -2,6 +2,8 @@ import React, { useState, useEffect, useCallback, useMemo } from "react";
 import handleApi from "../../libs/handleAPi";
 import { FaExclamationCircle, FaSearch } from "react-icons/fa";
 import { toast } from "react-toastify";
+import useAddMember from "../../libs/useAddMember";
+import { useSocket } from "../../context/SocketContext";
 
 // Import components
 import SearchBar from "./components/SearchBar";
@@ -42,6 +44,61 @@ const Teams = () => {
   // Track recently changed teams for visual feedback (optimistic UI)
   const [recentlyToggledTeam, setRecentlyToggledTeam] = useState(null);
   const [recentlyAddedMembers, setRecentlyAddedMembers] = useState({ teamId: null, members: [] });
+  // Get userId from JWT token
+  const [userId, setUserId] = useState(null);
+  // Screenshot preview from socket
+  const [screenshotPreview, setScreenshotPreview] = useState(null);
+
+  // Extract userId from JWT token on mount
+  useEffect(() => {
+    try {
+      const token = localStorage.getItem('token');
+      if (token) {
+        // Decode JWT payload (base64)
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        setUserId(payload._id || payload.id || payload.userId);
+      }
+    } catch (err) {
+      console.error('Error decoding token:', err);
+    }
+  }, []);
+
+  // Get socket subscribe function
+  const { subscribe, socket, isConnected } = useSocket();
+
+  // Listen for invite-monitoring-response event (only once in Teams page)
+  useEffect(() => {
+    // Only subscribe when socket is connected
+    if (!socket || !isConnected) return;
+
+    console.log('Subscribing to invite-monitoring-response event');
+
+    const unsubscribe = subscribe('invite-monitoring-response', (data) => {
+      console.log('invite-monitoring-response received:', data);
+
+      // Handle screenshot preview
+      if (data.status === 'screenshot' && data.screenshot) {
+        setScreenshotPreview({
+          image: data.screenshot,
+          gptAccount: data.gptAccount,
+          memberEmail: data.memberEmail,
+          timestamp: data.timestamp
+        });
+        // Auto-hide after 10 seconds
+        setTimeout(() => setScreenshotPreview(null), 10000);
+      }
+
+      if (data.success && data.message) {
+        toast.success(data.message);
+      } else if (!data.success && data.message) {
+        toast.error(data.message);
+      }
+    });
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, [subscribe, socket, isConnected]);
 
   // Sort teams with inactive first
   const sortedTeams = useMemo(() => {
@@ -259,66 +316,54 @@ const Teams = () => {
     }
   };
 
-  // Handle adding multiple members
-  const handleAddMembers = async (teamId, emailArray, reference) => {
-    try {
-      const response = await handleApi(
-        `/gptTeam/team/${teamId}/members`,
-        "POST",
-        { members: emailArray, reference }
-      );
+  // Update local state when members are added (for optimistic UI)
+  const updateLocalStateOnMemberAdd = useCallback((teamId, emailArray) => {
+    // Update active data
+    setData((prevData) => {
+      if (!Array.isArray(prevData)) return [];
+      return prevData.map((team) => {
+        if (team._id === teamId) {
+          const existingMembers = team.members || [];
+          const newMembers = emailArray.filter(
+            (email) => !existingMembers.includes(email)
+          );
+          return { ...team, members: [...existingMembers, ...newMembers] };
+        }
+        return team;
+      });
+    });
 
-      if (response.success) {
-        // Update local state immediately for optimistic UI
-        setData((prevData) => {
-          if (!Array.isArray(prevData)) return [];
-          const updatedData = prevData.map((team) => {
-            if (team._id === teamId) {
-              const existingMembers = team.members || [];
-              const newMembers = emailArray.filter(
-                (email) => !existingMembers.includes(email)
-              );
-              return { ...team, members: [...existingMembers, ...newMembers] };
-            }
-            return team;
-          });
-          return updatedData;
-        });
+    // Also update inactive data if team is there
+    setInActiveData((prevData) => {
+      if (!Array.isArray(prevData)) return [];
+      return prevData.map((team) => {
+        if (team._id === teamId) {
+          const existingMembers = team.members || [];
+          const newMembers = emailArray.filter(
+            (email) => !existingMembers.includes(email)
+          );
+          return { ...team, members: [...existingMembers, ...newMembers] };
+        }
+        return team;
+      });
+    });
 
-        // Also update inactive data if team is there
-        setInActiveData((prevData) => {
-          if (!Array.isArray(prevData)) return [];
-          const updatedData = prevData.map((team) => {
-            if (team._id === teamId) {
-              const existingMembers = team.members || [];
-              const newMembers = emailArray.filter(
-                (email) => !existingMembers.includes(email)
-              );
-              return { ...team, members: [...existingMembers, ...newMembers] };
-            }
-            return team;
-          });
-          return updatedData;
-        });
+    // Track recently added members for visual feedback
+    setRecentlyAddedMembers({ teamId, members: emailArray });
+    setTimeout(() => setRecentlyAddedMembers({ teamId: null, members: [] }), 3000);
+  }, []);
 
-        // Track recently added members for visual feedback
-        setRecentlyAddedMembers({ teamId, members: emailArray });
-        setTimeout(() => setRecentlyAddedMembers({ teamId: null, members: [] }), 3000);
-
-        const addedCount = emailArray.length;
-        toast.success(
-          `${addedCount} member${addedCount === 1 ? "" : "s"} added successfully`
-        );
-      } else {
-        toast.error(response.message || "Failed to add members");
-        throw new Error(response.message || "Failed to add members");
-      }
-    } catch (err) {
-      toast.error("An error occurred while adding members");
-      console.error("Error adding members:", err);
-      throw err;
+  // Use the reusable addMember hook
+  const { addMembers } = useAddMember({
+    onSuccess: (response, { teamId, emailArray }) => {
+      updateLocalStateOnMemberAdd(teamId, emailArray);
     }
-  };
+  });
+
+  // Handle adding multiple members (wrapper for child components)
+  const handleAddMembers = useCallback(async (teamId, emailArray, reference) => {
+    await addMembers(teamId, emailArray, reference);
+  }, [addMembers]);
 
   // Debounce search
   useEffect(() => {
@@ -426,6 +471,7 @@ const Teams = () => {
           togglingTeam={togglingTeam}
           recentlyToggledTeam={recentlyToggledTeam}
           recentlyAddedMembers={recentlyAddedMembers}
+          userId={userId}
         />
 
         {/* All Teams Header Section */}
@@ -440,6 +486,7 @@ const Teams = () => {
           togglingTeam={togglingTeam}
           recentlyToggledTeam={recentlyToggledTeam}
           recentlyAddedMembers={recentlyAddedMembers}
+          userId={userId}
         />
       </>
     );
@@ -505,6 +552,60 @@ const Teams = () => {
           </div>
         )}
       </div>
+
+      {/* Screenshot Preview - Fixed Bottom Right */}
+      {screenshotPreview && (
+        <div className="fixed bottom-4 right-4 z-50 animate-slide-in">
+          <div className="bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden max-w-sm">
+            {/* Header */}
+            <div className="bg-gradient-to-r from-purple-600 to-blue-600 px-4 py-3 flex items-center justify-between">
+              <div className="text-white">
+                <p className="text-sm font-bold">Screenshot Preview</p>
+                <p className="text-xs text-white/80 truncate max-w-[200px]">
+                  {screenshotPreview.gptAccount}
+                </p>
+              </div>
+              <button
+                onClick={() => setScreenshotPreview(null)}
+                className="p-1.5 bg-white/20 hover:bg-white/30 rounded-lg transition-all"
+              >
+                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            {/* Screenshot Image */}
+            <div className="p-2">
+              <img
+                src={`data:image/png;base64,${screenshotPreview.image}`}
+                alt="Screenshot Preview"
+                className="w-full h-auto rounded-lg border border-gray-200 cursor-pointer hover:opacity-90 transition-opacity"
+                onClick={() => {
+                  // Open full size in new tab
+                  const newWindow = window.open();
+                  newWindow.document.write(`
+                    <html>
+                      <head><title>Screenshot - ${screenshotPreview.gptAccount}</title></head>
+                      <body style="margin:0;background:#1f2937;display:flex;justify-content:center;align-items:center;min-height:100vh;">
+                        <img src="data:image/png;base64,${screenshotPreview.image}" style="max-width:100%;height:auto;"/>
+                      </body>
+                    </html>
+                  `);
+                }}
+              />
+            </div>
+            {/* Info */}
+            <div className="px-4 py-2 bg-gray-50 border-t border-gray-200">
+              <p className="text-xs text-gray-600 truncate">
+                <span className="font-medium">Member:</span> {screenshotPreview.memberEmail}
+              </p>
+              <p className="text-xs text-gray-400">
+                {new Date(screenshotPreview.timestamp).toLocaleTimeString()}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

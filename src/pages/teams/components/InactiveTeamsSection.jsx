@@ -13,6 +13,7 @@ const InactiveTeamsSection = ({
     togglingTeam,
     recentlyToggledTeam,
     recentlyAddedMembers,
+    userId,
 }) => {
     if (!inActiveData || inActiveData.length === 0) return null;
 
@@ -73,6 +74,7 @@ const InactiveTeamsSection = ({
                     togglingTeam={togglingTeam}
                     recentlyToggledTeam={recentlyToggledTeam}
                     recentlyAddedMembers={recentlyAddedMembers}
+                    userId={userId}
                 />
             ) : (
                 <div className="text-center py-8 bg-red-50 rounded-xl border border-red-200">

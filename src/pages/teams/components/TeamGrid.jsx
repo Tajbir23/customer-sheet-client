@@ -1,7 +1,7 @@
 import React from 'react'
 import TeamCard from './TeamCard'
 
-const TeamGrid = ({ teams, onToggleActive, onRemoveMember, onAddMembers, togglingTeam, recentlyToggledTeam, recentlyAddedMembers }) => {
+const TeamGrid = ({ teams, onToggleActive, onRemoveMember, onAddMembers, togglingTeam, recentlyToggledTeam, recentlyAddedMembers, userId }) => {
   return (
     <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
       {teams.map((team, index) => (
@@ -20,6 +20,7 @@ const TeamGrid = ({ teams, onToggleActive, onRemoveMember, onAddMembers, togglin
             isToggling={togglingTeam === team._id}
             justToggled={recentlyToggledTeam === team._id}
             recentlyAddedMembers={recentlyAddedMembers?.teamId === team._id ? recentlyAddedMembers.members : []}
+            userId={userId}
           />
         </div>
       ))}

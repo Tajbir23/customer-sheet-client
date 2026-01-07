@@ -1,8 +1,8 @@
 import { io } from "socket.io-client";
 
 // Socket server URL (same as API but without /api path)
-const SOCKET_URL = "https://customer-sheet-server-production.up.railway.app";
-// const SOCKET_URL = "http://localhost:5000";
+// const SOCKET_URL = "https://customer-sheet-server-production.up.railway.app";
+const SOCKET_URL = "http://localhost:5000";
 
 let socket = null;
 

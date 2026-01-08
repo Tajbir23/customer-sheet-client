@@ -68,6 +68,8 @@ const Teams = () => {
 
   // Listen for invite-monitoring-response event (only once in Teams page)
   useEffect(() => {
+    console.log('Socket status:', { socket: !!socket, isConnected });
+
     // Only subscribe when socket is connected
     if (!socket || !isConnected) return;
 
@@ -79,13 +81,13 @@ const Teams = () => {
       // Handle screenshot preview
       if (data.status === 'screenshot' && data.screenshot) {
         setScreenshotPreview({
+          id: Date.now() + Math.random(), // Unique ID to force re-render
           image: data.screenshot,
           gptAccount: data.gptAccount,
           memberEmail: data.memberEmail,
           timestamp: data.timestamp
         });
-        // Auto-hide after 10 seconds
-        setTimeout(() => setScreenshotPreview(null), 10000);
+        // Preview stays until next screenshot or manual close
       }
 
       if (data.success && data.message) {

@@ -17,6 +17,7 @@ import { BiWorld } from "react-icons/bi";
 import { HiX } from "react-icons/hi";
 import { HiMenuAlt3 } from "react-icons/hi";
 import { jwtDecode } from 'jwt-decode';
+import { FaMessage } from "react-icons/fa6";
 
 
 const Navbar = ({ isOpen, setIsOpen }) => {
@@ -72,6 +73,11 @@ const Navbar = ({ isOpen, setIsOpen }) => {
         path: "/reseller-info",
         icon: <FaUser size={20} />,
       },
+      {
+        name: "Send Message",
+        path: "/send-custom-message",
+        icon: <FaMessage size={20} />,
+      }
     ];
   }
 

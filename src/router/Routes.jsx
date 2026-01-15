@@ -20,6 +20,7 @@ import PaypalAccounts from "../pages/paypal/PaypalAccounts";
 import ResellerPage from "../pages/reseller-info/page";
 import ResellerAuthCheck from "./ResellerAuthCheck";
 import ResellerTeams from "../pages/reseller/teams/ResellerTeams";
+import SendCustomMessage from "../pages/sendCustomMessage/sendCustomMessage";
 
 const Routes = createBrowserRouter([
   {
@@ -74,6 +75,10 @@ const Routes = createBrowserRouter([
         path: "/reseller-info",
         element: <ResellerPage />,
       },
+      {
+        path: "/send-custom-message",
+        element: <SendCustomMessage />,
+      }
     ],
   },
   {

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import handleApi from '../../libs/handleAPi'
 import { Helmet } from 'react-helmet'
+import { FaUsers, FaKeyboard } from 'react-icons/fa'
+import { toast } from 'react-toastify'
 
 // Components
 import LoadingSpinner from './components/LoadingSpinner'
@@ -10,7 +12,7 @@ import SearchBox from './components/SearchBox'
 import ResultsSummary from './components/ResultsSummary'
 import CustomerTable from './components/CustomerTable'
 import SendMessageModal from './components/SendMessageModal'
-import { toast } from 'react-toastify'
+import CustomNumberInput from './components/CustomNumberInput'
 
 const SendCustomMessage = () => {
     const [users, setUsers] = useState([])
@@ -18,8 +20,9 @@ const SendCustomMessage = () => {
     const [error, setError] = useState(null)
     const [search, setSearch] = useState('')
     const [selectedUsers, setSelectedUsers] = useState([])
+    const [customNumbers, setCustomNumbers] = useState([])
     const [isModalOpen, setIsModalOpen] = useState(false)
-
+    const [activeTab, setActiveTab] = useState('customers') // 'customers' or 'custom'
 
     useEffect(() => {
         const fetchUserPhones = async () => {
@@ -65,6 +68,14 @@ const SendCustomMessage = () => {
         }
     }
 
+    // Get active numbers based on tab
+    const getActiveNumbers = () => {
+        if (activeTab === 'customers') {
+            return selectedUsers
+        }
+        return customNumbers
+    }
+
     // Handle send message - open modal
     const handleSendMessage = () => {
         setIsModalOpen(true)
@@ -72,13 +83,18 @@ const SendCustomMessage = () => {
 
     // Handle actual message send
     const handleSendActualMessage = async (message) => {
-        console.log('Sending message to:', selectedUsers)
+        const phones = getActiveNumbers()
+        console.log('Sending message to:', phones)
         console.log('Message:', message)
         try {
-            await handleApi(`/send-custom-message`, 'POST', { phones: selectedUsers, message })
+            await handleApi(`/send-custom-message`, 'POST', { phones, message })
             toast.success('Message sent successfully')
             setIsModalOpen(false)
-            setSelectedUsers([])
+            if (activeTab === 'customers') {
+                setSelectedUsers([])
+            } else {
+                setCustomNumbers([])
+            }
         } catch (error) {
             console.error('Error sending message:', error)
             toast.error('Failed to send message')
@@ -98,6 +114,8 @@ const SendCustomMessage = () => {
         return <ErrorMessage error={error} />
     }
 
+    const activeNumbers = getActiveNumbers()
+
     return (
         <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
             <Helmet>
@@ -107,34 +125,82 @@ const SendCustomMessage = () => {
             {/* Main Content */}
             <div className="p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto">
                 <PageHeader
-                    selectedCount={selectedUsers.length}
+                    selectedCount={activeNumbers.length}
                     onSendClick={handleSendMessage}
                 />
 
-                <SearchBox
-                    search={search}
-                    setSearch={setSearch}
-                />
+                {/* Tab Navigation */}
+                <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-2 mb-6">
+                    <div className="flex gap-2">
+                        <button
+                            onClick={() => setActiveTab('customers')}
+                            className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-medium transition-all duration-200 ${activeTab === 'customers'
+                                    ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg'
+                                    : 'text-gray-600 hover:bg-gray-100'
+                                }`}
+                        >
+                            <FaUsers />
+                            <span>Select from Customers</span>
+                            {selectedUsers.length > 0 && (
+                                <span className={`px-2 py-0.5 rounded-full text-xs ${activeTab === 'customers' ? 'bg-white/20' : 'bg-blue-100 text-blue-700'
+                                    }`}>
+                                    {selectedUsers.length}
+                                </span>
+                            )}
+                        </button>
+                        <button
+                            onClick={() => setActiveTab('custom')}
+                            className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-medium transition-all duration-200 ${activeTab === 'custom'
+                                    ? 'bg-gradient-to-r from-green-600 to-green-700 text-white shadow-lg'
+                                    : 'text-gray-600 hover:bg-gray-100'
+                                }`}
+                        >
+                            <FaKeyboard />
+                            <span>Enter Custom Numbers</span>
+                            {customNumbers.length > 0 && (
+                                <span className={`px-2 py-0.5 rounded-full text-xs ${activeTab === 'custom' ? 'bg-white/20' : 'bg-green-100 text-green-700'
+                                    }`}>
+                                    {customNumbers.length}
+                                </span>
+                            )}
+                        </button>
+                    </div>
+                </div>
 
-                <ResultsSummary
-                    totalCount={filteredUsers.length}
-                    selectedCount={selectedUsers.length}
-                    onClearSelection={handleClearSelection}
-                />
+                {/* Tab Content */}
+                {activeTab === 'customers' ? (
+                    <>
+                        <SearchBox
+                            search={search}
+                            setSearch={setSearch}
+                        />
 
-                <CustomerTable
-                    users={filteredUsers}
-                    selectedUsers={selectedUsers}
-                    onSelectUser={handleSelectUser}
-                    onSelectAll={handleSelectAll}
-                />
+                        <ResultsSummary
+                            totalCount={filteredUsers.length}
+                            selectedCount={selectedUsers.length}
+                            onClearSelection={handleClearSelection}
+                        />
+
+                        <CustomerTable
+                            users={filteredUsers}
+                            selectedUsers={selectedUsers}
+                            onSelectUser={handleSelectUser}
+                            onSelectAll={handleSelectAll}
+                        />
+                    </>
+                ) : (
+                    <CustomNumberInput
+                        customNumbers={customNumbers}
+                        setCustomNumbers={setCustomNumbers}
+                    />
+                )}
             </div>
 
             {/* Send Message Modal */}
             <SendMessageModal
                 isOpen={isModalOpen}
                 onClose={() => setIsModalOpen(false)}
-                selectedCount={selectedUsers.length}
+                selectedCount={activeNumbers.length}
                 onSend={handleSendActualMessage}
             />
         </div>

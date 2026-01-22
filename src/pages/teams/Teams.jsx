@@ -48,6 +48,8 @@ const Teams = () => {
   const [userId, setUserId] = useState(null);
   // Screenshot preview from socket
   const [screenshotPreview, setScreenshotPreview] = useState(null);
+  // Remove member screenshot preview from socket
+  const [removeScreenshotPreview, setRemoveScreenshotPreview] = useState(null);
 
   // Extract userId from JWT token on mount
   useEffect(() => {
@@ -85,6 +87,40 @@ const Teams = () => {
           image: data.screenshot,
           gptAccount: data.gptAccount,
           memberEmail: data.memberEmail,
+          timestamp: data.timestamp
+        });
+        // Preview stays until next screenshot or manual close
+      }
+
+      if (data.success && data.message) {
+        toast.success(data.message);
+      } else if (!data.success && data.message) {
+        toast.error(data.message);
+      }
+    });
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, [subscribe, socket, isConnected]);
+
+  // Listen for remove-monitoring-response event
+  useEffect(() => {
+    // Only subscribe when socket is connected
+    if (!socket || !isConnected) return;
+
+    console.log('Subscribing to remove-monitoring-response event');
+
+    const unsubscribe = subscribe('remove-monitoring-response', (data) => {
+      console.log('remove-monitoring-response received:', data);
+
+      // Handle screenshot preview
+      if (data.status === 'screenshot' && data.screenshot) {
+        setRemoveScreenshotPreview({
+          id: Date.now() + Math.random(), // Unique ID to force re-render
+          image: data.screenshot,
+          gptAccount: data.gptAccount,
+          email: data.email,
           timestamp: data.timestamp
         });
         // Preview stays until next screenshot or manual close
@@ -603,6 +639,60 @@ const Teams = () => {
               </p>
               <p className="text-xs text-gray-400">
                 {new Date(screenshotPreview.timestamp).toLocaleTimeString()}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Remove Member Screenshot Preview - Fixed Bottom Left */}
+      {removeScreenshotPreview && (
+        <div className="fixed bottom-4 left-4 z-50 animate-slide-in">
+          <div className="bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden max-w-sm">
+            {/* Header */}
+            <div className="bg-gradient-to-r from-red-600 to-orange-600 px-4 py-3 flex items-center justify-between">
+              <div className="text-white">
+                <p className="text-sm font-bold">Remove Member Preview</p>
+                <p className="text-xs text-white/80 truncate max-w-[200px]">
+                  {removeScreenshotPreview.gptAccount}
+                </p>
+              </div>
+              <button
+                onClick={() => setRemoveScreenshotPreview(null)}
+                className="p-1.5 bg-white/20 hover:bg-white/30 rounded-lg transition-all"
+              >
+                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            {/* Screenshot Image */}
+            <div className="p-2">
+              <img
+                src={`data:image/png;base64,${removeScreenshotPreview.image}`}
+                alt="Remove Member Screenshot Preview"
+                className="w-full h-auto rounded-lg border border-gray-200 cursor-pointer hover:opacity-90 transition-opacity"
+                onClick={() => {
+                  // Open full size in new tab
+                  const newWindow = window.open();
+                  newWindow.document.write(`
+                    <html>
+                      <head><title>Remove Screenshot - ${removeScreenshotPreview.gptAccount}</title></head>
+                      <body style="margin:0;background:#1f2937;display:flex;justify-content:center;align-items:center;min-height:100vh;">
+                        <img src="data:image/png;base64,${removeScreenshotPreview.image}" style="max-width:100%;height:auto;"/>
+                      </body>
+                    </html>
+                  `);
+                }}
+              />
+            </div>
+            {/* Info */}
+            <div className="px-4 py-2 bg-gray-50 border-t border-gray-200">
+              <p className="text-xs text-gray-600 truncate">
+                <span className="font-medium">Removing:</span> {removeScreenshotPreview.email}
+              </p>
+              <p className="text-xs text-gray-400">
+                {new Date(removeScreenshotPreview.timestamp).toLocaleTimeString()}
               </p>
             </div>
           </div>

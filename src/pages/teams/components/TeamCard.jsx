@@ -1,16 +1,18 @@
 import React, { useState, useEffect } from "react";
 import ToggleButton from "./ToggleButton";
-import { FaUserFriends, FaEnvelope, FaChevronUp, FaChevronDown, FaPlus, FaTimes, FaUserPlus, FaServer, FaCopy, FaCheck, FaPaperPlane } from "react-icons/fa";
+import { FaUserFriends, FaEnvelope, FaChevronUp, FaChevronDown, FaPlus, FaTimes, FaUserPlus, FaServer, FaCopy, FaCheck, FaPaperPlane, FaUserMinus } from "react-icons/fa";
 import Member from "./Member";
 import RdpInfo from "./RdpInfo";
 import handleApi from "../../../libs/handleAPi";
 import InviteMemberModal from "../../../components/InviteMemberModal";
+import RemoveMemberModal from "../../../components/RemoveMemberModal";
 
 const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembers, justToggled, recentlyAddedMembers = [], userId }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showRdp, setShowRdp] = useState(false);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showInviteModal, setShowInviteModal] = useState(false);
+  const [showRemoveModal, setShowRemoveModal] = useState(false);
   const [emailsText, setEmailsText] = useState('');
   const [isAdding, setIsAdding] = useState(false);
   const [emailErrors, setEmailErrors] = useState([]);
@@ -294,6 +296,15 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
                   </button>
 
                   <button
+                    onClick={() => setShowRemoveModal(true)}
+                    className="flex items-center gap-1.5 bg-red-500/80 hover:bg-red-600 backdrop-blur-sm rounded-xl px-3 py-2 transition-all duration-200 text-white font-medium shadow-lg shadow-red-500/25"
+                    title="Remove Member"
+                  >
+                    <FaUserMinus className="text-xs" />
+                    <span className="text-xs">Remove</span>
+                  </button>
+
+                  <button
                     onClick={handleCopyCookie}
                     disabled={cookieLoading}
                     className={`flex items-center gap-1.5 backdrop-blur-sm rounded-xl px-3 py-2 transition-all duration-200 font-medium ${cookieCopied
@@ -444,6 +455,13 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
         team={team}
         userId={userId}
         onInviteSent={(data) => console.log('Invite sent:', data)}
+      />
+
+      <RemoveMemberModal
+        isOpen={showRemoveModal}
+        onClose={() => setShowRemoveModal(false)}
+        team={team}
+        onRemoveSent={(data) => console.log('Remove request sent:', data)}
       />
 
       {showAddModal && (

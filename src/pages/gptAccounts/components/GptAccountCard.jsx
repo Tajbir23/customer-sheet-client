@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import gptSecretToCode from '../../../libs/gptSecretToCode'
 import { toast } from 'react-toastify'
-import { FaCopy, FaEye, FaEyeSlash, FaKey, FaLock } from 'react-icons/fa'
+
 
 const GptAccountCard = ({ account }) => {
     const [code, setCode] = useState('')
@@ -115,7 +115,7 @@ const GptAccountCard = ({ account }) => {
                             }}
                             title="Copy Code"
                         >
-                            <FaCopy />
+                            <span className="font-bold text-xs">Copy</span>
                         </button>
                     </div>
 
@@ -137,7 +137,7 @@ const GptAccountCard = ({ account }) => {
                 {/* Password */}
                 <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] overflow-hidden">
                     <div className="px-3 pt-2 text-[10px] font-bold uppercase tracking-wider text-[var(--text-tertiary)] flex items-center gap-1.5">
-                        <FaLock className="w-2.5 h-2.5 opacity-70" /> Password
+                        <span className="opacity-70 font-bold pr-1">***</span> Password
                     </div>
                     <div className="px-3 pb-2.5 flex items-center justify-between gap-2 mt-0.5">
                         <div className="font-mono text-sm text-[var(--text-secondary)] truncate pr-2 select-none group-hover:text-[var(--text-primary)] transition-colors">
@@ -149,14 +149,14 @@ const GptAccountCard = ({ account }) => {
                                 className="p-1.5 rounded-md hover:bg-[var(--bg-hover)] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors"
                                 title={showPassword ? 'Hide' : 'Show'}
                             >
-                                {showPassword ? <FaEyeSlash size={14} /> : <FaEye size={14} />}
+                                {showPassword ? 'Hide' : 'Show'}
                             </button>
                             <button
                                 onClick={() => copy(account.password || '', 'Password copied')}
                                 className="p-1.5 rounded-md hover:bg-[var(--bg-hover)] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors"
                                 title="Copy Password"
                             >
-                                <FaCopy size={14} />
+                                <span className="font-bold text-xs">Copy</span>
                             </button>
                         </div>
                     </div>
@@ -165,7 +165,7 @@ const GptAccountCard = ({ account }) => {
                 {/* Secret */}
                 <div className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] overflow-hidden">
                     <div className="px-3 pt-2 text-[10px] font-bold uppercase tracking-wider text-[var(--text-tertiary)] flex items-center gap-1.5">
-                        <FaKey className="w-2.5 h-2.5 opacity-70" /> Secret Key
+                        <span className="opacity-70 font-bold pr-1">Key</span> Secret Key
                     </div>
                     <div className="px-3 pb-2.5 flex items-center justify-between gap-2 mt-0.5">
                         <div className="font-mono text-sm text-[var(--text-secondary)] truncate pr-2 select-none group-hover:text-[var(--text-primary)] transition-colors">
@@ -177,14 +177,14 @@ const GptAccountCard = ({ account }) => {
                                 className="p-1.5 rounded-md hover:bg-[var(--bg-hover)] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors"
                                 title={showSecret ? 'Hide' : 'Show'}
                             >
-                                {showSecret ? <FaEyeSlash size={14} /> : <FaEye size={14} />}
+                                {showSecret ? 'Hide' : 'Show'}
                             </button>
                             <button
                                 onClick={() => copy(account.secret || '', 'Secret copied')}
                                 className="p-1.5 rounded-md hover:bg-[var(--bg-hover)] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors"
                                 title="Copy Secret"
                             >
-                                <FaCopy size={14} />
+                                <span className="font-bold text-xs">Copy</span>
                             </button>
                         </div>
                     </div>

@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import handleApi from "../../../libs/handleAPi"
 import { toast } from "react-toastify"
-import { FaUpload, FaSpinner } from "react-icons/fa"
+
 
 const ProxyUploadForm = ({ onClose }) => {
     const [isLoading, setIsLoading] = useState(false)
@@ -13,17 +13,17 @@ const ProxyUploadForm = ({ onClose }) => {
 
     const validateForm = () => {
         const newErrors = {}
-        
+
         if (!formData.location) {
             newErrors.location = 'Please select a location'
         }
-        
+
         if (!formData.proxyUrl) {
             newErrors.proxyUrl = 'Proxy URL is required'
         } else if (!isValidUrl(formData.proxyUrl)) {
             newErrors.proxyUrl = 'Please enter a valid URL'
         }
-        
+
         setErrors(newErrors)
         return Object.keys(newErrors).length === 0
     }
@@ -43,7 +43,7 @@ const ProxyUploadForm = ({ onClose }) => {
             ...prev,
             [name]: value
         }))
-        
+
         // Clear error when user starts typing
         if (errors[name]) {
             setErrors(prev => ({
@@ -55,19 +55,19 @@ const ProxyUploadForm = ({ onClose }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        
+
         if (!validateForm()) {
             return
         }
 
         setIsLoading(true)
-        
+
         try {
             const res = await handleApi("/upload-proxy", "POST", {
                 location: formData.location,
                 proxyUrl: formData.proxyUrl
             })
-            
+
             if (res.success) {
                 toast.success(res.message || 'Proxy uploaded successfully!')
                 setFormData({ location: '', proxyUrl: '' })
@@ -94,11 +94,10 @@ const ProxyUploadForm = ({ onClose }) => {
                     id="location"
                     value={formData.location}
                     onChange={handleInputChange}
-                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
-                        errors.location 
-                            ? 'border-red-500 bg-red-50' 
+                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${errors.location
+                            ? 'border-red-500 bg-red-50'
                             : 'border-gray-300 bg-white hover:border-gray-400'
-                    }`}
+                        }`}
                 >
                     <option value="">Select location</option>
                     <option value="netherlands">Netherlands</option>
@@ -125,11 +124,10 @@ const ProxyUploadForm = ({ onClose }) => {
                     value={formData.proxyUrl}
                     onChange={handleInputChange}
                     placeholder="https://proxy.example.com:8080"
-                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${
-                        errors.proxyUrl 
-                            ? 'border-red-500 bg-red-50' 
+                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${errors.proxyUrl
+                            ? 'border-red-500 bg-red-50'
                             : 'border-gray-300 bg-white hover:border-gray-400'
-                    }`}
+                        }`}
                 />
                 {errors.proxyUrl && (
                     <p className="mt-1 text-sm text-red-600">{errors.proxyUrl}</p>
@@ -158,12 +156,12 @@ const ProxyUploadForm = ({ onClose }) => {
                 >
                     {isLoading ? (
                         <>
-                            <FaSpinner className="animate-spin" />
+                            <span className="animate-spin font-bold">...</span>
                             <span>Uploading...</span>
                         </>
                     ) : (
                         <>
-                            <FaUpload />
+                            <span className="font-bold">↑</span>
                             <span>Upload Proxy</span>
                         </>
                     )}

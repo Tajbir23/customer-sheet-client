@@ -1,12 +1,11 @@
 import React from "react";
-import { FaFilter } from "react-icons/fa";
 
 const AdminFilter = ({ admins, onFilterChange }) => {
     return (
         <div className="relative inline-block mb-8 animate-fade-in">
             <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none z-10">
-                    <FaFilter className="text-[var(--text-tertiary)] group-focus-within:text-[var(--accent-purple)] transition-colors" />
+                    <span className="text-[var(--text-tertiary)] group-focus-within:text-[var(--accent-purple)] transition-colors font-bold text-lg">≡</span>
                 </div>
 
                 <select

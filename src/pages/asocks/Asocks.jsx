@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import ProxyUploadForm from './components/ProxyUploadForm'
 import Proxies from './components/Proxies'
-import { FaPlus, FaTimes, FaServer } from 'react-icons/fa'
+
 import { Helmet } from 'react-helmet'
 
 const Asocks = () => {
@@ -42,7 +42,7 @@ const Asocks = () => {
                     e.currentTarget.style.color = 'var(--text-muted)';
                   }}
                 >
-                  <FaTimes className="w-4 h-4" />
+                  <span className="w-4 h-4 font-bold">X</span>
                 </button>
               </div>
               <ProxyUploadForm onClose={() => setIsUploadFormOpen(false)} />
@@ -62,7 +62,7 @@ const Asocks = () => {
                 boxShadow: '0 10px 25px -10px rgba(16, 185, 129, 0.5)',
               }}
             >
-              <FaServer className="w-8 h-8 text-white" />
+              <span className="w-8 h-8 text-white font-bold text-xl">S</span>
             </div>
             <div>
               <h1 className="text-3xl font-bold text-white">Proxy Management</h1>
@@ -78,7 +78,7 @@ const Asocks = () => {
               boxShadow: '0 10px 30px -10px rgba(16, 185, 129, 0.5)',
             }}
           >
-            <FaPlus className="group-hover:scale-110 transition-transform duration-200" />
+            <span className="group-hover:scale-110 transition-transform duration-200 font-bold">+</span>
             <span>Add Proxy</span>
           </button>
         </div>

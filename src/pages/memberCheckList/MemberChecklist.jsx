@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react'
 import handleApi from '../../libs/handleAPi'
 import GptAccountCard from './components/GptAccountCard'
-import { FaSearch, FaTimes, FaUsers, FaChartBar, FaFilter, FaDownload, FaCog } from 'react-icons/fa'
 import { Helmet } from 'react-helmet'
 
 const MemberChecklist = () => {
@@ -186,7 +185,7 @@ const MemberChecklist = () => {
         return (
             <div className="min-h-screen flex items-center justify-center p-4">
                 <div className="text-center">
-                    <div className="animate-spin rounded-full h-16 w-16 border-4 border-[var(--border-subtle)] border-t-[var(--accent-blue)] mx-auto"></div>
+                    <div className="mx-auto font-bold text-lg text-[var(--accent-blue)]">Loading...</div>
                     <p className="mt-4 text-[var(--text-secondary)] font-medium">Loading member checklist...</p>
                 </div>
             </div>
@@ -199,14 +198,14 @@ const MemberChecklist = () => {
                 <title>Member Checklist</title>
             </Helmet>
             {/* Page Header */}
-            <div className="animate-fade-in mb-6">
+            <div className="mb-6">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
                     <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
                         {/* Title Section */}
                         <div className="flex-1">
                             <div className="flex items-center gap-4">
                                 <div className="p-3 bg-[var(--bg-elevated)] rounded-xl border border-[var(--border-subtle)]">
-                                    <FaUsers className="h-6 w-6 text-[var(--accent-blue)]" />
+                                    <span className="h-6 w-6 text-[var(--accent-blue)] font-bold text-xl">#</span>
                                 </div>
                                 <div>
                                     <h1 className="text-3xl font-bold text-[var(--text-primary)] mb-1">Member Checklist</h1>
@@ -220,7 +219,7 @@ const MemberChecklist = () => {
                             <div className="rounded-xl px-5 py-3 border border-[var(--border-subtle)] bg-[var(--bg-card)] shadow-sm hover:border-[var(--accent-blue)] transition-colors">
                                 <div className="flex items-center gap-3">
                                     <div className="p-2 rounded-lg bg-[var(--accent-blue)]/10">
-                                        <FaChartBar className="h-4 w-4 text-[var(--accent-blue)]" />
+                                        <span className="h-4 w-4 text-[var(--accent-blue)] font-bold text-xs">A</span>
                                     </div>
                                     <div>
                                         <p className="text-xs font-semibold text-[var(--text-tertiary)] uppercase tracking-wide">Total Accounts</p>
@@ -231,7 +230,7 @@ const MemberChecklist = () => {
                             <div className="rounded-xl px-5 py-3 border border-[var(--border-subtle)] bg-[var(--bg-card)] shadow-sm hover:border-[var(--accent-green)] transition-colors">
                                 <div className="flex items-center gap-3">
                                     <div className="p-2 rounded-lg bg-[var(--accent-green)]/10">
-                                        <FaUsers className="h-4 w-4 text-[var(--accent-green)]" />
+                                        <span className="h-4 w-4 text-[var(--accent-green)] font-bold text-xs">M</span>
                                     </div>
                                     <div>
                                         <p className="text-xs font-semibold text-[var(--text-tertiary)] uppercase tracking-wide">Total Members</p>
@@ -242,7 +241,7 @@ const MemberChecklist = () => {
                             <div className="rounded-xl px-5 py-3 border border-[var(--border-subtle)] bg-[var(--bg-card)] shadow-sm hover:border-[var(--accent-orange)] transition-colors">
                                 <div className="flex items-center gap-3">
                                     <div className="p-2 rounded-lg bg-[var(--accent-orange)]/10">
-                                        <FaCog className="h-4 w-4 text-[var(--accent-orange)]" />
+                                        <span className="h-4 w-4 text-[var(--accent-orange)] font-bold text-xs">AC</span>
                                     </div>
                                     <div>
                                         <p className="text-xs font-semibold text-[var(--text-tertiary)] uppercase tracking-wide">Active Accounts</p>
@@ -264,7 +263,7 @@ const MemberChecklist = () => {
                             <form onSubmit={handleSearchSubmit} className="space-y-4">
                                 <div className="relative group">
                                     <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                                        <FaSearch className="h-5 w-5 text-[var(--text-muted)] group-focus-within:text-[var(--accent-blue)] transition-colors" />
+                                        <span className="h-5 w-5 text-[var(--text-muted)] font-bold text-sm">Q</span>
                                     </div>
                                     <input
                                         type="email"
@@ -279,7 +278,7 @@ const MemberChecklist = () => {
                                             onClick={clearSearch}
                                             className="absolute inset-y-0 right-0 pr-4 flex items-center text-[var(--text-muted)] hover:text-white transition-colors"
                                         >
-                                            <FaTimes className="h-5 w-5" />
+                                            <span className="h-5 w-5 font-bold text-sm">X</span>
                                         </button>
                                     )}
                                 </div>
@@ -296,13 +295,11 @@ const MemberChecklist = () => {
                                     >
                                         {isSearching ? (
                                             <>
-                                                <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
-                                                Searching...
+                                                <span>Searching...</span>
                                             </>
                                         ) : (
                                             <>
-                                                <FaSearch className="h-3.5 w-3.5" />
-                                                Search
+                                                <span>Search</span>
                                             </>
                                         )}
                                     </button>
@@ -313,7 +310,7 @@ const MemberChecklist = () => {
                                             onClick={clearSearch}
                                             className="inline-flex items-center gap-2 px-4 py-2 rounded-xl font-medium text-sm text-[var(--text-secondary)] bg-[var(--bg-card)] border border-[var(--border-subtle)] hover:border-[var(--text-secondary)] hover:text-white transition-colors"
                                         >
-                                            <FaTimes className="h-3.5 w-3.5" />
+                                            <span className="font-bold text-sm">X</span>
                                             Clear
                                         </button>
                                     )}
@@ -322,7 +319,7 @@ const MemberChecklist = () => {
                                         type="button"
                                         className="inline-flex items-center gap-2 px-4 py-2 rounded-xl font-medium text-sm text-[var(--text-secondary)] bg-[var(--bg-card)] border border-[var(--border-subtle)] hover:border-[var(--text-secondary)] hover:text-white transition-colors"
                                     >
-                                        <FaFilter className="h-3.5 w-3.5" />
+                                        <span className="font-bold text-sm">F</span>
                                         Filter
                                     </button>
 
@@ -330,7 +327,7 @@ const MemberChecklist = () => {
                                         type="button"
                                         className="inline-flex items-center gap-2 px-4 py-2 rounded-xl font-medium text-sm text-[var(--text-secondary)] bg-[var(--bg-card)] border border-[var(--border-subtle)] hover:border-[var(--text-secondary)] hover:text-white transition-colors"
                                     >
-                                        <FaDownload className="h-3.5 w-3.5" />
+                                        <span className="font-bold text-sm">D</span>
                                         Export
                                     </button>
                                 </div>
@@ -366,7 +363,7 @@ const MemberChecklist = () => {
                             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                                 <div className="flex items-center gap-3">
                                     <div className="p-1.5 bg-[var(--accent-blue)]/20 rounded-lg">
-                                        <FaUsers className="text-[var(--accent-blue)] h-3.5 w-3.5" />
+                                        <span className="text-[var(--accent-blue)] font-bold text-xs">M</span>
                                     </div>
                                     <div>
                                         <p className="text-sm font-bold text-white">
@@ -401,12 +398,10 @@ const MemberChecklist = () => {
                         {[...Array(6)].map((_, index) => (
                             <div key={index} className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-card)] p-6">
                                 <div className="card-body">
-                                    <div className="animate-pulse">
+                                    <div>
                                         <div className="h-6 bg-[var(--bg-surface)] rounded mb-4 w-1/3"></div>
                                         <div className="space-y-3">
                                             <div className="h-4 bg-[var(--bg-surface)] rounded"></div>
-                                            <div className="h-4 bg-[var(--bg-surface)] rounded w-3/4"></div>
-                                            <div className="h-4 bg-[var(--bg-surface)] rounded w-1/2"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -418,7 +413,7 @@ const MemberChecklist = () => {
                         <div className="max-w-lg mx-auto p-8 rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-card)]">
                             <div className="text-center">
                                 <div className="w-20 h-20 mx-auto mb-6 bg-[var(--bg-surface)] rounded-full flex items-center justify-center">
-                                    <FaUsers className="h-10 w-10 text-[var(--text-muted)]" />
+                                    <span className="text-[var(--text-muted)] font-bold text-2xl">?</span>
                                 </div>
                                 <h3 className="text-xl font-bold text-white mb-2">
                                     {search ? 'No Results Found' : 'No Accounts Available'}
@@ -443,7 +438,7 @@ const MemberChecklist = () => {
                 ) : (
                     <>
                         {/* Account Cards Grid */}
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 animate-fade-in-up">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                             {data.map((account) => (
                                 <div key={account._id}>
                                     <GptAccountCard accountData={account} data={data} setData={setData} />

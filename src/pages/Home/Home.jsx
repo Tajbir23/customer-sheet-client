@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import handleApi from '../../libs/handleAPi'
-import { FaCalendarAlt, FaMoneyBillWave, FaShoppingCart, FaUserClock, FaRobot } from 'react-icons/fa';
+
 import DashboardCharts from './components/DashboardCharts';
 import CountdownTimer from './components/CountdownTimer';
 import { Helmet } from 'react-helmet';
+import { FaShoppingCart, FaMoneyBillWave, FaClock, FaWallet, FaCalendar, FaRobot, FaUser } from 'react-icons/fa';
 
 const StatCard = ({ icon: Icon, title, value, subValue, gradient, delay = 0 }) => (
   <div
@@ -111,7 +112,7 @@ const NextSubscriptionCard = ({ data }) => {
                 background: 'linear-gradient(135deg, var(--accent-purple) 0%, var(--accent-blue) 100%)',
               }}
             >
-              <FaCalendarAlt className="w-5 h-5 text-white" />
+              <FaCalendar className="w-5 h-5 text-white" />
             </div>
             <h3 className="text-lg font-bold text-white">Next Subscription Ending</h3>
           </div>
@@ -236,7 +237,7 @@ const Home = () => {
           delay={100}
         />
         <StatCard
-          icon={FaUserClock}
+          icon={FaClock}
           title="Pending Orders"
           value={data?.orderSummery?.totalPending || 0}
           subValue={`${data?.orderSummery?.totalPaid || 0} orders paid`}
@@ -244,7 +245,7 @@ const Home = () => {
           delay={150}
         />
         <StatCard
-          icon={FaMoneyBillWave}
+          icon={FaWallet}
           title="My Revenue"
           value={`${data?.orderSummery?.myRevenue?.toLocaleString() || 0} TK`}
           subValue={`${data?.orderSummery?.totalMyOrder || 0} personal orders`}

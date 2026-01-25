@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaSearch, FaTimes, FaFilter, FaDownload } from 'react-icons/fa';
+
 
 const SearchSection = ({
     searchEmail,
@@ -30,7 +30,7 @@ const SearchSection = ({
                     {/* Main Search Input */}
                     <div className="relative">
                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                            <FaSearch className="h-5 w-5 text-[var(--text-tertiary)]" />
+                            <span className="h-5 w-5 text-[var(--text-tertiary)] font-bold flex items-center justify-center">Q</span>
                         </div>
                         <input
                             type="text"
@@ -45,7 +45,7 @@ const SearchSection = ({
                                 onClick={clearSearch}
                                 className="absolute inset-y-0 right-0 pr-4 flex items-center text-[var(--text-tertiary)] hover:text-white transition-colors"
                             >
-                                <FaTimes className="h-5 w-5" />
+                                <span className="h-5 w-5 font-bold">X</span>
                             </button>
                         )}
                     </div>
@@ -57,11 +57,11 @@ const SearchSection = ({
                                 onClick={() => handleSearch(searchEmail)}
                                 disabled={isSearching}
                                 className={`inline-flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all duration-200 ${isSearching
-                                        ? 'bg-[var(--bg-elevated)] text-[var(--text-tertiary)] cursor-not-allowed'
-                                        : 'bg-[var(--accent-blue)] text-white hover:bg-[var(--accent-blue)]/90'
+                                    ? 'bg-[var(--bg-elevated)] text-[var(--text-tertiary)] cursor-not-allowed'
+                                    : 'bg-[var(--accent-blue)] text-white hover:bg-[var(--accent-blue)]/90'
                                     }`}
                             >
-                                <FaSearch className="w-4 h-4" />
+                                <span className="w-4 h-4 font-bold">Q</span>
                                 {isSearching ? 'Searching...' : 'Search'}
                             </button>
 
@@ -70,7 +70,7 @@ const SearchSection = ({
                                     onClick={clearSearch}
                                     className="inline-flex items-center gap-2 px-6 py-3 bg-[var(--bg-elevated)] text-[var(--text-secondary)] rounded-xl font-medium hover:bg-[var(--bg-hover)] transition-all duration-200"
                                 >
-                                    <FaTimes className="w-4 h-4" />
+                                    <span className="w-4 h-4 font-bold">X</span>
                                     Clear
                                 </button>
                             )}
@@ -79,11 +79,11 @@ const SearchSection = ({
                         {/* Additional Actions */}
                         <div className="flex items-center space-x-3">
                             <button className="inline-flex items-center gap-2 px-4 py-3 text-[var(--text-secondary)] hover:text-white hover:bg-[var(--bg-hover)] rounded-xl transition-all duration-200">
-                                <FaFilter className="w-4 h-4" />
+                                <span className="w-4 h-4 font-bold">F</span>
                                 <span className="hidden sm:inline">Filter</span>
                             </button>
                             <button className="inline-flex items-center gap-2 px-4 py-3 text-[var(--text-secondary)] hover:text-white hover:bg-[var(--bg-hover)] rounded-xl transition-all duration-200">
-                                <FaDownload className="w-4 h-4" />
+                                <span className="w-4 h-4 font-bold">↓</span>
                                 <span className="hidden sm:inline">Export</span>
                             </button>
                         </div>

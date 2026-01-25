@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { FaTimes, FaPaperPlane, FaWhatsapp } from 'react-icons/fa'
+
 
 const SendMessageModal = ({ isOpen, onClose, selectedCount, onSend }) => {
     const [message, setMessage] = useState('')
@@ -29,7 +29,7 @@ const SendMessageModal = ({ isOpen, onClose, selectedCount, onSend }) => {
                 <div className="flex items-center justify-between p-6 border-b border-[var(--border-subtle)]">
                     <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-full bg-[var(--success)] flex items-center justify-center">
-                            <FaWhatsapp className="text-white text-lg" />
+                            <span className="text-white text-lg font-bold">WA</span>
                         </div>
                         <div>
                             <h2 className="text-xl font-bold text-white">Send Message</h2>
@@ -42,7 +42,7 @@ const SendMessageModal = ({ isOpen, onClose, selectedCount, onSend }) => {
                         onClick={onClose}
                         className="p-2 hover:bg-[var(--bg-hover)] rounded-lg transition-colors"
                     >
-                        <FaTimes className="text-[var(--text-tertiary)] hover:text-white" />
+                        <span className="text-[var(--text-tertiary)] hover:text-white font-bold">X</span>
                     </button>
                 </div>
 
@@ -83,7 +83,7 @@ const SendMessageModal = ({ isOpen, onClose, selectedCount, onSend }) => {
                             </>
                         ) : (
                             <>
-                                <FaPaperPlane className="text-sm" />
+                                <span className="text-sm font-bold">Send</span>
                                 <span>Send Message</span>
                             </>
                         )}

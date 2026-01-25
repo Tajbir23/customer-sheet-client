@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import CustomerTable from './components/CustomerTable'
-import { FaSearch, FaUserPlus, FaCalendarAlt, FaUsers, FaTimes } from 'react-icons/fa'
+
 import AddCustomerForm from './components/AddCustomerForm'
 import { Helmet } from 'react-helmet'
 
@@ -47,7 +47,7 @@ const Customers = () => {
                   boxShadow: '0 8px 20px -8px rgba(59, 130, 246, 0.5)',
                 }}
               >
-                <FaUsers className="w-6 h-6 text-white" />
+                <span className="w-6 h-6 text-white font-bold text-xl flex items-center justify-center">C</span>
               </div>
               <div>
                 <h1 className="text-3xl lg:text-4xl font-bold text-white tracking-tight">
@@ -75,7 +75,7 @@ const Customers = () => {
               e.currentTarget.style.boxShadow = '0 10px 30px -10px rgba(139, 92, 246, 0.5)';
             }}
           >
-            <FaUserPlus className="text-lg group-hover:scale-110 transition-transform duration-200" />
+            <span className="text-xl font-bold group-hover:scale-110 transition-transform duration-200">+</span>
             <span>Add New Customer</span>
           </button>
         </div>
@@ -113,7 +113,7 @@ const Customers = () => {
                   e.target.style.boxShadow = 'none';
                 }}
               />
-              <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] group-focus-within:text-[var(--accent-purple)] transition-colors duration-200" />
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] group-focus-within:text-[var(--accent-purple)] transition-colors duration-200 font-bold">Q</span>
             </div>
           </div>
 
@@ -140,7 +140,7 @@ const Customers = () => {
                   e.target.style.boxShadow = 'none';
                 }}
               />
-              <FaCalendarAlt className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] group-focus-within:text-[var(--accent-cyan)] transition-colors duration-200" />
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] group-focus-within:text-[var(--accent-cyan)] transition-colors duration-200 font-bold">D</span>
             </div>
           </div>
         </div>
@@ -156,7 +156,7 @@ const Customers = () => {
           }}
         >
           <p className="text-[var(--accent-purple-light)] font-medium flex items-center gap-2">
-            <FaSearch className="w-4 h-4" />
+            <span className="font-bold">?</span>
             {search && `Searching for: "${search}"`}
             {search && searchSubscriptionEndDate && " • "}
             {searchSubscriptionEndDate && `End date: ${searchSubscriptionEndDate}`}
@@ -168,7 +168,7 @@ const Customers = () => {
             }}
             className="flex items-center gap-2 text-[var(--accent-purple-light)] hover:text-white font-medium text-sm px-3 py-1.5 rounded-lg hover:bg-[var(--accent-purple)]/20 transition-all duration-200"
           >
-            <FaTimes className="w-3 h-3" />
+            <span className="font-bold text-xs">x</span>
             Clear filters
           </button>
         </div>

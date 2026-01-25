@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { FaEye, FaTrash, FaClock, FaCheckCircle, FaExclamationTriangle, FaCopy, FaCheck } from 'react-icons/fa';
+
 import { toast } from 'react-toastify';
+import { FaEye, FaTrash, FaCheck, FaClock, FaExclamationCircle, FaCopy } from 'react-icons/fa';
 
 const TableRow = ({ item, index, formatDate, onViewDetails, onDelete }) => {
     const [copiedEmail, setCopiedEmail] = useState(false);
@@ -12,21 +13,21 @@ const TableRow = ({ item, index, formatDate, onViewDetails, onDelete }) => {
                     bg: 'rgba(16, 185, 129, 0.15)',
                     text: 'var(--success-light)',
                     border: 'rgba(16, 185, 129, 0.3)',
-                    icon: FaCheckCircle
+                    icon: () => <FaCheck className="w-3 h-3" />
                 };
             case 'pending':
                 return {
                     bg: 'rgba(245, 158, 11, 0.15)',
                     text: 'var(--warning-light)',
                     border: 'rgba(245, 158, 11, 0.3)',
-                    icon: FaClock
+                    icon: () => <FaClock className="w-3 h-3" />
                 };
             default:
                 return {
                     bg: 'var(--bg-surface)',
                     text: 'var(--text-tertiary)',
                     border: 'var(--border-subtle)',
-                    icon: FaExclamationTriangle
+                    icon: () => <FaExclamationCircle className="w-3 h-3" />
                 };
         }
     };
@@ -224,7 +225,7 @@ const TableRow = ({ item, index, formatDate, onViewDetails, onDelete }) => {
                         title="View Details"
                     >
                         <FaEye className="w-3 h-3" />
-                        <span className="hidden sm:inline">View</span>
+                        <span className="font-bold">View</span>
                     </button>
                     <button
                         onClick={() => onDelete(item)}
@@ -245,7 +246,7 @@ const TableRow = ({ item, index, formatDate, onViewDetails, onDelete }) => {
                         title="Delete Customer"
                     >
                         <FaTrash className="w-3 h-3" />
-                        <span className="hidden sm:inline">Delete</span>
+                        <span className="font-bold">Delete</span>
                     </button>
                 </div>
             </td>

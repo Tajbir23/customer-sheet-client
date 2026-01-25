@@ -1,5 +1,4 @@
 import React from 'react'
-import { FaUsers, FaCheckCircle, FaTimesCircle, FaEnvelope } from 'react-icons/fa'
 
 const TeamStats = ({ totalCount }) => {
   const { totalTeams, totalMembers, totalActiveTeams, totalInactiveTeams } = totalCount
@@ -8,25 +7,21 @@ const TeamStats = ({ totalCount }) => {
     {
       title: 'Total Teams',
       value: totalTeams,
-      icon: FaUsers,
       gradient: 'linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%)',
     },
     {
       title: 'Active Teams',
       value: totalActiveTeams,
-      icon: FaCheckCircle,
       gradient: 'linear-gradient(135deg, #10b981 0%, #34d399 100%)',
     },
     {
       title: 'Inactive Teams',
       value: totalInactiveTeams,
-      icon: FaTimesCircle,
       gradient: 'linear-gradient(135deg, #ef4444 0%, #f87171 100%)',
     },
     {
       title: 'Total Members',
       value: totalMembers,
-      icon: FaEnvelope,
       gradient: 'linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%)',
     }
   ]
@@ -38,8 +33,7 @@ const TeamStats = ({ totalCount }) => {
       {stats.map((stat, index) => (
         <div
           key={index}
-          className="group relative overflow-hidden animate-fade-in-up"
-          style={{ animationDelay: `${index * 50}ms` }}
+          className="group relative overflow-hidden"
         >
           {/* Card */}
           <div
@@ -49,11 +43,7 @@ const TeamStats = ({ totalCount }) => {
               border: '1px solid var(--border-subtle)',
             }}
           >
-            {/* Glow Effect on Hover */}
-            <div
-              className="absolute -inset-0.5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 blur-sm"
-              style={{ background: stat.gradient }}
-            />
+
 
             <div className="relative z-10">
               <div className="flex items-center justify-between mb-4">
@@ -61,7 +51,8 @@ const TeamStats = ({ totalCount }) => {
                   className="p-3 rounded-xl shadow-lg transition-transform duration-300 group-hover:scale-110"
                   style={{ background: stat.gradient }}
                 >
-                  <stat.icon className="text-white text-xl" />
+                  {/* Icon removed */}
+                  <span className="text-white font-bold text-lg">#</span>
                 </div>
                 <div className="text-right">
                   <div

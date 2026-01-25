@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { FaTimes, FaUser, FaCalendarAlt, FaCreditCard, FaStickyNote, FaCheck, FaSpinner } from 'react-icons/fa';
+
 import handleApi from '../../../libs/handleAPi';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
@@ -89,7 +89,7 @@ const EditCustomerModal = ({ customer, onClose, onUpdate }) => {
                             className="p-2 bg-white/20 hover:bg-white/30 rounded-lg transition-colors border border-white/10"
                             title="Close"
                         >
-                            <FaTimes className="w-4 h-4 text-white" />
+                            <span className="w-4 h-4 text-white font-bold">X</span>
                         </button>
                     </div>
                 </div>
@@ -101,7 +101,7 @@ const EditCustomerModal = ({ customer, onClose, onUpdate }) => {
                         <div className="flex items-center mb-4">
                             <div className="w-8 h-8 rounded-lg flex items-center justify-center mr-3"
                                 style={{ background: 'var(--accent-blue)/20' }}>
-                                <FaUser className="w-4 h-4 text-[var(--accent-blue)]" />
+                                <span className="w-4 h-4 text-[var(--accent-blue)] font-bold text-center">U</span>
                             </div>
                             <div>
                                 <h4 className="text-lg font-bold text-[var(--text-primary)]">Customer Information</h4>
@@ -150,7 +150,7 @@ const EditCustomerModal = ({ customer, onClose, onUpdate }) => {
                         <div className="flex items-center mb-4">
                             <div className="w-8 h-8 rounded-lg flex items-center justify-center mr-3"
                                 style={{ background: 'var(--success)/20' }}>
-                                <FaCalendarAlt className="w-4 h-4 text-[var(--success)]" />
+                                <span className="w-4 h-4 text-[var(--success)] font-bold text-center">D</span>
                             </div>
                             <div>
                                 <h4 className="text-lg font-bold text-[var(--text-primary)]">Subscription & Dates</h4>
@@ -215,7 +215,7 @@ const EditCustomerModal = ({ customer, onClose, onUpdate }) => {
                         <div className="flex items-center mb-4">
                             <div className="w-8 h-8 rounded-lg flex items-center justify-center mr-3"
                                 style={{ background: 'var(--accent-purple)/20' }}>
-                                <FaCreditCard className="w-4 h-4 text-[var(--accent-purple)]" />
+                                <span className="w-4 h-4 text-[var(--accent-purple)] font-bold text-center">$</span>
                             </div>
                             <div>
                                 <h4 className="text-lg font-bold text-[var(--text-primary)]">Payment Information</h4>
@@ -302,7 +302,7 @@ const EditCustomerModal = ({ customer, onClose, onUpdate }) => {
                         <div className="flex items-center mb-4">
                             <div className="w-8 h-8 rounded-lg flex items-center justify-center mr-3"
                                 style={{ background: 'var(--text-tertiary)/20' }}>
-                                <FaStickyNote className="w-4 h-4 text-[var(--text-secondary)]" />
+                                <span className="w-4 h-4 text-[var(--text-secondary)] font-bold text-center">N</span>
                             </div>
                             <div>
                                 <h4 className="text-lg font-bold text-[var(--text-primary)]">Notes & Reminders</h4>
@@ -352,19 +352,19 @@ const EditCustomerModal = ({ customer, onClose, onUpdate }) => {
                             type="submit"
                             disabled={isSubmitting}
                             className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold transition-all duration-200 shadow-lg ${isSubmitting
-                                    ? 'bg-[var(--bg-surface)] text-[var(--text-muted)] cursor-not-allowed border border-[var(--border-subtle)]'
-                                    : 'text-white hover:scale-[1.02] hover:shadow-xl'
+                                ? 'bg-[var(--bg-surface)] text-[var(--text-muted)] cursor-not-allowed border border-[var(--border-subtle)]'
+                                : 'text-white hover:scale-[1.02] hover:shadow-xl'
                                 }`}
                             style={!isSubmitting ? { background: 'linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-blue-dark) 100%)' } : {}}
                         >
                             {isSubmitting ? (
                                 <>
-                                    <FaSpinner className="w-4 h-4 animate-spin" />
+                                    <span className="w-4 h-4 animate-spin font-bold">...</span>
                                     Updating Customer...
                                 </>
                             ) : (
                                 <>
-                                    <FaCheck className="w-4 h-4" />
+                                    <span className="w-4 h-4 font-bold">✓</span>
                                     Save Changes
                                 </>
                             )}

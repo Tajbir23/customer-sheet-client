@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { FaTrash, FaTimes, FaUser, FaEnvelope } from 'react-icons/fa'
+
 
 const Member = ({ index, team, member, onRemoveMember, isNewlyAdded = false }) => {
     const [showModal, setShowModal] = useState(false)
@@ -72,10 +72,6 @@ const Member = ({ index, team, member, onRemoveMember, isNewlyAdded = false }) =
                     {/* Member Info */}
                     <div className="flex-grow min-w-0">
                         <div className="flex items-center gap-2 mb-1">
-                            <FaEnvelope className={`w-3.5 h-3.5 flex-shrink-0 ${team?.isActive
-                                ? 'text-[var(--text-secondary)]'
-                                : 'text-[var(--text-tertiary)]'
-                                }`} />
                             <span className="text-sm truncate font-semibold text-white">
                                 {member}
                             </span>
@@ -97,20 +93,19 @@ const Member = ({ index, team, member, onRemoveMember, isNewlyAdded = false }) =
                         </div>
                     </div>
 
-                    {/* Actions */}
                     <div className="flex items-center gap-2">
                         {/* Remove Button */}
                         <button
                             onClick={handleRemoveClick}
                             className={`
                                 opacity-0 group-hover:opacity-100 transition-all duration-200 
-                                p-2 rounded-lg hover:scale-110 active:scale-95
+                                px-3 py-1 rounded-lg hover:scale-105 active:scale-95
                                 hover:bg-[var(--error-bg)] text-[var(--text-tertiary)] hover:text-[var(--error)]
-                                focus:outline-none focus:opacity-100
+                                focus:outline-none focus:opacity-100 text-xs font-bold border border-transparent hover:border-[var(--error)]
                             `}
                             title="Remove member"
                         >
-                            <FaTrash className="w-3.5 h-3.5" />
+                            Remove
                         </button>
                     </div>
                 </div>
@@ -118,8 +113,8 @@ const Member = ({ index, team, member, onRemoveMember, isNewlyAdded = false }) =
 
             {/* Confirmation Modal */}
             {showModal && (
-                <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
-                    <div className="rounded-2xl shadow-2xl max-w-md w-full mx-4 overflow-hidden animate-scale-in"
+                <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                    <div className="rounded-2xl shadow-2xl max-w-md w-full mx-4 overflow-hidden"
                         style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)' }}>
                         {/* Modal Header */}
                         <div className="flex items-center justify-between p-6 border-b"
@@ -128,8 +123,8 @@ const Member = ({ index, team, member, onRemoveMember, isNewlyAdded = false }) =
                                 background: 'linear-gradient(135deg, var(--error) 0%, var(--error-dark) 100%)'
                             }}>
                             <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-white/20 rounded-xl backdrop-blur-sm flex items-center justify-center">
-                                    <FaTrash className="w-5 h-5 text-white" />
+                                <div className="w-10 h-10 bg-white/20 rounded-xl backdrop-blur-sm flex items-center justify-center text-white font-bold text-lg">
+                                    !
                                 </div>
                                 <h3 className="text-lg font-bold text-white">
                                     Remove Member
@@ -137,9 +132,9 @@ const Member = ({ index, team, member, onRemoveMember, isNewlyAdded = false }) =
                             </div>
                             <button
                                 onClick={handleCancelRemove}
-                                className="text-white/70 hover:text-white transition-colors p-2 rounded-lg hover:bg-white/10"
+                                className="text-white/70 hover:text-white transition-colors p-2 rounded-lg hover:bg-white/10 text-lg font-bold"
                             >
-                                <FaTimes className="w-5 h-5" />
+                                X
                             </button>
                         </div>
 
@@ -215,7 +210,6 @@ const Member = ({ index, team, member, onRemoveMember, isNewlyAdded = false }) =
                                     </>
                                 ) : (
                                     <>
-                                        <FaTrash className="w-3.5 h-3.5" />
                                         Remove Member
                                     </>
                                 )}

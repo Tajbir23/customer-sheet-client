@@ -1,10 +1,6 @@
 import React, { useState } from "react";
-import {
-    FaExclamationTriangle,
-    FaCopy,
-    FaChevronDown,
-    FaChevronUp,
-} from "react-icons/fa";
+
+
 import { toast } from "react-toastify";
 
 const DuplicateMembersCard = ({ duplicateMembers }) => {
@@ -33,7 +29,7 @@ const DuplicateMembersCard = ({ duplicateMembers }) => {
     const hasMore = duplicateMembers.length > 5;
 
     return (
-        <div className="mb-8 animate-fade-in-up">
+        <div className="mb-8">
             <div className="rounded-2xl overflow-hidden border border-[var(--warning)]/30"
                 style={{ background: 'var(--bg-card)' }}>
                 {/* Header */}
@@ -46,7 +42,7 @@ const DuplicateMembersCard = ({ duplicateMembers }) => {
                         <div className="flex items-center gap-3">
                             <div className="p-2 rounded-lg"
                                 style={{ background: 'var(--warning)', color: 'var(--bg-deepest)' }}>
-                                <FaExclamationTriangle className="text-lg" />
+                                <span className="text-lg font-bold">!</span>
                             </div>
                             <div>
                                 <h3 className="text-lg font-bold"
@@ -68,8 +64,7 @@ const DuplicateMembersCard = ({ duplicateMembers }) => {
                                 : "bg-[var(--bg-card)] text-[var(--text-secondary)] border-[var(--border-subtle)] hover:text-white hover:border-[var(--text-secondary)]"
                                 }`}
                         >
-                            <FaCopy className="text-sm" />
-                            {copied ? "Copied!" : "Copy All"}
+                            <span className="font-bold text-sm">{copied ? "Copied!" : "Copy All"}</span>
                         </button>
                     </div>
                 </div>
@@ -104,7 +99,7 @@ const DuplicateMembersCard = ({ duplicateMembers }) => {
                                         }`}
                                     title="Copy email"
                                 >
-                                    <FaCopy className="text-xs" />
+                                    <span className="text-xs font-bold">Copy</span>
                                 </button>
                             </div>
                         ))}
@@ -120,13 +115,11 @@ const DuplicateMembersCard = ({ duplicateMembers }) => {
                             >
                                 {isExpanded ? (
                                     <>
-                                        <FaChevronUp className="text-sm" />
-                                        Show Less
+                                        <span>Show Less</span>
                                     </>
                                 ) : (
                                     <>
-                                        <FaChevronDown className="text-sm" />
-                                        Show {duplicateMembers.length - 5} More
+                                        <span>Show {duplicateMembers.length - 5} More</span>
                                     </>
                                 )}
                             </button>

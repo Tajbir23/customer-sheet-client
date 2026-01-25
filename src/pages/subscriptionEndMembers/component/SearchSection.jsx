@@ -1,5 +1,5 @@
 import React from "react";
-import { FaSearch, FaTimes, FaCalendarAlt } from "react-icons/fa";
+
 
 const SearchSection = ({
   searchValue,
@@ -39,7 +39,7 @@ const SearchSection = ({
       >
         <div className="flex items-center justify-between">
           <h3 className="font-bold text-white flex items-center gap-2">
-            <FaSearch className="w-4 h-4" />
+            <span className="font-bold">Search</span>
             Search & Filter
           </h3>
           <div className="flex items-center space-x-2">
@@ -56,7 +56,7 @@ const SearchSection = ({
           {/* Main Search Input */}
           <div className="relative group">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-              <FaSearch className="h-5 w-5 text-[var(--text-muted)] group-focus-within:text-[var(--accent-purple)] transition-colors" />
+              <span className="text-[var(--text-muted)] group-focus-within:text-[var(--accent-purple)] transition-colors font-bold">Q</span>
             </div>
             <input
               type="text"
@@ -83,7 +83,7 @@ const SearchSection = ({
                 onClick={() => setSearchValue("")}
                 className="absolute inset-y-0 right-0 pr-4 flex items-center text-[var(--text-muted)] hover:text-white transition-colors"
               >
-                <FaTimes className="h-5 w-5" />
+                <span className="font-bold">X</span>
               </button>
             )}
           </div>
@@ -93,7 +93,7 @@ const SearchSection = ({
             {/* End Date Filter */}
             <div className="relative">
               <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">
-                <FaCalendarAlt className="inline w-4 h-4 mr-2 text-[var(--error)]" />
+                <span className="inline mr-2 text-[var(--error)] font-bold">Date:</span>
                 Subscription End Date (before)
               </label>
               <input
@@ -120,7 +120,7 @@ const SearchSection = ({
             {/* Order Date Filter */}
             <div className="relative">
               <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">
-                <FaCalendarAlt className="inline w-4 h-4 mr-2 text-[var(--accent-purple)]" />
+                <span className="inline mr-2 text-[var(--accent-purple)] font-bold">Date:</span>
                 Order Date (before)
               </label>
               <input
@@ -170,7 +170,7 @@ const SearchSection = ({
                 e.currentTarget.style.boxShadow = isSearching ? 'none' : '0 8px 20px -8px rgba(239, 68, 68, 0.5)';
               }}
             >
-              <FaSearch className="w-4 h-4" />
+              <span className="font-bold">Search</span>
               {isSearching ? "Searching..." : "Search"}
             </button>
 
@@ -192,7 +192,7 @@ const SearchSection = ({
                   e.currentTarget.style.color = 'var(--text-secondary)';
                 }}
               >
-                <FaTimes className="w-4 h-4" />
+                <span className="font-bold">X</span>
                 Clear All
               </button>
             )}
@@ -212,7 +212,7 @@ const SearchSection = ({
                 >
                   Search: "{searchValue}"
                   <button onClick={() => setSearchValue("")} className="ml-1 hover:text-white transition-colors">
-                    <FaTimes className="w-3 h-3" />
+                    <span className="font-bold text-xs">x</span>
                   </button>
                 </span>
               )}
@@ -227,7 +227,7 @@ const SearchSection = ({
                 >
                   End Date: ≤ {endDate}
                   <button onClick={() => setEndDate("")} className="ml-1 hover:text-white transition-colors">
-                    <FaTimes className="w-3 h-3" />
+                    <span className="font-bold text-xs">x</span>
                   </button>
                 </span>
               )}
@@ -242,7 +242,7 @@ const SearchSection = ({
                 >
                   Order Date: ≤ {orderDate}
                   <button onClick={() => setOrderDate("")} className="ml-1 hover:text-white transition-colors">
-                    <FaTimes className="w-3 h-3" />
+                    <span className="font-bold text-xs">x</span>
                   </button>
                 </span>
               )}

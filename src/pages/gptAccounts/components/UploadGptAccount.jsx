@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import gptSecretToCode from '../../../libs/gptSecretToCode'
 import handleApi from '../../../libs/handleAPi'
 import { toast } from 'react-toastify'
-import { FaTimes, FaCloudUploadAlt, FaExclamationTriangle, FaCheckCircle, FaSpinner } from 'react-icons/fa'
+
 
 const UploadGptAccount = ({ setIsOpen }) => {
     const [formData, setFormData] = useState({
@@ -193,7 +193,7 @@ const UploadGptAccount = ({ setIsOpen }) => {
                         onClick={() => setIsOpen(false)}
                         className="p-2 rounded-lg hover:bg-[var(--bg-hover)] text-[var(--text-secondary)] hover:text-white transition-colors"
                     >
-                        <FaTimes className="w-5 h-5" />
+                        <span className="w-5 h-5 font-bold">X</span>
                     </button>
                 </div>
 
@@ -279,7 +279,7 @@ const UploadGptAccount = ({ setIsOpen }) => {
                                     background: 'var(--bg-surface)'
                                 }}>
                                 <div className="space-y-2 text-center">
-                                    <FaCloudUploadAlt className="mx-auto h-12 w-12 text-[var(--text-tertiary)] group-hover:text-[var(--accent-purple)] transition-colors" />
+                                    <span className="mx-auto text-4xl text-[var(--text-tertiary)] group-hover:text-[var(--accent-purple)] transition-colors font-bold block mb-2">↑</span>
                                     <div className="flex text-sm text-[var(--text-secondary)] justify-center">
                                         <label htmlFor="qr-upload" className="relative cursor-pointer rounded-md font-medium text-[var(--accent-purple)] hover:text-[var(--accent-purple-light)] focus-within:outline-none">
                                             <span>Upload a file</span>
@@ -300,14 +300,14 @@ const UploadGptAccount = ({ setIsOpen }) => {
                             </div>
                             {selectedFile && (
                                 <p className="mt-2 text-sm text-[var(--success)] flex items-center gap-1">
-                                    <FaCheckCircle /> File selected: {selectedFile.name}
+                                    <span className="font-bold">✓</span> File selected: {selectedFile.name}
                                 </p>
                             )}
                         </div>
 
                         {error && (
                             <div className="p-3 rounded-xl border border-[var(--error)]/30 bg-[var(--error-bg)] flex items-start gap-2">
-                                <FaExclamationTriangle className="text-[var(--error)] mt-0.5 shrink-0" />
+                                <span className="text-[var(--error)] mt-0.5 shrink-0 font-bold">!</span>
                                 <p className="text-sm text-[var(--error)] font-medium">
                                     {error}
                                 </p>
@@ -332,7 +332,7 @@ const UploadGptAccount = ({ setIsOpen }) => {
                         disabled={isSubmitting}
                         className="px-6 py-2 text-sm font-bold text-white bg-[var(--accent-blue)] border border-transparent rounded-xl hover:bg-[var(--accent-blue-light)] hover:shadow-lg hover:shadow-blue-500/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all flex items-center gap-2"
                     >
-                        {isSubmitting && <FaSpinner className="animate-spin" />}
+                        {isSubmitting && <span className="animate-spin font-bold">...</span>}
                         Upload Account
                     </button>
                 </div>

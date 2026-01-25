@@ -3,10 +3,9 @@ import React from 'react'
 const LoadingCard = ({ delay = 0 }) => {
   return (
     <div
-      className="rounded-3xl overflow-hidden animate-fade-in border border-[var(--border-subtle)]"
+      className="rounded-3xl overflow-hidden border border-[var(--border-subtle)]"
       style={{
         background: 'var(--bg-card)',
-        animationDelay: `${delay}ms`,
       }}
     >
       {/* Header */}

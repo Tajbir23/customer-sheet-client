@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaUser, FaUsers, FaCalendarAlt, FaChevronDown, FaChevronUp, FaCopy, FaEye } from 'react-icons/fa';
+
 
 const MemberCard = ({ member }) => {
     const [showAllMembers, setShowAllMembers] = useState(false);
@@ -32,7 +32,7 @@ const MemberCard = ({ member }) => {
                     <div className="flex items-center space-x-4">
                         <div className="relative">
                             <div className="w-14 h-14 bg-[var(--accent-blue)] rounded-2xl flex items-center justify-center">
-                                <FaUser className="w-7 h-7 text-white" />
+                                <span className="w-7 h-7 text-white font-bold text-xl text-center flex items-center justify-center">U</span>
                             </div>
                             <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-[var(--error)] text-white rounded-full flex items-center justify-center text-xs font-bold">
                                 {member.members.length}
@@ -48,7 +48,7 @@ const MemberCard = ({ member }) => {
                                     className="p-1.5 text-[var(--text-tertiary)] hover:text-[var(--accent-blue)] hover:bg-[var(--bg-hover)] rounded-lg transition-all duration-200"
                                     title="Copy email"
                                 >
-                                    <FaCopy className="w-3 h-3" />
+                                    <span className="w-3 h-3 font-bold text-xs">Copy</span>
                                 </button>
                             </div>
                             <p className="text-sm text-[var(--text-secondary)] font-medium">GPT Account</p>
@@ -58,7 +58,7 @@ const MemberCard = ({ member }) => {
                     <div className="flex items-center space-x-3">
                         <div className="text-right">
                             <div className="flex items-center gap-2 text-[var(--error)] font-semibold">
-                                <FaUsers className="w-4 h-4" />
+                                <span className="w-4 h-4 font-bold">T</span>
                                 <span>{member.members.length} removed</span>
                             </div>
                             <div className="text-xs text-[var(--text-tertiary)] mt-1">
@@ -82,9 +82,9 @@ const MemberCard = ({ member }) => {
                                 onClick={() => setShowAllMembers(!showAllMembers)}
                                 className="inline-flex items-center gap-1 text-sm text-[var(--accent-blue)] hover:text-[var(--accent-blue-light)] font-medium transition-colors"
                             >
-                                <FaEye className="w-3 h-3" />
+                                <span className="w-3 h-3 font-bold">O</span>
                                 {showAllMembers ? 'Show Less' : 'Show All'}
-                                {showAllMembers ? <FaChevronUp className="w-3 h-3" /> : <FaChevronDown className="w-3 h-3" />}
+                                {showAllMembers ? <span className="w-3 h-3 font-bold">^</span> : <span className="w-3 h-3 font-bold">v</span>}
                             </button>
                         )}
                     </div>
@@ -116,7 +116,7 @@ const MemberCard = ({ member }) => {
                                     className="opacity-0 group-hover/member:opacity-100 p-1.5 text-[var(--text-tertiary)] hover:text-[var(--accent-blue)] hover:bg-[var(--bg-elevated)] rounded-lg transition-all duration-200"
                                     title="Copy email"
                                 >
-                                    <FaCopy className="w-3 h-3" />
+                                    <span className="w-3 h-3 font-bold text-xs">Copy</span>
                                 </button>
                             </div>
                         ))}
@@ -138,7 +138,7 @@ const MemberCard = ({ member }) => {
             <div className="bg-[var(--bg-surface)] px-6 py-4 border-t border-[var(--border-subtle)]">
                 <div className="flex items-center justify-between text-sm">
                     <div className="flex items-center gap-2 text-[var(--text-tertiary)]">
-                        <FaCalendarAlt className="w-4 h-4" />
+                        <span className="w-4 h-4 font-bold text-xs">D</span>
                         <span>Last updated: {formatDate(member.updatedAt)}</span>
                     </div>
                     <div className="text-[var(--text-muted)]">

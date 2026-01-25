@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { FaDesktop, FaNetworkWired, FaSpinner, FaPlay, FaStop } from 'react-icons/fa'
+
 import handleApi from '../../../libs/handleAPi'
 import { toast } from 'react-toastify'
 
@@ -94,7 +94,7 @@ const RdpInfo = ({ team, onRdpOpen, onRdpClose }) => {
       {/* RDP Data Display */}
       {loading ? (
         <div className="flex items-center justify-center py-8">
-          <FaSpinner className="animate-spin text-2xl text-[var(--text-tertiary)]" />
+          <span className="text-[var(--text-tertiary)] font-bold">Loading...</span>
         </div>
       ) : rdpData.length > 0 ? (
         <div className="grid gap-4">
@@ -128,10 +128,10 @@ const RdpInfo = ({ team, onRdpOpen, onRdpClose }) => {
                 {/* RDP Info */}
                 <div className="flex-grow min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <FaDesktop className={`w-3.5 h-3.5 flex-shrink-0 ${team?.isActive
-                        ? 'text-[var(--text-secondary)]'
-                        : 'text-[var(--text-tertiary)]'
-                      }`} />
+                    <span className={`text-xs font-bold ${team?.isActive
+                      ? 'text-[var(--text-secondary)]'
+                      : 'text-[var(--text-tertiary)]'
+                      }`}>RDP</span>
                     <span className="text-sm truncate font-semibold text-white">
                       {rdp.hostname}
                     </span>
@@ -139,7 +139,7 @@ const RdpInfo = ({ team, onRdpOpen, onRdpClose }) => {
 
                   {/* IP Address */}
                   <div className="flex items-center gap-2">
-                    <FaNetworkWired className="w-3 h-3 text-[var(--text-tertiary)]" />
+                    <span className="text-xs font-bold text-[var(--text-tertiary)]">IP:</span>
                     <span className="text-xs text-[var(--text-muted)] font-mono">
                       {rdp.ipAddress}
                     </span>
@@ -159,7 +159,7 @@ const RdpInfo = ({ team, onRdpOpen, onRdpClose }) => {
                     "
                     title="Open RDP"
                   >
-                    <FaPlay className="w-3.5 h-3.5" />
+                    <span className="text-xs font-bold">Start</span>
                   </button>
 
                   {/* Close Button */}
@@ -173,7 +173,7 @@ const RdpInfo = ({ team, onRdpOpen, onRdpClose }) => {
                     "
                     title="Close RDP"
                   >
-                    <FaStop className="w-3.5 h-3.5" />
+                    <span className="text-xs font-bold">Stop</span>
                   </button>
                 </div>
               </div>
@@ -183,7 +183,7 @@ const RdpInfo = ({ team, onRdpOpen, onRdpClose }) => {
       ) : (
         <div className="text-center py-12">
           <div className="bg-[var(--bg-card)] rounded-3xl p-8 max-w-sm mx-auto border border-[var(--border-subtle)] border-dashed">
-            <FaDesktop className="w-16 h-16 mx-auto mb-4 text-[var(--text-muted)]" />
+            <div className="w-16 h-16 mx-auto mb-4 text-[var(--text-muted)] flex items-center justify-center font-bold text-2xl border-2 border-[var(--text-muted)] rounded-lg">RDP</div>
             <h4 className="text-lg font-semibold text-white mb-2">No RDP Information</h4>
             <p className="text-[var(--text-tertiary)]">No RDP servers are currently configured for this team</p>
           </div>

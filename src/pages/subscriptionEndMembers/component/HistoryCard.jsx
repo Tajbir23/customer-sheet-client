@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import {
-  FaCalendarAlt,
-  FaCopy,
-  FaCheck,
   FaEnvelope,
+  FaRobot,
   FaWhatsapp,
+  FaHistory,
+  FaCalendarAlt,
+  FaUser,
   FaClock,
-  FaUserCircle,
-} from "react-icons/fa";
-import { MdComputer } from "react-icons/md";
+  FaCheck
+} from 'react-icons/fa';
+
 
 const HistoryCard = ({ item, index = 0 }) => {
   const [copiedField, setCopiedField] = useState(null);
@@ -59,11 +60,10 @@ const HistoryCard = ({ item, index = 0 }) => {
 
   return (
     <div
-      className="group rounded-2xl overflow-hidden transition-all duration-300 animate-fade-in-up"
+      className="group rounded-2xl overflow-hidden transition-all duration-300"
       style={{
         background: 'linear-gradient(145deg, var(--bg-card) 0%, var(--bg-surface) 100%)',
         border: '1px solid var(--border-subtle)',
-        animationDelay: `${index * 50}ms`,
       }}
     >
       {/* Card Header */}
@@ -74,7 +74,7 @@ const HistoryCard = ({ item, index = 0 }) => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
-              <FaEnvelope className="w-6 h-6 text-white" />
+              <FaEnvelope className="text-white text-2xl" />
             </div>
             <div>
               <div className="flex items-center gap-2">
@@ -89,7 +89,7 @@ const HistoryCard = ({ item, index = 0 }) => {
                   {copiedField === "email" ? (
                     <FaCheck className="w-3 h-3 text-green-300" />
                   ) : (
-                    <FaCopy className="w-3 h-3 text-white" />
+                    <span className="text-white text-xs font-bold">Copy</span>
                   )}
                 </button>
               </div>
@@ -123,7 +123,7 @@ const HistoryCard = ({ item, index = 0 }) => {
               className="w-10 h-10 rounded-lg flex items-center justify-center"
               style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%)' }}
             >
-              <MdComputer className="w-5 h-5 text-white" />
+              <FaRobot className="text-white text-xl" />
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-xs text-[var(--accent-blue-light)] font-medium uppercase">GPT Account</p>
@@ -137,7 +137,7 @@ const HistoryCard = ({ item, index = 0 }) => {
                   {copiedField === "gptAccount" ? (
                     <FaCheck className="w-3 h-3 text-[var(--success)]" />
                   ) : (
-                    <FaCopy className="w-3 h-3" />
+                    <span className="text-xs font-bold">Copy</span>
                   )}
                 </button>
               </div>
@@ -153,7 +153,7 @@ const HistoryCard = ({ item, index = 0 }) => {
               className="w-10 h-10 rounded-lg flex items-center justify-center"
               style={{ background: 'linear-gradient(135deg, #10b981 0%, #34d399 100%)' }}
             >
-              <FaWhatsapp className="w-5 h-5 text-white" />
+              <FaWhatsapp className="text-white text-xl" />
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-xs text-[var(--success-light)] font-medium uppercase">WhatsApp/FB ID</p>
@@ -168,7 +168,7 @@ const HistoryCard = ({ item, index = 0 }) => {
                     {copiedField === "waOrFbId" ? (
                       <FaCheck className="w-3 h-3 text-[var(--success)]" />
                     ) : (
-                      <FaCopy className="w-3 h-3" />
+                      <span className="text-xs font-bold">Copy</span>
                     )}
                   </button>
                 )}
@@ -185,7 +185,7 @@ const HistoryCard = ({ item, index = 0 }) => {
               className="w-10 h-10 rounded-lg flex items-center justify-center"
               style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%)' }}
             >
-              <FaCalendarAlt className="w-5 h-5 text-white" />
+              <FaHistory className="text-white text-xl" />
             </div>
             <div>
               <p className="text-xs text-[var(--accent-purple-light)] font-medium uppercase">Order Date</p>
@@ -202,7 +202,7 @@ const HistoryCard = ({ item, index = 0 }) => {
               className="w-10 h-10 rounded-lg flex items-center justify-center"
               style={{ background: 'linear-gradient(135deg, #ef4444 0%, #f87171 100%)' }}
             >
-              <FaClock className="w-5 h-5 text-white" />
+              <FaCalendarAlt className="text-white text-xl" />
             </div>
             <div>
               <p className="text-xs text-[var(--error-light)] font-medium uppercase">Subscription End</p>
@@ -217,12 +217,13 @@ const HistoryCard = ({ item, index = 0 }) => {
           style={{ borderColor: 'var(--border-subtle)' }}
         >
           <div className="flex items-center gap-2 text-sm text-[var(--text-tertiary)]">
-            <FaUserCircle className="w-4 h-4" />
+            <FaUser className="text-sm" />
             <span>
               Added by: {item.user?.name || item.user?.email || "Unknown"}
             </span>
           </div>
-          <div className="text-xs text-[var(--text-muted)]">
+          <div className="text-xs text-[var(--text-muted)] flex items-center gap-1">
+            <FaClock className="text-xs" />
             Recorded: {formatDateTime(item.createdAt)}
           </div>
         </div>

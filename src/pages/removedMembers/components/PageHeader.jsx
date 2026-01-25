@@ -1,13 +1,13 @@
 import React from 'react';
-import { FaHome, FaChevronRight, FaTrash, FaUsers, FaUserMinus, FaUserCheck } from 'react-icons/fa';
+
 
 const PageHeader = ({ totalAccounts, totalMembers, totalUniqueMembers, loading }) => {
     return (
         <div className="mb-8">
             {/* Breadcrumb */}
             <nav className="flex items-center space-x-2 text-sm text-[var(--text-tertiary)] mb-4">
-                <FaHome className="w-4 h-4" />
-                <FaChevronRight className="w-3 h-3" />
+                <span className="w-4 h-4 font-bold">Home</span>
+                <span className="w-3 h-3 font-bold">&gt;</span>
                 <span className="text-white font-medium">Removed Members</span>
             </nav>
 
@@ -15,7 +15,7 @@ const PageHeader = ({ totalAccounts, totalMembers, totalUniqueMembers, loading }
             <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
                 <div className="flex items-center space-x-4">
                     <div className="p-3 bg-[var(--bg-elevated)] rounded-xl border border-[var(--border-subtle)]">
-                        <FaTrash className="w-6 h-6 text-[var(--error)]" />
+                        <span className="w-6 h-6 text-[var(--error)] font-bold text-xl">🗑</span>
                     </div>
                     <div>
                         <h1 className="text-3xl font-bold text-[var(--text-primary)]">Removed Members</h1>
@@ -29,7 +29,7 @@ const PageHeader = ({ totalAccounts, totalMembers, totalUniqueMembers, loading }
                     <div className="bg-[var(--bg-card)] rounded-xl p-4 border border-[var(--border-subtle)]">
                         <div className="flex items-center gap-3">
                             <div className="w-10 h-10 bg-[var(--accent-blue)]/10 rounded-lg flex items-center justify-center">
-                                <FaUsers className="text-[var(--accent-blue)]" />
+                                <span className="text-[var(--accent-blue)] font-bold">AC</span>
                             </div>
                             <div>
                                 <div className="text-2xl font-bold text-white">
@@ -46,7 +46,7 @@ const PageHeader = ({ totalAccounts, totalMembers, totalUniqueMembers, loading }
                     <div className="bg-[var(--bg-card)] rounded-xl p-4 border border-[var(--border-subtle)]">
                         <div className="flex items-center gap-3">
                             <div className="w-10 h-10 bg-[var(--error)]/10 rounded-lg flex items-center justify-center">
-                                <FaUserMinus className="text-[var(--error)]" />
+                                <span className="text-[var(--error)] font-bold">RM</span>
                             </div>
                             <div>
                                 <div className="text-2xl font-bold text-[var(--error)]">
@@ -63,7 +63,7 @@ const PageHeader = ({ totalAccounts, totalMembers, totalUniqueMembers, loading }
                     <div className="bg-[var(--bg-card)] rounded-xl p-4 border border-[var(--border-subtle)]">
                         <div className="flex items-center gap-3">
                             <div className="w-10 h-10 bg-[var(--warning)]/10 rounded-lg flex items-center justify-center">
-                                <FaUserCheck className="text-[var(--warning)]" />
+                                <span className="text-[var(--warning)] font-bold">UM</span>
                             </div>
                             <div>
                                 <div className="text-2xl font-bold text-[var(--warning)]">

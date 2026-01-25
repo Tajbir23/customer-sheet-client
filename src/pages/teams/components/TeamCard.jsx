@@ -1,11 +1,26 @@
 import React, { useState, useEffect } from "react";
 import ToggleButton from "./ToggleButton";
-import { FaUserFriends, FaEnvelope, FaChevronUp, FaChevronDown, FaPlus, FaTimes, FaUserPlus, FaServer, FaCopy, FaCheck, FaPaperPlane, FaUserMinus } from "react-icons/fa";
+
 import Member from "./Member";
 import RdpInfo from "./RdpInfo";
 import handleApi from "../../../libs/handleAPi";
 import InviteMemberModal from "../../../components/InviteMemberModal";
 import RemoveMemberModal from "../../../components/RemoveMemberModal";
+import {
+  FaCopy,
+  FaUserPlus,
+  FaUserMinus,
+  FaDesktop,
+  FaUsers,
+  FaChevronDown,
+  FaChevronUp,
+  FaCheck,
+  FaCookie,
+  FaUser,
+  FaServer,
+  FaPlus,
+  FaTimes
+} from "react-icons/fa";
 
 const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembers, justToggled, recentlyAddedMembers = [], userId }) => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -249,22 +264,19 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
               {/* Status Row */}
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
-                  <div className={`w-3 h-3 rounded-full ${team.isActive ? 'bg-[var(--success)] shadow-[0_0_8px_var(--success)]' : 'bg-[var(--error)] shadow-[0_0_8px_var(--error)]'} ${justToggled ? 'animate-ping' : 'animate-pulse'}`} />
+                  <div className={`w-3 h-3 rounded-full ${team.isActive ? 'bg-[var(--success)] shadow-[0_0_8px_var(--success)]' : 'bg-[var(--error)] shadow-[0_0_8px_var(--error)]'}`} />
                   <span className={`text-white text-sm font-bold tracking-wide transition-all duration-300 ${justToggled ? 'scale-110' : ''}`}>
                     {team.isActive ? 'ACTIVE TEAM' : 'INACTIVE TEAM'}
                   </span>
                   {/* Status change indicator */}
-                  {justToggled && (
-                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-bold bg-[var(--success-bg)] text-[var(--success-light)] animate-pulse">
-                      ✓ Updated!
-                    </span>
-                  )}
+                  <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-bold bg-[var(--success-bg)] text-[var(--success-light)]">
+                    <FaCheck className="mr-1" /> Updated!
+                  </span>
                 </div>
                 <div className="flex items-center gap-3">
                   {/* Simple Member Count Badge */}
                   <div className="bg-white/10 backdrop-blur-md rounded-full px-3 py-1 flex items-center gap-2 border border-white/5">
-                    <FaUserFriends className="text-[var(--text-secondary)] text-sm" />
-                    <span className="text-white text-sm font-bold">{team.members.length}</span>
+                    <span className="text-white text-sm font-bold">{team.members.length} Members</span>
                   </div>
                   <div className={`transition-all duration-300 ${justToggled ? 'scale-110' : ''}`}>
                     <ToggleButton
@@ -285,7 +297,6 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
                       key={index}
                       className="inline-flex items-center gap-2 bg-[var(--bg-surface)] text-[var(--text-primary)] rounded-lg px-3 py-1.5 shadow-md border border-[var(--border-subtle)] hover:border-[var(--success)] transition-all duration-200 hover:scale-105"
                     >
-                      <div className="w-2 h-2 bg-[var(--success)] rounded-full animate-pulse shadow-sm"></div>
                       <span className="text-xs font-bold font-mono tracking-wide">
                         {openOn}
                       </span>
@@ -296,9 +307,6 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
               {/* Account Info */}
               <div className="mb-6">
                 <div className="flex items-center gap-3 mb-3">
-                  <div className={`p-3 rounded-xl backdrop-blur-sm shadow-inner ${team.isActive ? 'bg-[var(--accent-purple)]/20' : 'bg-white/5'}`}>
-                    <FaEnvelope className={`text-lg ${team.isActive ? 'text-[var(--accent-purple-light)]' : 'text-[var(--text-tertiary)]'}`} />
-                  </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
                       <h3 className="text-xl font-bold text-white truncate group-hover:text-[var(--accent-blue-light)] transition-colors">
@@ -320,9 +328,10 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 text-[var(--text-tertiary)] ml-16">
-                  <FaServer className="text-sm" />
-                  <span className="text-sm font-medium capitalize">{team.server}</span>
+                <div className="flex items-center gap-2 text-[var(--text-tertiary)]">
+                  <span className="text-sm font-medium capitalize flex items-center gap-1">
+                    <FaServer className="w-3 h-3" /> Server: {team.server}
+                  </span>
                 </div>
               </div>
 
@@ -332,28 +341,25 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
                 <div className="relative">
                   <button
                     onClick={handleToggleMemberActions}
-                    className="flex items-center gap-1.5 bg-[var(--accent-purple)] hover:bg-[var(--accent-purple-dark)] text-white rounded-xl px-3 py-2 transition-all duration-200 font-medium shadow-lg shadow-purple-900/20"
+                    className="bg-[var(--accent-purple)] hover:bg-[var(--accent-purple-dark)] text-white rounded-xl px-3 py-2 transition-all duration-200 font-medium shadow-lg shadow-purple-900/20 flex items-center gap-2"
                   >
-                    <FaUserPlus className="text-xs" />
                     <span className="text-xs">Actions</span>
-                    {showMemberActions ? <FaChevronUp className="text-xs" /> : <FaChevronDown className="text-xs" />}
+                    {showMemberActions ? <FaChevronUp className="w-2.5 h-2.5" /> : <FaChevronDown className="w-2.5 h-2.5" />}
                   </button>
                   {showMemberActions && (
                     <div className="absolute bottom-full left-0 mb-2 rounded-xl shadow-2xl border border-[var(--border-subtle)] py-2 z-[100] min-w-[150px] overflow-hidden"
                       style={{ background: 'var(--bg-elevated)' }}>
                       <button
                         onClick={() => { setShowInviteModal(true); setShowMemberActions(false); }}
-                        className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-white transition-colors"
+                        className="w-full text-left px-4 py-3 text-sm font-medium text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-white transition-colors flex items-center gap-2"
                       >
-                        <FaPaperPlane className="text-[var(--accent-purple)]" />
-                        Invite Member
+                        <FaUserPlus className="w-3 h-3" /> Invite Member
                       </button>
                       <button
                         onClick={() => { setShowRemoveModal(true); setShowMemberActions(false); }}
-                        className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--error-light)] transition-colors"
+                        className="w-full text-left px-4 py-3 text-sm font-medium text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--error-light)] transition-colors flex items-center gap-2"
                       >
-                        <FaUserMinus className="text-[var(--error)]" />
-                        Remove Member
+                        <FaUserMinus className="w-3 h-3" /> Remove Member
                       </button>
                     </div>
                   )}
@@ -371,18 +377,15 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
                   title="Copy cookies"
                 >
                   {cookieLoading ? (
-                    <>
-                      <div className="w-3 h-3 border-2 border-[var(--text-muted)] border-t-transparent rounded-full animate-spin" />
-                      <span className="text-xs">Loading...</span>
-                    </>
+                    <span className="text-xs">Loading...</span>
                   ) : cookieCopied ? (
                     <>
-                      <FaCheck className="text-xs" />
+                      <FaCheck className="w-3 h-3" />
                       <span className="text-xs">Copied!</span>
                     </>
                   ) : (
                     <>
-                      <FaCopy className="text-xs" />
+                      <FaCookie className="w-3 h-3" />
                       <span className="text-xs">Cookie</span>
                     </>
                   )}
@@ -390,30 +393,27 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
 
                 <button
                   onClick={handleToggleRdp}
-                  className="flex items-center gap-1.5 bg-[var(--bg-surface)] hover:bg-[var(--bg-hover)] border border-[var(--border-subtle)] rounded-xl px-3 py-2 transition-all duration-200 text-[var(--text-secondary)] font-medium"
+                  className="bg-[var(--bg-surface)] hover:bg-[var(--bg-hover)] border border-[var(--border-subtle)] rounded-xl px-3 py-2 transition-all duration-200 text-[var(--text-secondary)] font-medium flex items-center gap-2"
                 >
-                  <FaServer className="text-xs" />
-                  <span className="text-xs">RDP</span>
-                  {showRdp ? <FaChevronUp className="text-xs" /> : <FaChevronDown className="text-xs" />}
+                  <span className="text-xs flex items-center gap-1"><FaDesktop className="w-3 h-3" /> RDP</span>
+                  {showRdp ? <FaChevronUp className="w-2.5 h-2.5" /> : <FaChevronDown className="w-2.5 h-2.5" />}
                 </button>
 
                 <button
                   onClick={handleToggleMembers}
-                  className="flex items-center gap-1.5 bg-[var(--bg-surface)] hover:bg-[var(--bg-hover)] border border-[var(--border-subtle)] rounded-xl px-3 py-2 transition-all duration-200 text-[var(--text-secondary)] font-medium"
+                  className="bg-[var(--bg-surface)] hover:bg-[var(--bg-hover)] border border-[var(--border-subtle)] rounded-xl px-3 py-2 transition-all duration-200 text-[var(--text-secondary)] font-medium flex items-center gap-2"
                 >
-                  <FaUserFriends className="text-xs" />
-                  <span className="text-xs">Members</span>
-                  {isExpanded ? <FaChevronUp className="text-xs" /> : <FaChevronDown className="text-xs" />}
+                  <span className="text-xs flex items-center gap-1"><FaUsers className="w-3 h-3" /> Members</span>
+                  {isExpanded ? <FaChevronUp className="w-2.5 h-2.5" /> : <FaChevronDown className="w-2.5 h-2.5" />}
                 </button>
 
                 {team.allMembers && team.allMembers.length > 0 && (
                   <button
                     onClick={handleToggleAllMembers}
-                    className="flex items-center gap-1.5 bg-[var(--warning-bg)] hover:bg-[var(--warning)]/20 border border-[var(--warning)]/30 text-[var(--warning-light)] backdrop-blur-sm rounded-xl px-3 py-2 transition-all duration-200 font-medium"
+                    className="bg-[var(--warning-bg)] hover:bg-[var(--warning)]/20 border border-[var(--warning)]/30 text-[var(--warning-light)] backdrop-blur-sm rounded-xl px-3 py-2 transition-all duration-200 font-medium flex items-center gap-2"
                   >
-                    <FaUserFriends className="text-xs" />
-                    <span className="text-xs">All Members ({team.allMembers.length})</span>
-                    {showAllMembers ? <FaChevronUp className="text-xs" /> : <FaChevronDown className="text-xs" />}
+                    <span className="text-xs flex items-center gap-1"><FaUsers className="w-3 h-3" /> All Members ({team.allMembers.length})</span>
+                    {showAllMembers ? <FaChevronUp className="w-2.5 h-2.5" /> : <FaChevronDown className="w-2.5 h-2.5" />}
                   </button>
                 )}
               </div>
@@ -432,7 +432,7 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
             <div className="p-8 border-t border-[var(--border-subtle)]" style={{ background: 'rgba(245, 158, 11, 0.05)' }}>
               <div className="flex items-center justify-between mb-6">
                 <h4 className="text-lg font-bold text-white flex items-center gap-2">
-                  <FaUserFriends className="text-[var(--warning)]" />
+                  <FaUsers className="w-5 h-5 text-[var(--warning-light)]" />
                   All Members
                 </h4>
                 <div className="px-3 py-1 rounded-full text-sm font-medium bg-[var(--warning-bg)] text-[var(--warning-light)]">
@@ -454,7 +454,9 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
                       </div>
                       <div>
                         <p className="text-white font-medium">{member}</p>
-                        <p className="text-[var(--text-tertiary)] text-xs">Team Member</p>
+                        <p className="text-[var(--text-tertiary)] text-sm flex items-center gap-1">
+                          <FaUser className="w-3 h-3" /> Team Member
+                        </p>
                       </div>
                     </div>
                     <button
@@ -467,12 +469,12 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
                     >
                       {copiedAllMemberEmail === index ? (
                         <>
-                          <FaCheck className="text-xs" />
+                          <FaCheck className="w-3 h-3" />
                           <span>Copied!</span>
                         </>
                       ) : (
                         <>
-                          <FaCopy className="text-xs" />
+                          <FaCopy className="w-3 h-3" />
                           <span>Copy Email</span>
                         </>
                       )}
@@ -502,7 +504,6 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
                       : 'bg-[var(--error)] hover:bg-[var(--error-light)] text-white'
                       }`}
                   >
-                    <FaPlus className="text-xs" />
                     Add Members
                   </button>
                 </div>
@@ -516,13 +517,12 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
                     return (
                       <div
                         key={`${team._id}-${index}-${member}`}
-                        className={`transform transition-all duration-500 ${isNewlyAdded ? 'animate-pulse ring-2 ring-[var(--success)] ring-offset-2 ring-offset-[var(--bg-deepest)] rounded-xl scale-105' : ''}`}
-                        style={{ animationDelay: `${index * 50}ms` }}
+                        className={`transform transition-all duration-500 ${isNewlyAdded ? 'ring-2 ring-[var(--success)] ring-offset-2 ring-offset-[var(--bg-deepest)] rounded-xl scale-105' : ''}`}
                       >
                         {/* Newly added indicator */}
                         {isNewlyAdded && (
                           <div className="mb-2 flex items-center gap-2">
-                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-[var(--success)] text-white animate-bounce">
+                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-[var(--success)] text-white">
                               ✓ New! Just Added
                             </span>
                           </div>
@@ -541,9 +541,7 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
               ) : (
                 <div className="text-center py-12">
                   <div className="bg-[var(--bg-surface)] rounded-3xl p-8 max-w-sm mx-auto border border-[var(--border-subtle)] border-dashed">
-                    <FaUserFriends className="w-16 h-16 mx-auto mb-4 text-[var(--text-muted)]" />
                     <h4 className="text-lg font-semibold text-white mb-2">No Team Members</h4>
-                    <p className="text-[var(--text-tertiary)] mb-6">Get started by adding your first team member</p>
                     <button
                       onClick={handleAddMemberClick}
                       className={`flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold transition-all duration-200 hover:scale-105 mx-auto ${team.isActive
@@ -551,7 +549,6 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
                         : 'bg-gradient-to-r from-[var(--error)] to-[var(--error-light)] text-white shadow-lg shadow-red-900/20'
                         }`}
                     >
-                      <FaUserPlus className="text-sm" />
                       Add First Member
                     </button>
                   </div>
@@ -562,14 +559,11 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
         </div>
 
         {/* Hover Glow Effect */}
-        <div className={`absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10 blur-xl ${team.isActive
-          ? 'bg-[var(--accent-purple)]/20'
-          : 'bg-[var(--error)]/20'
-          }`}></div>
+
       </div >
 
       {/* Add Members Modal */}
-      <InviteMemberModal
+      < InviteMemberModal
         isOpen={showInviteModal}
         onClose={() => setShowInviteModal(false)}
         team={team}
@@ -577,7 +571,7 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
         onInviteSent={(data) => console.log('Invite sent:', data)}
       />
 
-      <RemoveMemberModal
+      < RemoveMemberModal
         isOpen={showRemoveModal}
         onClose={() => setShowRemoveModal(false)}
         team={team}
@@ -586,8 +580,8 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
 
       {
         showAddModal && (
-          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
-            <div className="rounded-3xl shadow-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-hidden animate-scale-in"
+          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className="rounded-3xl shadow-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-hidden"
               style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)' }}>
               {/* Modal Header */}
               <div className="p-8 text-white relative overflow-hidden"
@@ -600,7 +594,7 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
                 <div className="relative z-10 flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     <div className="bg-white/20 p-4 rounded-2xl backdrop-blur-sm">
-                      <FaUserPlus className="text-2xl text-white" />
+                      <span className="text-2xl text-white">+</span>
                     </div>
                     <div>
                       <h3 className="text-2xl font-bold text-white mb-1">Add Team Members</h3>
@@ -611,7 +605,7 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
                     onClick={handleCloseAddModal}
                     className="p-3 bg-white/20 hover:bg-white/30 rounded-2xl transition-all duration-200 backdrop-blur-sm"
                   >
-                    <FaTimes className="text-xl text-white" />
+                    <span className="text-xl text-white">X</span>
                   </button>
                 </div>
               </div>
@@ -734,12 +728,11 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
                 >
                   {isAdding ? (
                     <>
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full" />
                       Adding Members...
                     </>
                   ) : (
                     <>
-                      <FaUserPlus className="text-sm" />
                       Add {validateAndParseEmails(emailsText).validEmails.length} Members
                     </>
                   )}

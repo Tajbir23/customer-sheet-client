@@ -1,5 +1,17 @@
 import React, { useState } from 'react'
-import { FaUser, FaEnvelope, FaPhone, FaRobot, FaEdit, FaTrash, FaCalendarAlt, FaLock, FaEye, FaEyeSlash } from 'react-icons/fa'
+import {
+  FaUser,
+  FaEnvelope,
+  FaPhone,
+  FaRobot,
+  FaLock,
+  FaCalendarAlt,
+  FaEdit,
+  FaTrash,
+  FaEye,
+  FaEyeSlash
+} from 'react-icons/fa'
+
 
 // Password Field Component with show/hide toggle
 const PasswordField = ({ password }) => {
@@ -19,13 +31,19 @@ const PasswordField = ({ password }) => {
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="p-1 hover:bg-[var(--bg-hover)] rounded transition-colors"
+            className="p-1 hover:bg-[var(--bg-hover)] rounded transition-colors flex items-center gap-1"
             title={showPassword ? 'Hide password' : 'Show password'}
           >
             {showPassword ? (
-              <FaEyeSlash className="text-[var(--text-tertiary)] text-xs" />
+              <>
+                <FaEyeSlash className="text-[var(--text-tertiary)] text-xs" />
+                <span className="text-[var(--text-tertiary)] text-xs font-bold">Hide</span>
+              </>
             ) : (
-              <FaEye className="text-[var(--text-tertiary)] text-xs" />
+              <>
+                <FaEye className="text-[var(--text-tertiary)] text-xs" />
+                <span className="text-[var(--text-tertiary)] text-xs font-bold">Show</span>
+              </>
             )}
           </button>
         </div>

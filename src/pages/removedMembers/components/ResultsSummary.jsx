@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaInfoCircle, FaSearch } from 'react-icons/fa';
+
 
 const ResultsSummary = ({ searchEmail, membersCount, loading }) => {
     if (loading) return null;
@@ -11,9 +11,9 @@ const ResultsSummary = ({ searchEmail, membersCount, loading }) => {
                     <div className="flex items-center space-x-3">
                         <div className="w-8 h-8 bg-[var(--accent-blue)]/10 rounded-lg flex items-center justify-center">
                             {searchEmail ? (
-                                <FaSearch className="w-4 h-4 text-[var(--accent-blue)]" />
+                                <span className="w-4 h-4 text-[var(--accent-blue)] font-bold">Q</span>
                             ) : (
-                                <FaInfoCircle className="w-4 h-4 text-[var(--accent-blue)]" />
+                                <span className="w-4 h-4 text-[var(--accent-blue)] font-bold">i</span>
                             )}
                         </div>
                         <div>

@@ -1,5 +1,5 @@
 import React from "react";
-import { FaHistory } from "react-icons/fa";
+
 
 const PageHeader = () => (
   <div className="mb-8 animate-fade-in">
@@ -11,7 +11,7 @@ const PageHeader = () => (
           boxShadow: '0 10px 25px -10px rgba(245, 158, 11, 0.5)',
         }}
       >
-        <FaHistory className="w-8 h-8 text-white" />
+        <span className="w-8 h-8 text-white font-bold text-xl flex items-center justify-center">H</span>
       </div>
       <div>
         <h1 className="text-3xl font-bold text-white">

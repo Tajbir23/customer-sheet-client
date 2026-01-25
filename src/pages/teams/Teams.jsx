@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import handleApi from "../../libs/handleAPi";
-import { FaExclamationCircle, FaSearch } from "react-icons/fa";
+
 import { toast } from "react-toastify";
 import useAddMember from "../../libs/useAddMember";
 import { useSocket } from "../../context/SocketContext";
@@ -548,7 +548,7 @@ const Teams = () => {
 
     if (error) {
       return (
-        <EmptyState message={error} icon={FaExclamationCircle} type="error" />
+        <EmptyState message={error} type="error" />
       );
     }
 
@@ -562,7 +562,7 @@ const Teams = () => {
       const emptyMessage = search ? "No teams found" : "No teams available";
 
       return (
-        <EmptyState message={emptyMessage} icon={FaSearch} type={emptyType} />
+        <EmptyState message={emptyMessage} type={emptyType} />
       );
     }
 
@@ -654,7 +654,7 @@ const Teams = () => {
           <div className="mt-12 text-center">
             <div className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-[var(--border-subtle)]"
               style={{ background: 'var(--bg-card)' }}>
-              <div className="h-2 w-2 rounded-full animate-pulse bg-[var(--accent-blue)]"></div>
+              <div className="h-2 w-2 rounded-full bg-[var(--accent-blue)]"></div>
               <span className="text-sm font-medium text-[var(--text-secondary)]">
                 Last updated: {new Date().toLocaleString()}
               </span>

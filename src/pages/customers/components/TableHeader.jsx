@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaSort, FaSortUp, FaSortDown } from 'react-icons/fa';
+
 
 const TableHeader = ({ sortConfig, onSort }) => {
     const headers = [
@@ -14,11 +14,11 @@ const TableHeader = ({ sortConfig, onSort }) => {
 
     const getSortIcon = (key) => {
         if (!sortConfig || sortConfig.key !== key) {
-            return <FaSort className="ml-2 w-3 h-3 text-[var(--text-muted)] group-hover:text-[var(--accent-purple)] transition-colors" />;
+            return <span className="ml-2 w-3 h-3 text-[var(--text-muted)] group-hover:text-[var(--accent-purple)] transition-colors font-bold">↕</span>;
         }
         return sortConfig.direction === 'asc' ?
-            <FaSortUp className="ml-2 w-3 h-3 text-[var(--accent-purple)]" /> :
-            <FaSortDown className="ml-2 w-3 h-3 text-[var(--accent-purple)]" />;
+            <span className="ml-2 w-3 h-3 text-[var(--accent-purple)] font-bold">↑</span> :
+            <span className="ml-2 w-3 h-3 text-[var(--accent-purple)] font-bold">↓</span>;
     };
 
     return (

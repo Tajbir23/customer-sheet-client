@@ -3,7 +3,7 @@ import UploadPaypalAccount from './components/UploadPaypalAccount'
 import handleApi from '../../libs/handleAPi'
 import PaypalAccountCard from './components/PaypalAccountCard'
 import { Helmet } from 'react-helmet'
-import { FaPaypal, FaSearch, FaPlus, FaChevronLeft, FaChevronRight } from 'react-icons/fa'
+
 
 const PaypalAccounts = () => {
   const [isOpen, setIsOpen] = useState(false)
@@ -120,12 +120,12 @@ const PaypalAccounts = () => {
           onClick={() => onPageChange(currentPage - 1)}
           disabled={currentPage === 1}
           className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all duration-300 ${currentPage === 1
-              ? 'text-[var(--text-muted)] cursor-not-allowed'
-              : 'text-[var(--text-secondary)] hover:text-white hover:bg-[var(--bg-hover)]'
+            ? 'text-[var(--text-muted)] cursor-not-allowed'
+            : 'text-[var(--text-secondary)] hover:text-white hover:bg-[var(--bg-hover)]'
             }`}
           style={{ border: '1px solid var(--border-subtle)' }}
         >
-          <FaChevronLeft className="w-3 h-3" />
+          <span className="w-3 h-3 font-bold">&lt;</span>
           Previous
         </button>
 
@@ -137,8 +137,8 @@ const PaypalAccounts = () => {
               <button
                 onClick={() => onPageChange(p)}
                 className={`min-w-[40px] h-10 rounded-xl font-medium transition-all duration-300 ${currentPage === p
-                    ? 'text-white shadow-lg'
-                    : 'text-[var(--text-secondary)] hover:text-white hover:bg-[var(--bg-hover)]'
+                  ? 'text-white shadow-lg'
+                  : 'text-[var(--text-secondary)] hover:text-white hover:bg-[var(--bg-hover)]'
                   }`}
                 style={{
                   background: currentPage === p
@@ -158,13 +158,13 @@ const PaypalAccounts = () => {
           onClick={() => onPageChange(currentPage + 1)}
           disabled={currentPage >= totalPages}
           className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all duration-300 ${currentPage >= totalPages
-              ? 'text-[var(--text-muted)] cursor-not-allowed'
-              : 'text-[var(--text-secondary)] hover:text-white hover:bg-[var(--bg-hover)]'
+            ? 'text-[var(--text-muted)] cursor-not-allowed'
+            : 'text-[var(--text-secondary)] hover:text-white hover:bg-[var(--bg-hover)]'
             }`}
           style={{ border: '1px solid var(--border-subtle)' }}
         >
           Next
-          <FaChevronRight className="w-3 h-3" />
+          <span className="w-3 h-3 font-bold">&gt;</span>
         </button>
       </div>
     )
@@ -187,7 +187,7 @@ const PaypalAccounts = () => {
                 boxShadow: '0 10px 25px -10px rgba(0, 112, 186, 0.5)',
               }}
             >
-              <FaPaypal className="w-8 h-8 text-white" />
+              <span className="w-8 h-8 text-white font-bold text-center flex items-center justify-center text-xl">P</span>
             </div>
             <div>
               <h1 className="text-3xl font-bold text-white">PayPal Accounts</h1>
@@ -202,7 +202,7 @@ const PaypalAccounts = () => {
               boxShadow: '0 10px 30px -10px rgba(0, 112, 186, 0.5)',
             }}
           >
-            <FaPlus className="group-hover:scale-110 transition-transform duration-200" />
+            <span className="group-hover:scale-110 transition-transform duration-200 font-bold">+</span>
             <span>Upload Account</span>
           </button>
         </div>
@@ -221,7 +221,7 @@ const PaypalAccounts = () => {
             {isSearching ? (
               <div className="animate-rotate w-5 h-5 border-2 border-[#0070ba] border-t-transparent rounded-full" />
             ) : (
-              <FaSearch className="h-5 w-5 text-[var(--text-muted)] group-focus-within:text-[#0070ba] transition-colors" />
+              <span className="h-5 w-5 text-[var(--text-muted)] group-focus-within:text-[#0070ba] transition-colors font-bold pl-1">Q</span>
             )}
           </div>
           <input
@@ -260,7 +260,7 @@ const PaypalAccounts = () => {
               className="p-2 rounded-lg"
               style={{ background: 'rgba(0, 112, 186, 0.2)' }}
             >
-              <FaPaypal className="h-4 w-4 text-[#00b0f4]" />
+              <span className="h-4 w-4 text-[#00b0f4] font-bold">P</span>
             </div>
             <div>
               <p className="text-sm font-medium text-white">
@@ -320,7 +320,7 @@ const PaypalAccounts = () => {
               className="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center"
               style={{ background: 'var(--bg-surface)' }}
             >
-              <FaPaypal className="h-8 w-8 text-[var(--text-muted)]" />
+              <span className="h-8 w-8 text-[var(--text-muted)] font-bold text-2xl text-center">P</span>
             </div>
             <h3 className="text-lg font-semibold text-white mb-2">
               {search ? 'No Results Found' : 'No Accounts Available'}

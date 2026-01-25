@@ -1,5 +1,5 @@
 import React from "react";
-import { FaHistory } from "react-icons/fa";
+
 
 const EmptyState = () => (
   <div className="text-center py-16 animate-fade-in">
@@ -10,7 +10,7 @@ const EmptyState = () => (
         border: '1px solid var(--border-subtle)',
       }}
     >
-      <FaHistory className="w-10 h-10 text-[var(--text-muted)]" />
+      <span className="w-10 h-10 text-[var(--text-muted)] font-bold text-4xl block">H</span>
     </div>
     <h3 className="text-xl font-semibold text-white mb-2">
       No Subscription End History

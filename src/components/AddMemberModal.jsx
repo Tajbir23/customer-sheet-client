@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FaUserPlus, FaTimes } from 'react-icons/fa';
+
 import handleApi from '../libs/handleAPi';
 import useAddMember, { validateAndParseEmails } from '../libs/useAddMember';
 
@@ -70,7 +70,7 @@ const AddMemberModal = ({
                     <div className="relative z-10 flex items-center justify-between">
                         <div className="flex items-center gap-4">
                             <div className="bg-white/20 p-4 rounded-2xl backdrop-blur-sm">
-                                <FaUserPlus className="text-2xl text-white" />
+                                <span className="text-2xl text-white font-bold block text-center">+</span>
                             </div>
                             <div>
                                 <h3 className="text-2xl font-bold text-white mb-1">{title}</h3>
@@ -81,7 +81,7 @@ const AddMemberModal = ({
                             onClick={handleClose}
                             className="p-3 bg-white/20 hover:bg-white/30 rounded-2xl transition-all duration-200 backdrop-blur-sm"
                         >
-                            <FaTimes className="text-xl text-white" />
+                            <span className="text-xl text-white font-bold">X</span>
                         </button>
                     </div>
                 </div>
@@ -184,7 +184,7 @@ const AddMemberModal = ({
                             </>
                         ) : (
                             <>
-                                <FaUserPlus className="text-sm" />
+                                <span className="text-sm font-bold">+</span>
                                 {buttonText} ({previewEmails.length})
                             </>
                         )}

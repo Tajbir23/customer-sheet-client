@@ -1,5 +1,5 @@
 import React from "react";
-import { FaLayerGroup, FaServer, FaCircle } from "react-icons/fa";
+
 
 const AllTeamsHeader = ({ totalCount }) => {
     return (
@@ -9,7 +9,7 @@ const AllTeamsHeader = ({ totalCount }) => {
                     {/* Left Side - Title & Description */}
                     <div className="flex items-center gap-4">
                         <div className="p-3 bg-[var(--bg-surface)] rounded-xl border border-[var(--border-subtle)]">
-                            <FaLayerGroup className="w-6 h-6 text-[var(--accent-blue)]" />
+                            <span className="text-xl font-bold text-[var(--accent-blue)]">T</span>
                         </div>
                         <div>
                             <h3 className="text-xl font-bold text-[var(--text-primary)]">
@@ -26,7 +26,7 @@ const AllTeamsHeader = ({ totalCount }) => {
                         {/* Total Teams Badge */}
                         <div className="flex items-center gap-3 bg-[var(--bg-surface)] px-4 py-2.5 rounded-xl border border-[var(--border-subtle)]">
                             <div className="p-1.5 rounded-lg bg-[var(--accent-blue)]/10 text-[var(--accent-blue)]">
-                                <FaLayerGroup className="w-3.5 h-3.5" />
+                                <span className="font-bold text-xs">T</span>
                             </div>
                             <div className="flex flex-col">
                                 <span className="text-xs text-[var(--text-tertiary)] font-bold">Total</span>
@@ -39,7 +39,7 @@ const AllTeamsHeader = ({ totalCount }) => {
                         {/* Active Teams Badge */}
                         <div className="flex items-center gap-3 bg-[var(--bg-surface)] px-4 py-2.5 rounded-xl border border-[var(--border-subtle)]">
                             <div className="p-1.5 rounded-lg bg-[var(--success)]/10 text-[var(--success)]">
-                                <FaServer className="w-3.5 h-3.5" />
+                                <span className="font-bold text-xs">A</span>
                             </div>
                             <div className="flex flex-col">
                                 <span className="text-xs text-[var(--text-tertiary)] font-bold">
@@ -54,7 +54,7 @@ const AllTeamsHeader = ({ totalCount }) => {
                         {/* Inactive Teams Badge */}
                         <div className="flex items-center gap-3 bg-[var(--bg-surface)] px-4 py-2.5 rounded-xl border border-[var(--border-subtle)]">
                             <div className="p-1.5 rounded-lg bg-[var(--error)]/10 text-[var(--error)]">
-                                <FaServer className="w-3.5 h-3.5" />
+                                <span className="font-bold text-xs">I</span>
                             </div>
                             <div className="flex flex-col">
                                 <span className="text-xs text-[var(--text-tertiary)] font-bold">

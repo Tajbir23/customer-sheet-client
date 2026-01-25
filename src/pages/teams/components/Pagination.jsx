@@ -1,5 +1,5 @@
 import React from "react";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+
 
 const Pagination = ({ currentPage, totalPages, onPageChange }) => {
     if (totalPages <= 1) return null;
@@ -55,7 +55,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
                     : "border-[var(--border-subtle)] bg-[var(--bg-card)] text-[var(--text-secondary)] hover:border-[var(--accent-blue)] hover:text-[var(--accent-blue)]"
                     }`}
             >
-                <FaChevronLeft className="w-3 h-3" />
+                <span className="font-bold">{"<"}</span>
                 <span>Previous</span>
             </button>
 
@@ -86,7 +86,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
                     }`}
             >
                 <span>Next</span>
-                <FaChevronRight className="w-3 h-3" />
+                <span className="font-bold">{">"}</span>
             </button>
         </div>
     );

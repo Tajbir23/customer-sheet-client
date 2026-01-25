@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
-import { FaUserPlus, FaSearch, FaUsers } from 'react-icons/fa'
+
 import { toast } from 'react-toastify'
 import handleApi from '../../libs/handleAPi'
 
@@ -154,7 +154,7 @@ const ResellerPage = () => {
             {/* Title and Description */}
             <div className="flex items-center gap-4">
               <div className="p-3 bg-[var(--bg-elevated)] rounded-xl border border-[var(--border-subtle)]">
-                <FaUsers className="h-6 w-6 text-[var(--accent-purple)]" />
+                <span className="h-6 w-6 text-[var(--accent-purple)] font-bold text-xl flex items-center justify-center">R</span>
               </div>
               <div>
                 <h1 className="text-3xl font-bold text-[var(--text-primary)] mb-1">
@@ -171,7 +171,7 @@ const ResellerPage = () => {
               onClick={() => setIsAddModalOpen(true)}
               className="group flex items-center gap-3 bg-[var(--accent-purple)] hover:bg-[var(--accent-purple)]/90 text-white px-6 py-3 rounded-xl transition-all duration-200 font-bold"
             >
-              <FaUserPlus className="text-lg group-hover:scale-110 transition-transform duration-200" />
+              <span className="text-xl font-bold group-hover:scale-110 transition-transform duration-200">+</span>
               <span>Add New Reseller</span>
             </button>
           </div>
@@ -187,7 +187,7 @@ const ResellerPage = () => {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
-            <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)]" />
+            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)] font-bold">Q</span>
           </div>
         </div>
 
@@ -213,7 +213,7 @@ const ResellerPage = () => {
           <div className="bg-[var(--bg-card)] rounded-xl p-4 border border-[var(--border-subtle)]">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-[var(--accent-purple)]/10 rounded-xl flex items-center justify-center">
-                <FaUsers className="text-[var(--accent-purple)] text-xl" />
+                <span className="text-[var(--accent-purple)] text-xl font-bold">R</span>
               </div>
               <div>
                 <p className="text-sm text-[var(--text-tertiary)]">Total Resellers</p>
@@ -225,7 +225,7 @@ const ResellerPage = () => {
           <div className="bg-[var(--bg-card)] rounded-xl p-4 border border-[var(--border-subtle)]">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-[var(--success)]/10 rounded-xl flex items-center justify-center">
-                <FaUsers className="text-[var(--success)] text-xl" />
+                <span className="text-[var(--success)] text-xl font-bold">✓</span>
               </div>
               <div>
                 <p className="text-sm text-[var(--text-tertiary)]">With GPT Account</p>
@@ -239,7 +239,7 @@ const ResellerPage = () => {
           <div className="bg-[var(--bg-card)] rounded-xl p-4 border border-[var(--border-subtle)]">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 bg-[var(--warning)]/10 rounded-xl flex items-center justify-center">
-                <FaUsers className="text-[var(--warning)] text-xl" />
+                <span className="text-[var(--warning)] text-xl font-bold">!</span>
               </div>
               <div>
                 <p className="text-sm text-[var(--text-tertiary)]">Without GPT Account</p>
@@ -258,7 +258,7 @@ const ResellerPage = () => {
           ) : filteredResellers.length === 0 ? (
             <div className="text-center py-16">
               <div className="w-16 h-16 mx-auto mb-4 bg-[var(--bg-surface)] rounded-full flex items-center justify-center">
-                <FaUsers className="w-8 h-8 text-[var(--text-muted)]" />
+                <span className="w-8 h-8 text-[var(--text-muted)] font-bold text-2xl flex items-center justify-center">∅</span>
               </div>
               <h3 className="text-lg font-medium text-white mb-2">
                 {debouncedSearch ? 'No resellers found' : 'No resellers yet'}
@@ -273,7 +273,7 @@ const ResellerPage = () => {
                   onClick={() => setIsAddModalOpen(true)}
                   className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--accent-purple)] text-white rounded-lg hover:bg-[var(--accent-purple)]/90 transition-colors"
                 >
-                  <FaUserPlus />
+                  <span className="font-bold">+</span>
                   Add First Reseller
                 </button>
               )}

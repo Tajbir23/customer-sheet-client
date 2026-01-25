@@ -1,5 +1,6 @@
 import React from 'react'
-import { FaPaperPlane, FaCommentDots } from 'react-icons/fa'
+import { FaCommentDots, FaPaperPlane } from 'react-icons/fa'
+
 
 const PageHeader = ({ selectedCount, onSendClick }) => {
     return (

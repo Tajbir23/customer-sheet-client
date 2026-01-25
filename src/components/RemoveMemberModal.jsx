@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaUserMinus, FaTimes, FaTrash } from 'react-icons/fa';
+
 import { useSocket } from '../context/SocketContext';
 import { toast } from 'react-toastify';
 
@@ -86,7 +86,7 @@ const RemoveMemberModal = ({
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                             <div className="w-10 h-10 bg-[var(--error)]/20 rounded-xl flex items-center justify-center">
-                                <FaUserMinus className="text-[var(--error)]" />
+                                <span className="text-[var(--error)] font-bold text-lg">-</span>
                             </div>
                             <div>
                                 <h3 className="text-xl font-bold text-white">Remove Member</h3>
@@ -97,7 +97,7 @@ const RemoveMemberModal = ({
                             onClick={handleClose}
                             className="p-2 hover:bg-[var(--bg-hover)] rounded-lg transition-colors"
                         >
-                            <FaTimes className="text-[var(--text-tertiary)]" />
+                            <span className="text-[var(--text-tertiary)] font-bold">X</span>
                         </button>
                     </div>
                 </div>
@@ -172,7 +172,7 @@ const RemoveMemberModal = ({
                             </>
                         ) : (
                             <>
-                                <FaTrash className="text-sm" />
+                                <span className="text-sm font-bold">🗑</span>
                                 Remove Member
                             </>
                         )}

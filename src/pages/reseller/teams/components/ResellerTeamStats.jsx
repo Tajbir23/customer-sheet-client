@@ -1,5 +1,4 @@
 import React from 'react';
-import { FaUsers, FaUserFriends, FaServer, FaChartLine } from 'react-icons/fa';
 
 const ResellerTeamStats = ({ teams }) => {
     const totalTeams = teams.length;
@@ -9,7 +8,7 @@ const ResellerTeamStats = ({ teams }) => {
 
     const stats = [
         {
-            icon: FaServer,
+            symbol: 'T',
             label: 'Total Teams',
             value: totalTeams,
             color: 'from-blue-500 to-blue-600',
@@ -17,7 +16,7 @@ const ResellerTeamStats = ({ teams }) => {
             textColor: 'text-blue-700'
         },
         {
-            icon: FaUserFriends,
+            symbol: 'M',
             label: 'Total Members',
             value: totalMembers,
             color: 'from-purple-500 to-purple-600',
@@ -25,7 +24,7 @@ const ResellerTeamStats = ({ teams }) => {
             textColor: 'text-purple-700'
         },
         {
-            icon: FaUsers,
+            symbol: 'My',
             label: 'My Members',
             value: myMembers,
             color: 'from-green-500 to-green-600',
@@ -33,7 +32,7 @@ const ResellerTeamStats = ({ teams }) => {
             textColor: 'text-green-700'
         },
         {
-            icon: FaChartLine,
+            symbol: '%',
             label: 'Teams With My Members',
             value: teamsWithMembers,
             color: 'from-amber-500 to-amber-600',
@@ -52,7 +51,7 @@ const ResellerTeamStats = ({ teams }) => {
                     >
                         <div className="flex items-center gap-4">
                             <div className={`p-3 rounded-xl bg-gradient-to-br ${stat.color} shadow-lg`}>
-                                <stat.icon className="text-white text-xl" />
+                                <span className="text-white text-xl font-bold">{stat.symbol}</span>
                             </div>
                             <div>
                                 <div className={`text-2xl font-bold ${stat.textColor}`}>{stat.value}</div>

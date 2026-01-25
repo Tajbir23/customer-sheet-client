@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { FaTimes, FaEdit, FaUser, FaEnvelope, FaCalendarAlt, FaDollarSign, FaStickyNote, FaCheckCircle, FaClock, FaExclamationTriangle } from 'react-icons/fa';
+
 import EditCustomerModal from './EditCustomerModal';
 
 const CustomerDetailsModal = ({ customer, onClose, formatDate, onUpdate }) => {
@@ -19,7 +19,7 @@ const CustomerDetailsModal = ({ customer, onClose, formatDate, onUpdate }) => {
                     bg: 'bg-[var(--success-bg)]',
                     text: 'text-[var(--success-light)]',
                     border: 'border-[var(--success)]/30',
-                    icon: FaCheckCircle,
+                    icon: () => <span className="font-bold">✓</span>,
                     badgeBg: 'bg-[var(--success)]/20'
                 };
             case 'pending':
@@ -27,7 +27,7 @@ const CustomerDetailsModal = ({ customer, onClose, formatDate, onUpdate }) => {
                     bg: 'bg-[var(--warning-bg)]',
                     text: 'text-[var(--warning-light)]',
                     border: 'border-[var(--warning)]/30',
-                    icon: FaClock,
+                    icon: () => <span className="font-bold">Clock</span>,
                     badgeBg: 'bg-[var(--warning)]/20'
                 };
             default:
@@ -35,7 +35,7 @@ const CustomerDetailsModal = ({ customer, onClose, formatDate, onUpdate }) => {
                     bg: 'bg-[var(--error-bg)]',
                     text: 'text-[var(--error-light)]',
                     border: 'border-[var(--error)]/30',
-                    icon: FaExclamationTriangle,
+                    icon: () => <span className="font-bold">!</span>,
                     badgeBg: 'bg-[var(--error)]/20'
                 };
         }
@@ -76,14 +76,14 @@ const CustomerDetailsModal = ({ customer, onClose, formatDate, onUpdate }) => {
                                     className="group p-3 bg-white/20 hover:bg-white/30 rounded-xl transition-all duration-200 backdrop-blur-sm border border-white/10"
                                     title="Edit Customer"
                                 >
-                                    <FaEdit className="w-5 h-5 text-white group-hover:scale-110 transition-transform" />
+                                    <span className="w-5 h-5 text-white font-bold group-hover:scale-110 transition-transform">Edit</span>
                                 </button>
                                 <button
                                     onClick={onClose}
                                     className="group p-3 bg-white/20 hover:bg-white/30 rounded-xl transition-all duration-200 backdrop-blur-sm border border-white/10"
                                     title="Close"
                                 >
-                                    <FaTimes className="w-5 h-5 text-white group-hover:scale-110 transition-transform" />
+                                    <span className="w-5 h-5 text-white font-bold group-hover:scale-110 transition-transform">X</span>
                                 </button>
                             </div>
                         </div>
@@ -124,7 +124,7 @@ const CustomerDetailsModal = ({ customer, onClose, formatDate, onUpdate }) => {
                             <div className="rounded-xl p-6 border"
                                 style={{ background: 'var(--bg-surface)', borderColor: 'var(--border-subtle)' }}>
                                 <div className="flex items-center mb-4">
-                                    <FaUser className="w-5 h-5 text-[var(--accent-blue)] mr-2" />
+                                    <span className="w-5 h-5 text-[var(--accent-blue)] font-bold mr-2">U</span>
                                     <h4 className="text-lg font-bold text-[var(--text-primary)]">Personal Information</h4>
                                 </div>
                                 <div className="space-y-4">
@@ -147,7 +147,7 @@ const CustomerDetailsModal = ({ customer, onClose, formatDate, onUpdate }) => {
                             <div className="rounded-xl p-6 border"
                                 style={{ background: 'var(--bg-surface)', borderColor: 'var(--border-subtle)' }}>
                                 <div className="flex items-center mb-4">
-                                    <FaCalendarAlt className="w-5 h-5 text-[var(--success)] mr-2" />
+                                    <span className="w-5 h-5 text-[var(--success)] font-bold mr-2">D</span>
                                     <h4 className="text-lg font-bold text-[var(--text-primary)]">Subscription Details</h4>
                                 </div>
                                 <div className="space-y-4">
@@ -173,7 +173,7 @@ const CustomerDetailsModal = ({ customer, onClose, formatDate, onUpdate }) => {
                             <div className="rounded-xl p-6 border"
                                 style={{ background: 'var(--bg-surface)', borderColor: 'var(--border-subtle)' }}>
                                 <div className="flex items-center mb-4">
-                                    <FaDollarSign className="w-5 h-5 text-[var(--accent-purple)] mr-2" />
+                                    <span className="w-5 h-5 text-[var(--accent-purple)] font-bold mr-2">$</span>
                                     <h4 className="text-lg font-bold text-[var(--text-primary)]">Payment Information</h4>
                                 </div>
                                 <div className="space-y-4">
@@ -202,7 +202,7 @@ const CustomerDetailsModal = ({ customer, onClose, formatDate, onUpdate }) => {
                             <div className="rounded-xl p-6 border"
                                 style={{ background: 'var(--bg-surface)', borderColor: 'var(--border-subtle)' }}>
                                 <div className="flex items-center mb-4">
-                                    <FaStickyNote className="w-5 h-5 text-[var(--warning)] mr-2" />
+                                    <span className="w-5 h-5 text-[var(--warning)] font-bold mr-2">N</span>
                                     <h4 className="text-lg font-bold text-[var(--text-primary)]">Notes & Reminders</h4>
                                 </div>
                                 <div className="space-y-4">
@@ -247,7 +247,7 @@ const CustomerDetailsModal = ({ customer, onClose, formatDate, onUpdate }) => {
                                 className="flex items-center gap-2 px-6 py-3 font-bold rounded-xl transition-all duration-200 transform hover:-translate-y-0.5 shadow-lg hover:shadow-xl text-white"
                                 style={{ background: 'linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-blue-dark) 100%)' }}
                             >
-                                <FaEdit className="w-4 h-4" />
+                                <span className="w-4 h-4 font-bold">✎</span>
                                 Edit Customer
                             </button>
                             <button

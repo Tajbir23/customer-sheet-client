@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaUserFriends, FaEnvelope, FaTrash, FaCopy, FaCheck, FaChevronDown, FaChevronUp, FaUsers, FaUserPlus, FaTimes, FaCalendarAlt } from 'react-icons/fa';
+
 import { toast } from 'react-toastify';
 import handleApi from '../../../../libs/handleAPi';
 
@@ -147,7 +147,7 @@ const ResellerTeamCard = ({ team, onRemoveMember, onMemberAdded }) => {
         <>
             <div className="group relative">
                 {/* Main Card */}
-                <div className="relative overflow-hidden rounded-3xl transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl bg-white shadow-xl border border-gray-100">
+                <div className="relative overflow-hidden rounded-3xl bg-white shadow-xl border border-gray-100">
 
                     {/* Header Section */}
                     <div className="relative p-6 overflow-hidden bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600">
@@ -161,9 +161,7 @@ const ResellerTeamCard = ({ team, onRemoveMember, onMemberAdded }) => {
                             {/* Account Info */}
                             <div className="flex items-start justify-between mb-4">
                                 <div className="flex items-center gap-3 flex-1 min-w-0">
-                                    <div className="bg-white/20 p-3 rounded-xl backdrop-blur-sm flex-shrink-0">
-                                        <FaEnvelope className="text-white text-lg" />
-                                    </div>
+
                                     <div className="min-w-0 flex-1">
                                         <div className="flex items-center gap-2">
                                             <h3 className="text-lg font-bold text-white truncate" title={team.gptAccount}>
@@ -175,9 +173,9 @@ const ResellerTeamCard = ({ team, onRemoveMember, onMemberAdded }) => {
                                                 title="Copy email"
                                             >
                                                 {copied ? (
-                                                    <FaCheck className="text-green-300 text-sm" />
+                                                    <span className="text-green-300 text-sm font-bold">Copied</span>
                                                 ) : (
-                                                    <FaCopy className="text-white text-sm hover:scale-110 transition-transform" />
+                                                    <span className="text-white text-sm font-bold hover:scale-110 transition-transform">Copy</span>
                                                 )}
                                             </button>
                                         </div>
@@ -192,7 +190,6 @@ const ResellerTeamCard = ({ team, onRemoveMember, onMemberAdded }) => {
                                 <div className="flex items-center gap-3">
                                     <div className="bg-white/20 backdrop-blur-sm rounded-2xl px-4 py-3">
                                         <div className="flex items-center gap-2">
-                                            <FaUserFriends className="text-white text-lg" />
                                             <div>
                                                 <div className="text-2xl font-bold text-white">{usedSlots}</div>
                                                 <div className="text-white/80 text-xs font-medium">Total Members</div>
@@ -216,11 +213,10 @@ const ResellerTeamCard = ({ team, onRemoveMember, onMemberAdded }) => {
                                         onClick={handleOpenAddModal}
                                         disabled={availableSlots <= 0}
                                         className={`flex items-center gap-1.5 backdrop-blur-sm rounded-xl px-4 py-2 transition-all duration-200 font-medium ${availableSlots > 0
-                                            ? 'bg-green-500/80 hover:bg-green-500 text-white shadow-lg shadow-green-500/25 hover:scale-105'
+                                            ? 'bg-green-500/80 hover:bg-green-500 text-white shadow-lg shadow-green-500/25'
                                             : 'bg-gray-400/50 text-gray-200 cursor-not-allowed'
                                             }`}
                                     >
-                                        <FaUserPlus className="text-sm" />
                                         <span className="text-sm">Add Member</span>
                                     </button>
 
@@ -230,9 +226,7 @@ const ResellerTeamCard = ({ team, onRemoveMember, onMemberAdded }) => {
                                             onClick={() => setIsExpanded(!isExpanded)}
                                             className="flex items-center gap-1.5 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-xl px-4 py-2 transition-all duration-200 text-white font-medium"
                                         >
-                                            <FaUsers className="text-sm" />
-                                            <span className="text-sm">My Members ({team.members.length})</span>
-                                            {isExpanded ? <FaChevronUp className="text-xs" /> : <FaChevronDown className="text-xs" />}
+                                            <span className="text-sm">My Members ({team.members.length}) {isExpanded ? '▲' : '▼'}</span>
                                         </button>
                                     )}
                                 </div>
@@ -266,7 +260,6 @@ const ResellerTeamCard = ({ team, onRemoveMember, onMemberAdded }) => {
                                             {/* Member Info */}
                                             <div className="flex-grow min-w-0">
                                                 <div className="flex items-center gap-2">
-                                                    <FaEnvelope className="w-3.5 h-3.5 flex-shrink-0 text-gray-400" />
                                                     <span className="text-sm truncate font-semibold text-gray-900" title={member}>
                                                         {member}
                                                     </span>
@@ -279,18 +272,17 @@ const ResellerTeamCard = ({ team, onRemoveMember, onMemberAdded }) => {
                                                 disabled={removingMember === index}
                                                 className={`flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${removingMember === index
                                                     ? 'bg-red-100 text-red-400 cursor-not-allowed'
-                                                    : 'bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700 hover:scale-105 active:scale-95'
+                                                    : 'bg-red-50 text-red-600 hover:bg-red-100 hover:text-red-700'
                                                     }`}
                                                 title="Remove member"
                                             >
                                                 {removingMember === index ? (
                                                     <>
-                                                        <div className="w-3.5 h-3.5 border-2 border-red-400 border-t-transparent rounded-full animate-spin" />
+                                                        <div className="w-3.5 h-3.5 border-2 border-red-400 border-t-transparent rounded-full" />
                                                         <span className="hidden sm:inline">Removing...</span>
                                                     </>
                                                 ) : (
                                                     <>
-                                                        <FaTrash className="w-3.5 h-3.5" />
                                                         <span className="hidden sm:inline">Remove</span>
                                                     </>
                                                 )}
@@ -306,7 +298,6 @@ const ResellerTeamCard = ({ team, onRemoveMember, onMemberAdded }) => {
                     {!hasMembers && (
                         <div className="p-6 text-center border-t-2 border-gray-100">
                             <div className="inline-flex items-center gap-2 px-4 py-2 bg-gray-100 rounded-xl text-gray-500 text-sm font-medium">
-                                <FaUsers className="text-gray-400" />
                                 No members assigned to you
                             </div>
                         </div>
@@ -331,7 +322,7 @@ const ResellerTeamCard = ({ team, onRemoveMember, onMemberAdded }) => {
                             <div className="relative z-10 flex items-center justify-between">
                                 <div className="flex items-center gap-4">
                                     <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-sm">
-                                        <FaUserPlus className="text-xl text-white" />
+                                        <span className="text-xl text-white">+</span>
                                     </div>
                                     <div>
                                         <h3 className="text-xl font-bold text-white mb-1">Add Customer</h3>
@@ -344,7 +335,7 @@ const ResellerTeamCard = ({ team, onRemoveMember, onMemberAdded }) => {
                                     onClick={handleCloseAddModal}
                                     className="p-2 bg-white/20 hover:bg-white/30 rounded-xl transition-all duration-200 backdrop-blur-sm"
                                 >
-                                    <FaTimes className="text-lg text-white" />
+                                    <span className="text-lg text-white">X</span>
                                 </button>
                             </div>
                         </div>
@@ -367,7 +358,6 @@ const ResellerTeamCard = ({ team, onRemoveMember, onMemberAdded }) => {
                                     Customer Email <span className="text-red-500">*</span>
                                 </label>
                                 <div className="relative">
-                                    <FaEnvelope className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
                                     <input
                                         type="email"
                                         name="email"
@@ -391,7 +381,6 @@ const ResellerTeamCard = ({ team, onRemoveMember, onMemberAdded }) => {
                                     Order Date <span className="text-red-500">*</span>
                                 </label>
                                 <div className="relative">
-                                    <FaCalendarAlt className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
                                     <input
                                         type="date"
                                         name="orderDate"
@@ -425,12 +414,11 @@ const ResellerTeamCard = ({ team, onRemoveMember, onMemberAdded }) => {
                             >
                                 {isAdding ? (
                                     <>
-                                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                                        <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full" />
                                         Adding...
                                     </>
                                 ) : (
                                     <>
-                                        <FaUserPlus className="text-sm" />
                                         Add Customer
                                     </>
                                 )}

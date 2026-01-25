@@ -1,5 +1,5 @@
 import React from "react";
-import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+
 
 const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   if (totalPages <= 1) return null;
@@ -48,12 +48,12 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
         className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all duration-300 ${currentPage === 1
-            ? "text-[var(--text-muted)] cursor-not-allowed"
-            : "text-[var(--text-secondary)] hover:text-white hover:bg-[var(--bg-hover)]"
+          ? "text-[var(--text-muted)] cursor-not-allowed"
+          : "text-[var(--text-secondary)] hover:text-white hover:bg-[var(--bg-hover)]"
           }`}
         style={{ border: '1px solid var(--border-subtle)' }}
       >
-        <FaChevronLeft className="w-3 h-3" />
+        <span className="w-3 h-3 font-bold">&lt;</span>
         Previous
       </button>
 
@@ -66,8 +66,8 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
             <button
               onClick={() => onPageChange(page)}
               className={`min-w-[40px] h-10 rounded-xl font-medium transition-all duration-300 ${currentPage === page
-                  ? "text-white shadow-lg"
-                  : "text-[var(--text-secondary)] hover:text-white hover:bg-[var(--bg-hover)]"
+                ? "text-white shadow-lg"
+                : "text-[var(--text-secondary)] hover:text-white hover:bg-[var(--bg-hover)]"
                 }`}
               style={{
                 background: currentPage === page
@@ -88,13 +88,13 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
         className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all duration-300 ${currentPage === totalPages
-            ? "text-[var(--text-muted)] cursor-not-allowed"
-            : "text-[var(--text-secondary)] hover:text-white hover:bg-[var(--bg-hover)]"
+          ? "text-[var(--text-muted)] cursor-not-allowed"
+          : "text-[var(--text-secondary)] hover:text-white hover:bg-[var(--bg-hover)]"
           }`}
         style={{ border: '1px solid var(--border-subtle)' }}
       >
         Next
-        <FaChevronRight className="w-3 h-3" />
+        <span className="w-3 h-3 font-bold">&gt;</span>
       </button>
     </div>
   );

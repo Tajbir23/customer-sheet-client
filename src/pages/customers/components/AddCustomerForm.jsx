@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 import handleApi from '../../../libs/handleAPi'
 import { toast } from 'react-toastify'
-import { FaUser, FaShoppingCart, FaCreditCard, FaStickyNote, FaTimes, FaCheck, FaSpinner } from 'react-icons/fa'
+
 
 const AddCustomerForm = ({ setIsOpen, className }) => {
   const isMountedRef = useRef(true)
@@ -97,7 +97,7 @@ const AddCustomerForm = ({ setIsOpen, className }) => {
             className="p-2 rounded-lg hover:bg-[var(--bg-hover)] text-[var(--text-secondary)] hover:text-white transition-colors"
             title="Close"
           >
-            <FaTimes className="w-5 h-5" />
+            <span className="w-5 h-5 font-bold">X</span>
           </button>
         </div>
 
@@ -107,7 +107,7 @@ const AddCustomerForm = ({ setIsOpen, className }) => {
           <div className="space-y-6">
             <div className="flex items-center pb-2 border-b border-[var(--border-subtle)]">
               <div className={`bg-[var(--accent-blue)]/10 ${sectionIconClass}`}>
-                <FaUser className="w-4 h-4 text-[var(--accent-blue)]" />
+                <span className="w-4 h-4 text-[var(--accent-blue)] font-bold text-center">U</span>
               </div>
               <div>
                 <h3 className="text-lg font-bold text-[var(--text-primary)]">Basic Information</h3>
@@ -157,7 +157,7 @@ const AddCustomerForm = ({ setIsOpen, className }) => {
           <div className="space-y-6">
             <div className="flex items-center pb-2 border-b border-[var(--border-subtle)]">
               <div className={`bg-[var(--success)]/10 ${sectionIconClass}`}>
-                <FaShoppingCart className="w-4 h-4 text-[var(--success)]" />
+                <span className="w-4 h-4 text-[var(--success)] font-bold text-center">O</span>
               </div>
               <div>
                 <h3 className="text-lg font-bold text-[var(--text-primary)]">Order Information</h3>
@@ -227,7 +227,7 @@ const AddCustomerForm = ({ setIsOpen, className }) => {
           <div className="space-y-6">
             <div className="flex items-center pb-2 border-b border-[var(--border-subtle)]">
               <div className={`bg-[var(--warning)]/10 ${sectionIconClass}`}>
-                <FaCreditCard className="w-4 h-4 text-[var(--warning)]" />
+                <span className="w-4 h-4 text-[var(--warning)] font-bold text-center">$</span>
               </div>
               <div>
                 <h3 className="text-lg font-bold text-[var(--text-primary)]">Payment Information</h3>
@@ -287,7 +287,7 @@ const AddCustomerForm = ({ setIsOpen, className }) => {
           <div className="space-y-6">
             <div className="flex items-center pb-2 border-b border-[var(--border-subtle)]">
               <div className={`bg-[var(--accent-purple)]/10 ${sectionIconClass}`}>
-                <FaStickyNote className="w-4 h-4 text-[var(--accent-purple)]" />
+                <span className="w-4 h-4 text-[var(--accent-purple)] font-bold text-center">N</span>
               </div>
               <div>
                 <h3 className="text-lg font-bold text-[var(--text-primary)]">Notes & Reminders</h3>
@@ -335,18 +335,18 @@ const AddCustomerForm = ({ setIsOpen, className }) => {
               type="submit"
               disabled={isSubmitting}
               className={`flex-1 flex items-center justify-center gap-2 py-3 px-6 rounded-xl font-bold transition-all duration-200 shadow-lg ${isSubmitting
-                  ? 'bg-[var(--bg-elevated)] text-[var(--text-muted)] cursor-not-allowed'
-                  : 'bg-[var(--accent-blue)] hover:bg-[var(--accent-blue-light)] text-white hover:shadow-blue-500/25'
+                ? 'bg-[var(--bg-elevated)] text-[var(--text-muted)] cursor-not-allowed'
+                : 'bg-[var(--accent-blue)] hover:bg-[var(--accent-blue-light)] text-white hover:shadow-blue-500/25'
                 }`}
             >
               {isSubmitting ? (
                 <>
-                  <FaSpinner className="w-4 h-4 animate-spin" />
+                  <span className="w-4 h-4 animate-spin font-bold">...</span>
                   Adding...
                 </>
               ) : (
                 <>
-                  <FaCheck className="w-4 h-4" />
+                  <span className="w-4 h-4 font-bold">✓</span>
                   Add Customer
                 </>
               )}

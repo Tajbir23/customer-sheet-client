@@ -1,5 +1,4 @@
 import React from "react";
-import { FaExclamationCircle, FaSearch, FaTimes } from "react-icons/fa";
 import TeamGrid from "./TeamGrid";
 
 const InactiveTeamsSection = ({
@@ -26,7 +25,7 @@ const InactiveTeamsSection = ({
                     <div className="flex items-center gap-3">
                         <div className="p-2 rounded-lg"
                             style={{ background: 'var(--error-bg)', color: 'var(--error)' }}>
-                            <FaExclamationCircle className="text-lg" />
+                            <span className="text-lg font-bold">!</span>
                         </div>
                         <div>
                             <h3 className="text-lg font-bold text-[var(--text-primary)]">Inactive Teams</h3>
@@ -47,7 +46,7 @@ const InactiveTeamsSection = ({
                     </div>
                     {/* Search Input for Inactive Teams */}
                     <div className="relative group">
-                        <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)] group-focus-within:text-[var(--error)] transition-colors" />
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)] group-focus-within:text-[var(--error)] transition-colors font-bold text-sm">Q</span>
                         <input
                             type="text"
                             placeholder="Search inactive teams..."
@@ -74,7 +73,7 @@ const InactiveTeamsSection = ({
                                 onClick={() => setInactiveSearch("")}
                                 className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-[var(--bg-hover)] text-[var(--text-tertiary)] hover:text-[var(--error)] transition-colors"
                             >
-                                <FaTimes />
+                                <span className="font-bold text-sm">X</span>
                             </button>
                         )}
                     </div>
@@ -95,7 +94,7 @@ const InactiveTeamsSection = ({
             ) : (
                 <div className="text-center py-8 rounded-xl border border-dashed border-[var(--border-subtle)]"
                     style={{ background: 'var(--bg-card)' }}>
-                    <FaSearch className="mx-auto text-[var(--text-tertiary)] text-3xl mb-3" />
+                    <div className="mx-auto text-[var(--text-tertiary)] text-3xl mb-3 font-bold">?</div>
                     <p className="font-medium text-[var(--text-secondary)]">
                         No inactive teams match "<span className="text-[var(--error)]">{inactiveSearch}</span>"
                     </p>

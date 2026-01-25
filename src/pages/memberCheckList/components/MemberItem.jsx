@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { FaCheck, FaTimes, FaEnvelope, FaTag, FaStar, FaCopy, FaUser } from 'react-icons/fa'
 import UpdateMember from './UpdateMember'
 import AddMember from './AddMember'
 
@@ -34,13 +33,13 @@ const MemberItem = ({ member, gptAccount, data, setData }) => {
                 : 'bg-[var(--bg-card)] border border-[var(--border-subtle)] text-[var(--text-tertiary)] hover:border-[var(--error)] hover:text-[var(--error)] hover:bg-[var(--error)]/10'
                 }`}
             >
-              {isChecked ? <FaCheck size={10} /> : <FaTimes size={10} />}
+              {isChecked ? <span className="font-bold text-sm">✔</span> : <span className="font-bold text-sm">✕</span>}
             </button>
 
             {/* Email Section */}
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
-                <FaEnvelope className={`text-xs ${isChecked ? 'text-[var(--success)]' : 'text-[var(--text-tertiary)]'}`} />
+                <span className={`text-xs font-bold ${isChecked ? 'text-[var(--success)]' : 'text-[var(--text-tertiary)]'}`}>@</span>
                 <p className={`font-mono text-sm truncate transition-colors ${isChecked ? 'text-[var(--text-primary)] font-medium' : 'text-[var(--text-secondary)]'}`}>
                   {email}
                 </p>
@@ -50,9 +49,9 @@ const MemberItem = ({ member, gptAccount, data, setData }) => {
                   title="Copy email"
                 >
                   {copied ? (
-                    <FaCheck className="text-[10px] text-[var(--success)]" />
+                    <span className="text-[10px] text-[var(--success)] font-bold">Copied</span>
                   ) : (
-                    <FaCopy className="text-[10px]" />
+                    <span className="text-[10px] font-bold">Copy</span>
                   )}
                 </button>
               </div>
@@ -65,14 +64,14 @@ const MemberItem = ({ member, gptAccount, data, setData }) => {
             <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
               {reference?._id && (
                 <div className="flex items-center gap-1 bg-[var(--accent-blue)] text-white px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider shadow-sm shadow-blue-500/20">
-                  <FaUser className="text-[9px]" />
+                  <span className="text-[9px] font-bold">Ref:</span>
                   <span>{reference.username}</span>
                 </div>
               )}
 
               {isResell && (
                 <div className="flex items-center gap-1 bg-[var(--accent-purple)]/10 text-[var(--accent-purple)] px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider border border-[var(--accent-purple)]/20">
-                  <FaStar className="text-[9px]" />
+                  <span className="font-bold">★</span>
                   <span>Resell</span>
                 </div>
               )}

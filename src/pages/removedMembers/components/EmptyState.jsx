@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaUsers, FaTimes, FaSearch, FaExclamationTriangle } from 'react-icons/fa';
+
 
 const EmptyState = ({ searchEmail, clearSearch }) => {
     return (
@@ -8,14 +8,14 @@ const EmptyState = ({ searchEmail, clearSearch }) => {
                 <div className="relative mb-8">
                     <div className="w-24 h-24 bg-[var(--bg-surface)] rounded-3xl flex items-center justify-center mx-auto border border-[var(--border-subtle)]">
                         {searchEmail ? (
-                            <FaSearch className="w-12 h-12 text-[var(--text-muted)]" />
+                            <span className="w-12 h-12 text-[var(--text-muted)] font-bold text-4xl text-center flex items-center justify-center">Q</span>
                         ) : (
-                            <FaUsers className="w-12 h-12 text-[var(--text-muted)]" />
+                            <span className="w-12 h-12 text-[var(--text-muted)] font-bold text-4xl text-center flex items-center justify-center">T</span>
                         )}
                     </div>
                     {searchEmail && (
                         <div className="absolute -top-2 -right-2 w-8 h-8 bg-[var(--warning)]/10 rounded-full flex items-center justify-center">
-                            <FaExclamationTriangle className="w-4 h-4 text-[var(--warning)]" />
+                            <span className="w-4 h-4 text-[var(--warning)] font-bold text-xs text-center">!</span>
                         </div>
                     )}
                 </div>
@@ -37,7 +37,7 @@ const EmptyState = ({ searchEmail, clearSearch }) => {
                                 onClick={clearSearch}
                                 className="inline-flex items-center gap-3 px-6 py-3 bg-[var(--accent-blue)] text-white rounded-xl font-medium hover:bg-[var(--accent-blue)]/90 transition-all duration-200"
                             >
-                                <FaTimes className="w-4 h-4" />
+                                <span className="w-4 h-4 font-bold">X</span>
                                 Clear Search & Show All
                             </button>
 

@@ -1,0 +1,71 @@
+[0m[0m
+[0m[4mE:\Chat gpt\customer sheet\client\src\components\InviteMemberModal.jsx[24m[0m
+[0m  [2m1:27[22m  [31merror[39m  'useEffect' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  [2mno-unused-vars[22m[0m
+[0m[0m
+[0m[4mE:\Chat gpt\customer sheet\client\src\context\SocketContext.jsx[24m[0m
+[0m   [2m2:40[22m  [31merror[39m  'getSocket' is defined but never used. Allowed unused vars must match /^[A-Z_]/u                                                [2mno-unused-vars[22m[0m
+[0m  [2m54:14[22m  [31merror[39m  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  [2mreact-refresh/only-export-components[22m[0m
+[0m[0m
+[0m[4mE:\Chat gpt\customer sheet\client\src\pages\Home\Home.jsx[24m[0m
+[0m  [2m8:27[22m  [31merror[39m  'Icon' is defined but never used  [2mno-unused-vars[22m[0m
+[0m[0m
+[0m[4mE:\Chat gpt\customer sheet\client\src\pages\Home\components\DashboardCharts.jsx[24m[0m
+[0m  [2m167:25[22m  [31merror[39m  'name' is defined but never used  [2mno-unused-vars[22m[0m
+[0m[0m
+[0m[4mE:\Chat gpt\customer sheet\client\src\pages\asocks\components\Proxies.jsx[24m[0m
+[0m  [2m23:14[22m  [31merror[39m  'error' is defined but never used  [2mno-unused-vars[22m[0m
+[0m[0m
+[0m[4mE:\Chat gpt\customer sheet\client\src\pages\asocks\components\ProxyUploadForm.jsx[24m[0m
+[0m  [2m35:18[22m  [31merror[39m  '_' is defined but never used      [2mno-unused-vars[22m[0m
+[0m  [2m78:18[22m  [31merror[39m  'error' is defined but never used  [2mno-unused-vars[22m[0m
+[0m[0m
+[0m[4mE:\Chat gpt\customer sheet\client\src\pages\customers\components\CustomerTable.jsx[24m[0m
+[0m  [2m118:18[22m  [31merror[39m  'err' is defined but never used  [2mno-unused-vars[22m[0m
+[0m[0m
+[0m[4mE:\Chat gpt\customer sheet\client\src\pages\gptAccounts\components\GptAccountCard.jsx[24m[0m
+[0m  [2m60:18[22m  [31merror[39m  'e' is defined but never used  [2mno-unused-vars[22m[0m
+[0m[0m
+[0m[4mE:\Chat gpt\customer sheet\client\src\pages\invoice\Invoice.jsx[24m[0m
+[0m  [2m211:42[22m  [31merror[39m  'index' is defined but never used  [2mno-unused-vars[22m[0m
+[0m[0m
+[0m[4mE:\Chat gpt\customer sheet\client\src\pages\invoice\SearchInvoice.jsx[24m[0m
+[0m  [2m31:14[22m  [31merror[39m  'err' is defined but never used  [2mno-unused-vars[22m[0m
+[0m[0m
+[0m[4mE:\Chat gpt\customer sheet\client\src\pages\memberCheckList\components\GptAccountCard.jsx[24m[0m
+[0m  [2m143:34[22m  [31merror[39m  'index' is defined but never used  [2mno-unused-vars[22m[0m
+[0m[0m
+[0m[4mE:\Chat gpt\customer sheet\client\src\pages\paypal\components\PaypalAccountCard.jsx[24m[0m
+[0m  [2m54:18[22m  [31merror[39m  'e' is defined but never used  [2mno-unused-vars[22m[0m
+[0m[0m
+[0m[4mE:\Chat gpt\customer sheet\client\src\pages\qrCode\QrCode.jsx[24m[0m
+[0m  [2m9:12[22m  [31merror[39m  'qrCodeUrl' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u     [2mno-unused-vars[22m[0m
+[0m  [2m9:23[22m  [31merror[39m  'setQrCodeUrl' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  [2mno-unused-vars[22m[0m
+[0m[0m
+[0m[4mE:\Chat gpt\customer sheet\client\src\pages\reseller-info\components\DeleteResellerModal.jsx[24m[0m
+[0m  [2m92:1[22m  [31merror[39m  Parsing error: Unexpected token `}`. Did you mean `&rbrace;` or `{"}"}`?[0m
+[0m[0m
+[0m[4mE:\Chat gpt\customer sheet\client\src\pages\reseller\teams\ResellerTeams.jsx[24m[0m
+[0m  [2m4:10[22m  [31merror[39m  'toast' is defined but never used. Allowed unused vars must match /^[A-Z_]/u  [2mno-unused-vars[22m[0m
+[0m[0m
+[0m[4mE:\Chat gpt\customer sheet\client\src\pages\sendCustomMessage\components\CustomerTableRow.jsx[24m[0m
+[0m  [2m4:35[22m  [31merror[39m  'index' is defined but never used  [2mno-unused-vars[22m[0m
+[0m[0m
+[0m[4mE:\Chat gpt\customer sheet\client\src\pages\subscriptionEndMembers\component\HistoryCard.jsx[24m[0m
+[0m  [2m4:30[22m  [31merror[39m  'index' is assigned a value but never used  [2mno-unused-vars[22m[0m
+[0m[0m
+[0m[4mE:\Chat gpt\customer sheet\client\src\pages\subscriptionEndMembers\subscriptionEndMembers.jsx[24m[0m
+[0m  [2m73:6[22m  [33mwarning[39m  React Hook useEffect has missing dependencies: 'endDate', 'orderDate', and 'search'. Either include them or remove the dependency array  [2mreact-hooks/exhaustive-deps[22m[0m
+[0m[0m
+[0m[4mE:\Chat gpt\customer sheet\client\src\pages\teams\Teams.jsx[24m[0m
+[0m   [2m38:10[22m  [31merror[39m    'page' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u                            [2mno-unused-vars[22m[0m
+[0m  [2m341:6[22m   [33mwarning[39m  React Hook useEffect has a missing dependency: 'fetchAdmins'. Either include it or remove the dependency array  [2mreact-hooks/exhaustive-deps[22m[0m
+[0m  [2m520:16[22m  [31merror[39m    'error' is defined but never used                                                                               [2mno-unused-vars[22m[0m
+[0m[0m
+[0m[4mE:\Chat gpt\customer sheet\client\src\pages\teams\components\LoadingGrid.jsx[24m[0m
+[0m  [2m3:24[22m  [31merror[39m  'delay' is assigned a value but never used  [2mno-unused-vars[22m[0m
+[0m[0m
+[0m[4mE:\Chat gpt\customer sheet\client\src\pages\teams\components\ToggleButton.jsx[24m[0m
+[0m  [2m4:10[22m  [31merror[39m  'showSuccessPulse' is assigned a value but never used. Allowed unused vars must match /^[A-Z_]/u  [2mno-unused-vars[22m[0m
+[0m[0m
+[0m[31m[1m✖ 26 problems (24 errors, 2 warnings)[22m[39m[0m
+[0m[31m[1m[22m[39m[0m

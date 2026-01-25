@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { FaTimes, FaUser, FaEnvelope, FaPhone, FaLock, FaRobot, FaCheck, FaSpinner } from 'react-icons/fa'
+
 import handleApi from '../../../libs/handleAPi'
 import { toast } from 'react-toastify'
 
@@ -51,7 +51,7 @@ const AddResellerModal = ({ onClose, onSuccess }) => {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 bg-[var(--accent-purple)]/20 rounded-xl flex items-center justify-center">
-                <FaUser className="text-[var(--accent-purple)] text-lg" />
+                <span className="text-[var(--accent-purple)] text-lg font-bold">+</span>
               </div>
               <div>
                 <h2 className="text-xl font-semibold text-white">Add New Reseller</h2>
@@ -63,7 +63,7 @@ const AddResellerModal = ({ onClose, onSuccess }) => {
               className="p-2 hover:bg-[var(--bg-hover)] rounded-lg transition-colors"
               title="Close"
             >
-              <FaTimes className="w-4 h-4 text-[var(--text-tertiary)]" />
+              <span className="w-4 h-4 text-[var(--text-tertiary)] font-bold">X</span>
             </button>
           </div>
         </div>
@@ -77,7 +77,7 @@ const AddResellerModal = ({ onClose, onSuccess }) => {
             </label>
             <div className="relative">
               <div className="absolute left-3 top-1/2 -translate-y-1/2">
-                <FaUser className="text-[var(--text-tertiary)]" />
+                <span className="text-[var(--text-tertiary)] font-bold">U</span>
               </div>
               <input
                 type="text"
@@ -98,7 +98,7 @@ const AddResellerModal = ({ onClose, onSuccess }) => {
             </label>
             <div className="relative">
               <div className="absolute left-3 top-1/2 -translate-y-1/2">
-                <FaEnvelope className="text-[var(--text-tertiary)]" />
+                <span className="text-[var(--text-tertiary)] font-bold">@</span>
               </div>
               <input
                 type="email"
@@ -118,7 +118,7 @@ const AddResellerModal = ({ onClose, onSuccess }) => {
             </label>
             <div className="relative">
               <div className="absolute left-3 top-1/2 -translate-y-1/2">
-                <FaPhone className="text-[var(--text-tertiary)]" />
+                <span className="text-[var(--text-tertiary)] font-bold">P</span>
               </div>
               <input
                 type="tel"
@@ -139,7 +139,7 @@ const AddResellerModal = ({ onClose, onSuccess }) => {
             </label>
             <div className="relative">
               <div className="absolute left-3 top-1/2 -translate-y-1/2">
-                <FaLock className="text-[var(--text-tertiary)]" />
+                <span className="text-[var(--text-tertiary)] font-bold">***</span>
               </div>
               <input
                 type="password"
@@ -160,7 +160,7 @@ const AddResellerModal = ({ onClose, onSuccess }) => {
             </label>
             <div className="relative">
               <div className="absolute left-3 top-1/2 -translate-y-1/2">
-                <FaRobot className="text-[var(--text-tertiary)]" />
+                <span className="text-[var(--text-tertiary)] font-bold">GPT</span>
               </div>
               <input
                 type="text"
@@ -179,18 +179,18 @@ const AddResellerModal = ({ onClose, onSuccess }) => {
               type="submit"
               disabled={isSubmitting}
               className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-medium transition-all duration-200 ${isSubmitting
-                  ? 'bg-[var(--bg-elevated)] text-[var(--text-tertiary)] cursor-not-allowed'
-                  : 'bg-[var(--accent-purple)] hover:bg-[var(--accent-purple)]/90 text-white'
+                ? 'bg-[var(--bg-elevated)] text-[var(--text-tertiary)] cursor-not-allowed'
+                : 'bg-[var(--accent-purple)] hover:bg-[var(--accent-purple)]/90 text-white'
                 }`}
             >
               {isSubmitting ? (
                 <>
-                  <FaSpinner className="w-4 h-4 animate-spin" />
+                  <span className="w-4 h-4 animate-spin font-bold">...</span>
                   Adding...
                 </>
               ) : (
                 <>
-                  <FaCheck className="w-4 h-4" />
+                  <span className="w-4 h-4 font-bold">✓</span>
                   Add Reseller
                 </>
               )}

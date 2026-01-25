@@ -1,5 +1,6 @@
 import React from 'react'
-import { FaSearch, FaTimes, FaLayerGroup } from 'react-icons/fa'
+import { FaSearch, FaTimesCircle, FaUsersCog } from 'react-icons/fa';
+
 
 const SearchBar = ({ search, onSearchChange, isLoading }) => {
   const handleClear = () => {
@@ -7,11 +8,11 @@ const SearchBar = ({ search, onSearchChange, isLoading }) => {
   }
 
   return (
-    <div className="max-w-2xl mx-auto mb-8 animate-fade-in-down">
+    <div className="max-w-2xl mx-auto mb-8">
       <div className="text-center mb-6">
         <div className="flex items-center justify-center gap-3 mb-3">
           <div className="p-3 rounded-xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)]">
-            <FaLayerGroup className="w-6 h-6 text-[var(--accent-purple)]" />
+            <FaUsersCog className="w-8 h-8 text-[var(--accent-purple)]" />
           </div>
         </div>
         <h1 className="text-3xl sm:text-4xl font-bold mb-2 text-white">
@@ -22,7 +23,7 @@ const SearchBar = ({ search, onSearchChange, isLoading }) => {
 
       <div className="relative group max-w-xl mx-auto">
         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-          <FaSearch className="text-[var(--text-tertiary)] group-focus-within:text-[var(--accent-purple)] transition-colors duration-200" />
+          <FaSearch className="text-[var(--text-tertiary)] w-5 h-5" />
         </div>
 
         <input
@@ -51,7 +52,7 @@ const SearchBar = ({ search, onSearchChange, isLoading }) => {
             className="absolute inset-y-0 right-0 pr-3 flex items-center"
           >
             <div className="p-1 rounded-full hover:bg-[var(--bg-hover)] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors">
-              <FaTimes className="w-4 h-4" />
+              <FaTimesCircle className="w-5 h-5" />
             </div>
           </button>
         )}

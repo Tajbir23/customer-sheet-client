@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { FaPlus, FaTimes, FaWhatsapp } from 'react-icons/fa'
+
 
 const CustomNumberInput = ({ customNumbers, setCustomNumbers }) => {
     const [inputValue, setInputValue] = useState('')
@@ -58,14 +58,14 @@ const CustomNumberInput = ({ customNumbers, setCustomNumbers }) => {
                             placeholder="Enter phone number (e.g., 01712345678)"
                             className="w-full pl-12 pr-4 py-3 bg-[var(--bg-surface)] border border-[var(--border-subtle)] rounded-xl focus:outline-none focus:border-[var(--success)] focus:ring-1 focus:ring-[var(--success)] transition-all duration-200 text-white placeholder-[var(--text-muted)]"
                         />
-                        <FaWhatsapp className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--success)] text-lg" />
+                        <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--success)] text-lg font-bold">WA</span>
                     </div>
                     <button
                         onClick={handleAddNumber}
                         disabled={!inputValue.trim()}
                         className="px-4 py-3 bg-[var(--success)] hover:bg-[var(--success)]/90 text-white rounded-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                        <FaPlus />
+                        <span className="font-bold">+</span>
                     </button>
                 </div>
             </div>
@@ -90,13 +90,13 @@ const CustomNumberInput = ({ customNumbers, setCustomNumbers }) => {
                                 key={index}
                                 className="flex items-center gap-2 px-3 py-1.5 bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-full text-sm font-mono text-white"
                             >
-                                <FaWhatsapp className="text-[var(--success)] text-xs" />
+                                <span className="text-[var(--success)] text-xs font-bold">WA</span>
                                 <span>{number}</span>
                                 <button
                                     onClick={() => handleRemoveNumber(number)}
                                     className="text-[var(--text-tertiary)] hover:text-[var(--error)] transition-colors"
                                 >
-                                    <FaTimes className="text-xs" />
+                                    <span className="text-xs font-bold">X</span>
                                 </button>
                             </div>
                         ))}
@@ -106,7 +106,7 @@ const CustomNumberInput = ({ customNumbers, setCustomNumbers }) => {
 
             {customNumbers.length === 0 && (
                 <div className="mt-4 p-6 bg-[var(--bg-surface)] rounded-xl text-center border border-[var(--border-subtle)]">
-                    <FaWhatsapp className="mx-auto text-3xl text-[var(--text-muted)] mb-2" />
+                    <span className="mx-auto text-3xl text-[var(--text-muted)] mb-2 font-bold block">WA</span>
                     <p className="text-[var(--text-tertiary)] text-sm">No numbers added yet</p>
                 </div>
             )}

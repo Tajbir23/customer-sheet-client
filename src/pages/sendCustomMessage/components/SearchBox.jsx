@@ -1,6 +1,7 @@
 import React from 'react'
 import { FaSearch } from 'react-icons/fa'
 
+
 const SearchBox = ({ search, setSearch }) => {
     return (
         <div className="bg-[var(--bg-card)] rounded-2xl border border-[var(--border-subtle)] p-6 mb-8">

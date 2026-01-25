@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import handleApi from '../../libs/handleAPi';
 import { useNavigate } from 'react-router-dom';
-import { FaUser, FaLock, FaSignInAlt } from 'react-icons/fa';
+
 
 const Login = () => {
   const navigate = useNavigate()
@@ -149,7 +149,7 @@ const Login = () => {
               </label>
               <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <FaUser className="text-[var(--text-muted)] group-focus-within:text-[var(--accent-purple)] transition-colors" />
+                  <span className="text-[var(--text-muted)] group-focus-within:text-[var(--accent-purple)] transition-colors font-bold pl-1">U</span>
                 </div>
                 <input
                   id="username"
@@ -183,7 +183,7 @@ const Login = () => {
               </label>
               <div className="relative group">
                 <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                  <FaLock className="text-[var(--text-muted)] group-focus-within:text-[var(--accent-purple)] transition-colors" />
+                  <span className="text-[var(--text-muted)] group-focus-within:text-[var(--accent-purple)] transition-colors font-bold pl-1">***</span>
                 </div>
                 <input
                   id="password"
@@ -250,7 +250,7 @@ const Login = () => {
                   </>
                 ) : (
                   <>
-                    <FaSignInAlt />
+                    <span className="font-bold">→</span>
                     Sign In
                   </>
                 )}

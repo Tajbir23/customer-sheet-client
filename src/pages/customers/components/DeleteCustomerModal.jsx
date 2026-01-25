@@ -1,5 +1,5 @@
 import React from 'react';
-import { FaTrash, FaTimes } from 'react-icons/fa';
+
 
 const DeleteCustomerModal = ({ customer, onClose, onDelete }) => {
   return (
@@ -11,7 +11,7 @@ const DeleteCustomerModal = ({ customer, onClose, onDelete }) => {
         <div className="flex items-center gap-3 mb-6">
           <div className="w-10 h-10 rounded-full flex items-center justify-center"
             style={{ background: 'var(--error-bg)' }}>
-            <FaTrash className="w-5 h-5" style={{ color: 'var(--error)' }} />
+            <span className="w-5 h-5 font-bold" style={{ color: 'var(--error)' }}>🗑</span>
           </div>
           <h2 className="text-xl font-bold text-white">Delete Customer</h2>
         </div>
@@ -59,7 +59,7 @@ const DeleteCustomerModal = ({ customer, onClose, onDelete }) => {
             style={{ background: 'linear-gradient(135deg, var(--error) 0%, var(--error-dark) 100%)' }}
             onClick={() => onDelete(customer._id)}
           >
-            <FaTrash className="w-3.5 h-3.5" />
+            <span className="w-3.5 h-3.5 font-bold">🗑</span>
             Delete
           </button>
         </div>

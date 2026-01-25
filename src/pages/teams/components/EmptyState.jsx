@@ -1,6 +1,6 @@
 import React from 'react'
 
-const EmptyState = ({ message, icon: Icon, type = 'default', actionButton }) => {
+const EmptyState = ({ message, type = 'default', actionButton }) => {
   const getStateConfig = () => {
     switch (type) {
       case 'error':
@@ -27,7 +27,7 @@ const EmptyState = ({ message, icon: Icon, type = 'default', actionButton }) => 
   const styles = getStateConfig()
 
   return (
-    <div className="flex flex-col items-center justify-center py-12 animate-fade-in-up">
+    <div className="flex flex-col items-center justify-center py-12">
       <div
         className={`rounded-2xl p-8 max-w-sm mx-auto text-center border ${styles.borderColor}`}
         style={{ background: 'var(--bg-card)' }}
@@ -36,7 +36,9 @@ const EmptyState = ({ message, icon: Icon, type = 'default', actionButton }) => 
           w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 
           ${styles.bg} ${styles.iconColor}
         `}>
-          <Icon className="text-3xl" />
+          <span className="text-3xl font-bold">
+            {type === 'error' ? '!' : type === 'search' ? '?' : '∅'}
+          </span>
         </div>
 
         <h3 className="text-xl font-bold text-white mb-2">

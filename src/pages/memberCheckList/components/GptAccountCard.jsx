@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import MemberItem from './MemberItem'
-import { FaEnvelope, FaUsers, FaClock, FaCalendarAlt, FaCopy, FaCheck } from 'react-icons/fa'
+
 
 const GptAccountCard = ({ accountData, data, setData }) => {
   const { gptAccount, members, createdAt } = accountData
@@ -42,7 +42,7 @@ const GptAccountCard = ({ accountData, data, setData }) => {
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-3">
               <div className="p-2.5 rounded-xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)] group-hover:border-[var(--accent-purple)]/50 transition-colors">
-                <FaEnvelope className="text-[var(--accent-purple)] text-lg" />
+                <span className="text-[var(--accent-purple)] font-bold text-lg">@</span>
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
@@ -55,20 +55,20 @@ const GptAccountCard = ({ accountData, data, setData }) => {
                     title="Copy email"
                   >
                     {copied ? (
-                      <FaCheck className="text-[var(--success)] text-xs" />
+                      <span className="text-[var(--success)] text-xs font-bold">Copied</span>
                     ) : (
-                      <FaCopy className="text-xs" />
+                      <span className="text-xs font-bold">Copy</span>
                     )}
                   </button>
                 </div>
                 <div className="flex items-center gap-3 text-xs text-[var(--text-secondary)] mt-0.5">
                   <div className="flex items-center gap-1.5">
-                    <FaCalendarAlt className="opacity-70" />
+                    <span className="opacity-70 text-[10px] font-bold">Date:</span>
                     <span>{formatDate(createdAt)}</span>
                   </div>
                   <span className="w-1 h-1 rounded-full bg-[var(--text-tertiary)]"></span>
                   <div className="flex items-center gap-1.5">
-                    <FaClock className="opacity-70" />
+                    <span className="opacity-70 text-[10px] font-bold">Time:</span>
                     <span>{formatTime(createdAt)}</span>
                   </div>
                 </div>
@@ -79,7 +79,7 @@ const GptAccountCard = ({ accountData, data, setData }) => {
           <div className="flex items-center justify-between sm:justify-end gap-4 min-w-[140px]">
             <div className="text-right">
               <div className="flex items-center justify-end gap-1.5 text-white font-bold text-lg leading-none">
-                <FaUsers className="text-[var(--text-tertiary)] text-xs" />
+                <span className="text-[var(--text-tertiary)] text-xs font-bold">Total:</span>
                 <span>{members.length}</span>
               </div>
               <p className="text-[10px] font-bold uppercase tracking-wider text-[var(--text-tertiary)] mt-1">Members</p>
@@ -106,7 +106,7 @@ const GptAccountCard = ({ accountData, data, setData }) => {
                   strokeDasharray={100}
                   strokeDashoffset={100 - completionPercentage}
                   strokeLinecap="round"
-                  className="transition-all duration-500 ease-out"
+                  className=""
                 />
               </svg>
               <span className={`absolute text-[10px] font-bold ${completionPercentage === 100 ? 'text-[var(--success)]' : completionPercentage >= 50 ? 'text-[var(--warning)]' : 'text-[var(--error)]'
@@ -135,7 +135,7 @@ const GptAccountCard = ({ accountData, data, setData }) => {
           {members.length === 0 ? (
             <div className="text-center py-8">
               <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-[var(--bg-surface)] flex items-center justify-center">
-                <FaUsers className="text-[var(--text-muted)]" />
+                <span className="text-[var(--text-muted)] font-bold text-xl">M</span>
               </div>
               <p className="text-[var(--text-secondary)] text-sm font-medium">No members found</p>
             </div>
@@ -143,10 +143,7 @@ const GptAccountCard = ({ accountData, data, setData }) => {
             members.map((member, index) => (
               <div
                 key={member._id}
-                className="animate-fade-in-up"
-                style={{
-                  animationDelay: `${index * 30}ms`
-                }}
+                className=""
               >
                 <MemberItem member={member} gptAccount={gptAccount} data={data} setData={setData} />
               </div>

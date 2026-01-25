@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { Helmet } from 'react-helmet';
-import { FaSearch, FaUsers } from 'react-icons/fa';
+
 import { toast } from 'react-toastify';
 import handleApi from '../../../libs/handleAPi';
 
@@ -132,7 +132,7 @@ const ResellerTeams = () => {
                         <div>
                             <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-3">
                                 <div className="p-2 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-xl shadow-lg">
-                                    <FaUsers className="text-white" />
+                                    <span className="text-white font-bold text-lg">T</span>
                                 </div>
                                 My Teams
                             </h1>
@@ -143,7 +143,7 @@ const ResellerTeams = () => {
 
                         {/* Search Bar */}
                         <div className="relative w-full md:w-80">
-                            <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
+                            <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 font-bold">Q</span>
                             <input
                                 type="text"
                                 placeholder="Search teams or members..."

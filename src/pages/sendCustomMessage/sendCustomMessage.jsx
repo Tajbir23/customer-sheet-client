@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import handleApi from '../../libs/handleAPi'
 import { Helmet } from 'react-helmet'
-import { FaUsers, FaKeyboard } from 'react-icons/fa'
+import { FaUsers, FaHashtag } from 'react-icons/fa'
+
 import { toast } from 'react-toastify'
 
 // Components
@@ -139,7 +140,7 @@ const SendCustomMessage = () => {
                                 : 'text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-white'
                                 }`}
                         >
-                            <FaUsers />
+                            <FaUsers className="text-lg" />
                             <span>Select from Customers</span>
                             {selectedUsers.length > 0 && (
                                 <span className={`px-2 py-0.5 rounded-full text-xs ${activeTab === 'customers' ? 'bg-white/20' : 'bg-[var(--accent-blue)]/20 text-[var(--accent-blue)]'
@@ -155,7 +156,7 @@ const SendCustomMessage = () => {
                                 : 'text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-white'
                                 }`}
                         >
-                            <FaKeyboard />
+                            <FaHashtag className="text-lg" />
                             <span>Enter Custom Numbers</span>
                             {customNumbers.length > 0 && (
                                 <span className={`px-2 py-0.5 rounded-full text-xs ${activeTab === 'custom' ? 'bg-white/20' : 'bg-[var(--success)]/20 text-[var(--success)]'

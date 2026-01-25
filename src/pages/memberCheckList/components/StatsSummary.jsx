@@ -1,15 +1,15 @@
 import React from 'react'
-import { FaServer, FaUsers, FaCheckCircle, FaTimesCircle, FaPercentage } from 'react-icons/fa'
+
 
 const StatsSummary = ({ data }) => {
   const totalAccounts = data.length
   const totalMembers = data.reduce((sum, account) => sum + account.members.length, 0)
-  const checkedMembers = data.reduce((sum, account) => 
+  const checkedMembers = data.reduce((sum, account) =>
     sum + account.members.filter(member => member.isChecked).length, 0
   )
   const pendingMembers = totalMembers - checkedMembers
   const completionPercentage = totalMembers > 0 ? Math.round((checkedMembers / totalMembers) * 100) : 0
-  const resellMembers = data.reduce((sum, account) => 
+  const resellMembers = data.reduce((sum, account) =>
     sum + account.members.filter(member => member.isResell).length, 0
   )
 
@@ -17,7 +17,7 @@ const StatsSummary = ({ data }) => {
     {
       title: 'Total Accounts',
       value: totalAccounts,
-      icon: FaServer,
+      valName: 'A',
       color: 'bg-blue-500',
       textColor: 'text-blue-600',
       bgColor: 'bg-blue-50'
@@ -25,7 +25,7 @@ const StatsSummary = ({ data }) => {
     {
       title: 'Total Members',
       value: totalMembers,
-      icon: FaUsers,
+      valName: 'M',
       color: 'bg-purple-500',
       textColor: 'text-purple-600',
       bgColor: 'bg-purple-50'
@@ -33,7 +33,7 @@ const StatsSummary = ({ data }) => {
     {
       title: 'Checked',
       value: checkedMembers,
-      icon: FaCheckCircle,
+      valName: 'C',
       color: 'bg-green-500',
       textColor: 'text-green-600',
       bgColor: 'bg-green-50'
@@ -41,7 +41,7 @@ const StatsSummary = ({ data }) => {
     {
       title: 'Pending',
       value: pendingMembers,
-      icon: FaTimesCircle,
+      valName: 'P',
       color: 'bg-red-500',
       textColor: 'text-red-600',
       bgColor: 'bg-red-50'
@@ -49,7 +49,7 @@ const StatsSummary = ({ data }) => {
     {
       title: 'Completion',
       value: `${completionPercentage}%`,
-      icon: FaPercentage,
+      valName: '%',
       color: completionPercentage >= 75 ? 'bg-green-500' : completionPercentage >= 50 ? 'bg-yellow-500' : 'bg-red-500',
       textColor: completionPercentage >= 75 ? 'text-green-600' : completionPercentage >= 50 ? 'text-yellow-600' : 'text-red-600',
       bgColor: completionPercentage >= 75 ? 'bg-green-50' : completionPercentage >= 50 ? 'bg-yellow-50' : 'bg-red-50'
@@ -67,11 +67,10 @@ const StatsSummary = ({ data }) => {
               {stat.title === 'Completion' && (
                 <div className="mt-3">
                   <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div 
-                      className={`h-2 rounded-full transition-all duration-300 ${
-                        completionPercentage >= 75 ? 'bg-green-500' : 
-                        completionPercentage >= 50 ? 'bg-yellow-500' : 'bg-red-500'
-                      }`}
+                    <div
+                      className={`h-2 rounded-full ${completionPercentage >= 75 ? 'bg-green-500' :
+                          completionPercentage >= 50 ? 'bg-yellow-500' : 'bg-red-500'
+                        }`}
                       style={{ width: `${completionPercentage}%` }}
                     ></div>
                   </div>
@@ -79,12 +78,12 @@ const StatsSummary = ({ data }) => {
               )}
             </div>
             <div className={`${stat.color} p-3 rounded-xl`}>
-              <stat.icon className="text-white text-xl" />
+              <span className="text-white text-xl font-bold">{stat.valName}</span>
             </div>
           </div>
         </div>
       ))}
-      
+
       {/* Additional Info Card */}
       {resellMembers > 0 && (
         <div className="col-span-full bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-6 border border-purple-200">
@@ -96,7 +95,7 @@ const StatsSummary = ({ data }) => {
               </p>
             </div>
             <div className="bg-purple-500 p-4 rounded-xl">
-              <FaServer className="text-white text-2xl" />
+              <span className="text-white text-xl font-bold">R</span>
             </div>
           </div>
         </div>

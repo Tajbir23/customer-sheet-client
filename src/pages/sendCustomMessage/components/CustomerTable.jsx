@@ -1,5 +1,5 @@
 import React from 'react'
-import { FaUser } from 'react-icons/fa'
+
 import CustomerTableHeader from './CustomerTableHeader'
 import CustomerTableRow from './CustomerTableRow'
 
@@ -35,7 +35,7 @@ const CustomerTable = ({
                 {/* Empty State */}
                 {users.length === 0 && (
                     <div className="text-center py-12">
-                        <FaUser className="mx-auto text-4xl text-[var(--text-muted)] mb-4" />
+                        <span className="mx-auto text-4xl text-[var(--text-muted)] mb-4 font-bold block">U</span>
                         <p className="text-[var(--text-secondary)] text-lg">No customers found</p>
                         <p className="text-[var(--text-tertiary)] text-sm">Try adjusting your search</p>
                     </div>

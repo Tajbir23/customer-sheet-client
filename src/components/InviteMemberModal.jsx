@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { FaUserPlus, FaTimes, FaPaperPlane } from 'react-icons/fa';
+
 import { useSocket } from '../context/SocketContext';
 import { toast } from 'react-toastify';
 
@@ -88,7 +88,7 @@ const InviteMemberModal = ({
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
                             <div className="w-10 h-10 bg-[var(--accent-purple)]/20 rounded-xl flex items-center justify-center">
-                                <FaPaperPlane className="text-[var(--accent-purple)]" />
+                                <span className="text-[var(--accent-purple)] font-bold text-lg">Send</span>
                             </div>
                             <div>
                                 <h3 className="text-xl font-bold text-white">Invite Member</h3>
@@ -99,7 +99,7 @@ const InviteMemberModal = ({
                             onClick={handleClose}
                             className="p-2 hover:bg-[var(--bg-hover)] rounded-lg transition-colors"
                         >
-                            <FaTimes className="text-[var(--text-tertiary)]" />
+                            <span className="text-[var(--text-tertiary)] font-bold">X</span>
                         </button>
                     </div>
                 </div>
@@ -167,7 +167,7 @@ const InviteMemberModal = ({
                             </>
                         ) : (
                             <>
-                                <FaPaperPlane className="text-sm" />
+                                <span className="text-sm font-bold">Send</span>
                                 Send Invite
                             </>
                         )}

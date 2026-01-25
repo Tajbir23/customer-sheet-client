@@ -1,5 +1,6 @@
 import React from 'react'
-import { FaWhatsapp } from 'react-icons/fa'
+import { FaWhatsapp, FaCircle } from 'react-icons/fa'
+
 
 const CustomerTableRow = ({ user, index, isSelected, onSelect }) => {
     return (
@@ -37,7 +38,7 @@ const CustomerTableRow = ({ user, index, isSelected, onSelect }) => {
             </td>
             <td className="px-6 py-4 whitespace-nowrap hidden md:table-cell">
                 <div className="flex items-center gap-2">
-                    <FaWhatsapp className="text-[var(--success)] text-lg" />
+                    <FaWhatsapp className="text-[var(--success)] text-xl" />
                     <span className="text-sm font-mono text-white bg-[var(--bg-elevated)] px-2 py-1 rounded-md">
                         {user.waOrFbId}
                     </span>
@@ -45,7 +46,7 @@ const CustomerTableRow = ({ user, index, isSelected, onSelect }) => {
             </td>
             <td className="px-6 py-4 whitespace-nowrap hidden md:table-cell">
                 <div className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold border bg-[var(--success)]/10 text-[var(--success)] border-[var(--success)]/30">
-                    <div className="w-2 h-2 bg-[var(--success)] rounded-full mr-2"></div>
+                    <FaCircle className="w-2 h-2 mr-2" />
                     Active
                 </div>
             </td>

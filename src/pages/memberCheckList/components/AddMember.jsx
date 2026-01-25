@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { toast } from 'react-toastify'
-import { FaUser, FaShoppingCart, FaCreditCard, FaStickyNote, FaTimes, FaCheck, FaSpinner } from 'react-icons/fa'
+
 import handleApi from '../../../libs/handleAPi'
 import removeDataFromCheckList from './removeDataFromChecklist'
 
@@ -57,7 +57,7 @@ const AddMember = ({ member, gptAccount, setIsOpen, className, reference, member
 
   return (
     <div className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto ${className}`}>
-      <div className="bg-[var(--bg-card)] rounded-2xl w-full max-w-5xl max-h-[95vh] overflow-y-auto shadow-2xl border border-[var(--border-subtle)] my-8 animate-scale-in">
+      <div className="bg-[var(--bg-card)] rounded-2xl w-full max-w-5xl max-h-[95vh] overflow-y-auto shadow-2xl border border-[var(--border-subtle)] my-8">
         {/* Header */}
         <div className="bg-gradient-to-r from-[var(--accent-blue)] to-[var(--accent-purple)] p-6 rounded-t-2xl">
           <div className="flex items-center justify-between">
@@ -67,10 +67,10 @@ const AddMember = ({ member, gptAccount, setIsOpen, className, reference, member
             </div>
             <button
               onClick={() => setIsOpen(false)}
-              className="p-2 bg-white/20 hover:bg-white/30 rounded-lg transition-colors text-white"
+              className="p-2 bg-white/20 hover:bg-white/30 rounded-lg transition-colors text-white font-bold"
               title="Close"
             >
-              <FaTimes className="w-4 h-4" />
+              X
             </button>
           </div>
         </div>
@@ -81,7 +81,7 @@ const AddMember = ({ member, gptAccount, setIsOpen, className, reference, member
           <div className="space-y-4">
             <div className="flex items-center mb-4">
               <div className="w-10 h-10 bg-[var(--accent-blue)]/10 rounded-xl flex items-center justify-center mr-4 border border-[var(--accent-blue)]/20">
-                <FaUser className="w-5 h-5 text-[var(--accent-blue)]" />
+                <span className="text-[var(--accent-blue)] font-bold text-lg">U</span>
               </div>
               <div>
                 <h3 className="text-lg font-bold text-[var(--text-primary)]">Basic Information</h3>
@@ -133,7 +133,7 @@ const AddMember = ({ member, gptAccount, setIsOpen, className, reference, member
           <div className="space-y-4 pt-6 border-t border-[var(--border-subtle)]">
             <div className="flex items-center mb-4">
               <div className="w-10 h-10 bg-[var(--accent-green)]/10 rounded-xl flex items-center justify-center mr-4 border border-[var(--accent-green)]/20">
-                <FaShoppingCart className="w-5 h-5 text-[var(--accent-green)]" />
+                <span className="text-[var(--accent-green)] font-bold text-lg">O</span>
               </div>
               <div>
                 <h3 className="text-lg font-bold text-[var(--text-primary)]">Order Information</h3>
@@ -209,7 +209,7 @@ const AddMember = ({ member, gptAccount, setIsOpen, className, reference, member
           <div className="space-y-4 pt-6 border-t border-[var(--border-subtle)]">
             <div className="flex items-center mb-4">
               <div className="w-10 h-10 bg-[var(--accent-orange)]/10 rounded-xl flex items-center justify-center mr-4 border border-[var(--accent-orange)]/20">
-                <FaCreditCard className="w-5 h-5 text-[var(--accent-orange)]" />
+                <span className="text-[var(--accent-orange)] font-bold text-lg">$</span>
               </div>
               <div>
                 <h3 className="text-lg font-bold text-[var(--text-primary)]">Payment Information</h3>
@@ -279,7 +279,7 @@ const AddMember = ({ member, gptAccount, setIsOpen, className, reference, member
           <div className="space-y-4 pt-6 border-t border-[var(--border-subtle)]">
             <div className="flex items-center mb-4">
               <div className="w-10 h-10 bg-[var(--bg-surface)] rounded-xl flex items-center justify-center mr-4 border border-[var(--border-subtle)]">
-                <FaStickyNote className="w-5 h-5 text-[var(--text-tertiary)]" />
+                <span className="text-[var(--text-tertiary)] font-bold text-lg">N</span>
               </div>
               <div>
                 <h3 className="text-lg font-bold text-[var(--text-primary)]">Notes & Reminders</h3>
@@ -327,19 +327,17 @@ const AddMember = ({ member, gptAccount, setIsOpen, className, reference, member
               type="submit"
               disabled={isSubmitting}
               className={`flex-1 flex items-center justify-center gap-2 py-3.5 px-6 rounded-xl font-bold transition-all shadow-lg ${isSubmitting
-                  ? 'bg-[var(--bg-surface)] text-[var(--text-muted)] cursor-not-allowed border border-[var(--border-subtle)]'
-                  : 'bg-gradient-to-r from-[var(--accent-blue)] to-[var(--accent-purple)] text-white hover:shadow-blue-500/25 hover:scale-[1.01] active:scale-[0.99]'
+                ? 'bg-[var(--bg-surface)] text-[var(--text-muted)] cursor-not-allowed border border-[var(--border-subtle)]'
+                : 'bg-gradient-to-r from-[var(--accent-blue)] to-[var(--accent-purple)] text-white hover:shadow-blue-500/25 hover:scale-[1.01] active:scale-[0.99]'
                 }`}
             >
               {isSubmitting ? (
                 <>
-                  <FaSpinner className="w-5 h-5 animate-spin" />
-                  Adding Customer...
+                  <span>Adding Customer...</span>
                 </>
               ) : (
                 <>
-                  <FaCheck className="w-4 h-4" />
-                  Add Customer
+                  <span>Add Customer</span>
                 </>
               )}
             </button>

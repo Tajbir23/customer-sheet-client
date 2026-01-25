@@ -531,9 +531,9 @@ const Teams = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen">
       <Helmet>
-        <title>Teams</title>
+        <title>Teams - Customer Sheet</title>
       </Helmet>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Search Section */}
@@ -581,9 +581,10 @@ const Teams = () => {
         {/* Footer */}
         {!isLoading && !error && sortedTeams.length > 0 && (
           <div className="mt-12 text-center">
-            <div className="inline-flex items-center gap-2 bg-white rounded-lg px-6 py-3 shadow-sm border border-gray-200">
-              <div className="h-2 w-2 bg-blue rounded-full animate-pulse"></div>
-              <span className="text-sm text-gray-600 font-medium">
+            <div className="inline-flex items-center gap-2 px-6 py-3 rounded-xl border border-[var(--border-subtle)]"
+              style={{ background: 'var(--bg-card)' }}>
+              <div className="h-2 w-2 rounded-full animate-pulse bg-[var(--accent-blue)]"></div>
+              <span className="text-sm font-medium text-[var(--text-secondary)]">
                 Last updated: {new Date().toLocaleString()}
               </span>
             </div>
@@ -593,10 +594,19 @@ const Teams = () => {
 
       {/* Screenshot Preview - Fixed Bottom Right */}
       {screenshotPreview && (
-        <div className="fixed bottom-4 right-4 z-50 animate-slide-in">
-          <div className="bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden max-w-sm">
+        <div className="fixed bottom-4 right-4 z-50 animate-slide-in-right">
+          <div
+            className="rounded-2xl shadow-2xl overflow-hidden max-w-sm"
+            style={{
+              background: 'var(--bg-card)',
+              border: '1px solid var(--border-subtle)'
+            }}
+          >
             {/* Header */}
-            <div className="bg-gradient-to-r from-purple-600 to-blue-600 px-4 py-3 flex items-center justify-between">
+            <div
+              className="px-4 py-3 flex items-center justify-between"
+              style={{ background: 'linear-gradient(135deg, var(--accent-purple) 0%, var(--accent-blue) 100%)' }}
+            >
               <div className="text-white">
                 <p className="text-sm font-bold">Screenshot Preview</p>
                 <p className="text-xs text-white/80 truncate max-w-[200px]">
@@ -617,7 +627,8 @@ const Teams = () => {
               <img
                 src={`data:image/png;base64,${screenshotPreview.image}`}
                 alt="Screenshot Preview"
-                className="w-full h-auto rounded-lg border border-gray-200 cursor-pointer hover:opacity-90 transition-opacity"
+                className="w-full h-auto rounded-lg border cursor-pointer hover:opacity-90 transition-opacity"
+                style={{ borderColor: 'var(--border-subtle)' }}
                 onClick={() => {
                   // Open full size in new tab
                   const newWindow = window.open();
@@ -633,11 +644,14 @@ const Teams = () => {
               />
             </div>
             {/* Info */}
-            <div className="px-4 py-2 bg-gray-50 border-t border-gray-200">
-              <p className="text-xs text-gray-600 truncate">
+            <div
+              className="px-4 py-2 border-t"
+              style={{ backgroundColor: 'var(--bg-surface)', borderColor: 'var(--border-subtle)' }}
+            >
+              <p className="text-xs text-[var(--text-secondary)] truncate">
                 <span className="font-medium">Member:</span> {screenshotPreview.memberEmail}
               </p>
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-[var(--text-tertiary)]">
                 {new Date(screenshotPreview.timestamp).toLocaleTimeString()}
               </p>
             </div>
@@ -647,10 +661,19 @@ const Teams = () => {
 
       {/* Remove Member Screenshot Preview - Fixed Bottom Left */}
       {removeScreenshotPreview && (
-        <div className="fixed bottom-4 left-4 z-50 animate-slide-in">
-          <div className="bg-white rounded-2xl shadow-2xl border border-gray-200 overflow-hidden max-w-sm">
+        <div className="fixed bottom-4 left-4 z-50 animate-slide-in-left">
+          <div
+            className="rounded-2xl shadow-2xl overflow-hidden max-w-sm"
+            style={{
+              background: 'var(--bg-card)',
+              border: '1px solid var(--border-subtle)'
+            }}
+          >
             {/* Header */}
-            <div className="bg-gradient-to-r from-red-600 to-orange-600 px-4 py-3 flex items-center justify-between">
+            <div
+              className="px-4 py-3 flex items-center justify-between"
+              style={{ background: 'linear-gradient(135deg, var(--error) 0%, var(--error-light) 100%)' }}
+            >
               <div className="text-white">
                 <p className="text-sm font-bold">Remove Member Preview</p>
                 <p className="text-xs text-white/80 truncate max-w-[200px]">
@@ -671,7 +694,8 @@ const Teams = () => {
               <img
                 src={`data:image/png;base64,${removeScreenshotPreview.image}`}
                 alt="Remove Member Screenshot Preview"
-                className="w-full h-auto rounded-lg border border-gray-200 cursor-pointer hover:opacity-90 transition-opacity"
+                className="w-full h-auto rounded-lg border cursor-pointer hover:opacity-90 transition-opacity"
+                style={{ borderColor: 'var(--border-subtle)' }}
                 onClick={() => {
                   // Open full size in new tab
                   const newWindow = window.open();
@@ -687,11 +711,14 @@ const Teams = () => {
               />
             </div>
             {/* Info */}
-            <div className="px-4 py-2 bg-gray-50 border-t border-gray-200">
-              <p className="text-xs text-gray-600 truncate">
+            <div
+              className="px-4 py-2 border-t"
+              style={{ backgroundColor: 'var(--bg-surface)', borderColor: 'var(--border-subtle)' }}
+            >
+              <p className="text-xs text-[var(--text-secondary)] truncate">
                 <span className="font-medium">Removing:</span> {removeScreenshotPreview.email}
               </p>
-              <p className="text-xs text-gray-400">
+              <p className="text-xs text-[var(--text-tertiary)]">
                 {new Date(removeScreenshotPreview.timestamp).toLocaleTimeString()}
               </p>
             </div>

@@ -5,17 +5,14 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
 
     const getVisiblePages = () => {
         const pages = [];
-        const showPages = 5; // Show 5 page numbers max
-        
+        const showPages = 5;
+
         if (totalPages <= showPages) {
-            // Show all pages if total is small
             for (let i = 1; i <= totalPages; i++) {
                 pages.push(i);
             }
         } else {
-            // Smart pagination logic
             if (currentPage <= 3) {
-                // Show first pages + ... + last
                 for (let i = 1; i <= 4; i++) {
                     pages.push(i);
                 }
@@ -24,7 +21,6 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
                     pages.push(totalPages);
                 }
             } else if (currentPage >= totalPages - 2) {
-                // Show first + ... + last pages
                 pages.push(1);
                 if (totalPages > 5) {
                     pages.push('...');
@@ -33,7 +29,6 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
                     pages.push(i);
                 }
             } else {
-                // Show first + ... + current-1, current, current+1 + ... + last
                 pages.push(1);
                 pages.push('...');
                 for (let i = currentPage - 1; i <= currentPage + 1; i++) {
@@ -43,7 +38,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
                 pages.push(totalPages);
             }
         }
-        
+
         return pages;
     };
 
@@ -55,11 +50,10 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
             <button
                 onClick={() => onPageChange(currentPage - 1)}
                 disabled={currentPage === 1}
-                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                    currentPage === 1
-                        ? 'text-gray-400 cursor-not-allowed'
-                        : 'text-gray-600 hover:text-blue hover:bg-blue-50'
-                }`}
+                className={`px-4 py-2 rounded-lg font-medium transition-colors ${currentPage === 1
+                        ? 'text-[var(--text-muted)] cursor-not-allowed'
+                        : 'text-[var(--text-secondary)] hover:text-[var(--accent-blue)] hover:bg-[var(--bg-hover)]'
+                    }`}
             >
                 Previous
             </button>
@@ -68,15 +62,14 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
             {visiblePages.map((page, index) => (
                 <React.Fragment key={index}>
                     {page === '...' ? (
-                        <span className="px-3 py-2 text-gray-400">...</span>
+                        <span className="px-3 py-2 text-[var(--text-muted)]">...</span>
                     ) : (
                         <button
                             onClick={() => onPageChange(page)}
-                            className={`min-w-[40px] h-10 rounded-lg font-medium transition-colors ${
-                                currentPage === page
-                                    ? 'bg-blue text-white'
-                                    : 'text-gray-600 hover:text-blue hover:bg-blue-50'
-                            }`}
+                            className={`min-w-[40px] h-10 rounded-lg font-medium transition-colors ${currentPage === page
+                                    ? 'bg-[var(--accent-blue)] text-white'
+                                    : 'text-[var(--text-secondary)] hover:text-[var(--accent-blue)] hover:bg-[var(--bg-hover)]'
+                                }`}
                         >
                             {page}
                         </button>
@@ -88,11 +81,10 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
             <button
                 onClick={() => onPageChange(currentPage + 1)}
                 disabled={currentPage >= totalPages}
-                className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                    currentPage >= totalPages
-                        ? 'text-gray-400 cursor-not-allowed'
-                        : 'text-gray-600 hover:text-blue hover:bg-blue-50'
-                }`}
+                className={`px-4 py-2 rounded-lg font-medium transition-colors ${currentPage >= totalPages
+                        ? 'text-[var(--text-muted)] cursor-not-allowed'
+                        : 'text-[var(--text-secondary)] hover:text-[var(--accent-blue)] hover:bg-[var(--bg-hover)]'
+                    }`}
             >
                 Next
             </button>
@@ -100,4 +92,4 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
     );
 };
 
-export default Pagination; 
+export default Pagination;

@@ -33,20 +33,28 @@ const DuplicateMembersCard = ({ duplicateMembers }) => {
     const hasMore = duplicateMembers.length > 5;
 
     return (
-        <div className="mb-8">
-            <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-xl shadow-sm overflow-hidden">
+        <div className="mb-8 animate-fade-in-up">
+            <div className="rounded-2xl overflow-hidden border border-[var(--warning)]/30"
+                style={{ background: 'var(--bg-card)' }}>
                 {/* Header */}
-                <div className="bg-gradient-to-r from-amber-100 to-orange-100 px-6 py-4 border-b border-amber-200">
+                <div className="px-6 py-4 border-b"
+                    style={{
+                        background: 'var(--warning-bg)',
+                        borderColor: 'var(--warning)/20'
+                    }}>
                     <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                            <div className="p-2 bg-amber-500 rounded-lg">
-                                <FaExclamationTriangle className="text-white text-lg" />
+                            <div className="p-2 rounded-lg"
+                                style={{ background: 'var(--warning)', color: 'var(--bg-deepest)' }}>
+                                <FaExclamationTriangle className="text-lg" />
                             </div>
                             <div>
-                                <h3 className="text-lg font-bold text-amber-800">
+                                <h3 className="text-lg font-bold"
+                                    style={{ color: 'var(--warning-light)' }}>
                                     Duplicate Members Detected
                                 </h3>
-                                <p className="text-sm text-amber-600">
+                                <p className="text-sm font-medium opacity-90"
+                                    style={{ color: 'var(--warning-light)' }}>
                                     {duplicateMembers.length} member
                                     {duplicateMembers.length !== 1 ? "s" : ""} found in multiple
                                     teams
@@ -55,9 +63,9 @@ const DuplicateMembersCard = ({ duplicateMembers }) => {
                         </div>
                         <button
                             onClick={handleCopyAll}
-                            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 ${copied
-                                ? "bg-green-500 text-white"
-                                : "bg-white text-amber-700 hover:bg-amber-50 border border-amber-300"
+                            className={`flex items-center gap-2 px-4 py-2 rounded-lg font-bold transition-all duration-200 border ${copied
+                                ? "bg-[var(--success-bg)] text-[var(--success)] border-[var(--success)]"
+                                : "bg-[var(--bg-card)] text-[var(--text-secondary)] border-[var(--border-subtle)] hover:text-white hover:border-[var(--text-secondary)]"
                                 }`}
                         >
                             <FaCopy className="text-sm" />
@@ -72,15 +80,18 @@ const DuplicateMembersCard = ({ duplicateMembers }) => {
                         {displayMembers.map((email, index) => (
                             <div
                                 key={index}
-                                className="group flex items-center gap-3 bg-white rounded-lg px-4 py-3 border border-amber-100 hover:border-amber-300 hover:shadow-md transition-all duration-200"
+                                className="group flex items-center gap-3 rounded-lg px-4 py-3 border transition-all duration-200"
+                                style={{
+                                    background: 'var(--bg-surface)',
+                                    borderColor: 'var(--border-subtle)'
+                                }}
                             >
-                                <div className="flex-shrink-0 w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center">
-                                    <span className="text-amber-600 font-semibold text-sm">
-                                        {index + 1}
-                                    </span>
+                                <div className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm"
+                                    style={{ background: 'var(--warning-bg)', color: 'var(--warning-light)' }}>
+                                    {index + 1}
                                 </div>
                                 <span
-                                    className="text-gray-700 text-sm font-medium truncate flex-1"
+                                    className="text-sm font-medium truncate flex-1 text-[var(--text-primary)]"
                                     title={email}
                                 >
                                     {email}
@@ -88,8 +99,8 @@ const DuplicateMembersCard = ({ duplicateMembers }) => {
                                 <button
                                     onClick={() => handleCopyEmail(email, index)}
                                     className={`flex-shrink-0 p-1.5 rounded-md transition-all duration-200 ${copiedEmail === index
-                                        ? "bg-green-500 text-white"
-                                        : "text-gray-400 hover:text-amber-600 hover:bg-amber-50"
+                                        ? "bg-[var(--success)] text-white"
+                                        : "text-[var(--text-tertiary)] hover:text-[var(--accent-purple)] hover:bg-[var(--bg-hover)]"
                                         }`}
                                     title="Copy email"
                                 >
@@ -104,7 +115,8 @@ const DuplicateMembersCard = ({ duplicateMembers }) => {
                         <div className="mt-4 text-center">
                             <button
                                 onClick={() => setIsExpanded(!isExpanded)}
-                                className="inline-flex items-center gap-2 px-4 py-2 text-amber-700 hover:text-amber-800 font-medium transition-colors duration-200"
+                                className="inline-flex items-center gap-2 px-4 py-2 font-bold transition-colors duration-200 rounded-lg hover:bg-[var(--bg-hover)]"
+                                style={{ color: 'var(--warning-light)' }}
                             >
                                 {isExpanded ? (
                                     <>

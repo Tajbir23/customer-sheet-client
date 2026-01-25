@@ -1,4 +1,5 @@
 import React from 'react';
+import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
 const Pagination = ({ currentPage, totalPages, onPageChange }) => {
     const getPageNumbers = () => {
@@ -45,34 +46,38 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
     };
 
     return (
-        <div className="flex justify-center items-center space-x-2 mt-4 mb-6">
+        <div className="flex justify-center items-center space-x-2">
+            {/* Previous Button */}
             <button
                 onClick={() => onPageChange(currentPage - 1)}
                 disabled={currentPage === 1}
-                className={`px-3 py-1 rounded-md ${
-                    currentPage === 1
-                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                    : 'bg-blue-600 text-white hover:bg-blue-700'
-                }`}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 border ${currentPage === 1
+                    ? 'border-transparent text-[var(--text-muted)] cursor-not-allowed'
+                    : 'bg-[var(--bg-surface)] border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-white hover:border-[var(--accent-blue)] hover:bg-[var(--bg-hover)]'
+                    }`}
             >
-                Previous
+                <FaChevronLeft className="w-3 h-3" />
+                <span className="hidden sm:inline">Previous</span>
             </button>
-            
-            <div className="flex space-x-1">
+
+            {/* Page Numbers */}
+            <div className="flex items-center gap-1">
                 {getPageNumbers().map((page, index) => (
                     page === '...' ? (
-                        <span key={`ellipsis-${index}`} className="px-3 py-1">
+                        <span
+                            key={`ellipsis-${index}`}
+                            className="px-3 py-2 text-[var(--text-muted)]"
+                        >
                             {page}
                         </span>
                     ) : (
                         <button
                             key={`page-${page}`}
                             onClick={() => onPageChange(page)}
-                            className={`px-3 py-1 rounded-md ${
-                                currentPage === page
-                                ? 'bg-blue-600 text-white'
-                                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                            }`}
+                            className={`min-w-[40px] px-3 py-2 rounded-xl text-sm font-bold transition-all duration-300 border ${currentPage === page
+                                ? 'bg-[var(--accent-blue)] border-[var(--accent-blue)] text-white shadow-md'
+                                : 'bg-[var(--bg-surface)] border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-white hover:border-[var(--accent-blue)]'
+                                }`}
                         >
                             {page}
                         </button>
@@ -80,19 +85,20 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
                 ))}
             </div>
 
+            {/* Next Button */}
             <button
                 onClick={() => onPageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className={`px-3 py-1 rounded-md ${
-                    currentPage === totalPages
-                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                    : 'bg-blue-600 text-white hover:bg-blue-700'
-                }`}
+                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 border ${currentPage === totalPages
+                    ? 'border-transparent text-[var(--text-muted)] cursor-not-allowed'
+                    : 'bg-[var(--bg-surface)] border-[var(--border-subtle)] text-[var(--text-secondary)] hover:text-white hover:border-[var(--accent-blue)] hover:bg-[var(--bg-hover)]'
+                    }`}
             >
-                Next
+                <span className="hidden sm:inline">Next</span>
+                <FaChevronRight className="w-3 h-3" />
             </button>
         </div>
     );
 };
 
-export default Pagination; 
+export default Pagination;

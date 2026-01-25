@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  FaUser,
   FaCalendarAlt,
   FaCopy,
   FaCheck,
@@ -11,7 +10,7 @@ import {
 } from "react-icons/fa";
 import { MdComputer } from "react-icons/md";
 
-const HistoryCard = ({ item }) => {
+const HistoryCard = ({ item, index = 0 }) => {
   const [copiedField, setCopiedField] = useState(null);
 
   const formatDate = (dateString) => {
@@ -40,7 +39,6 @@ const HistoryCard = ({ item }) => {
     setTimeout(() => setCopiedField(null), 2000);
   };
 
-  // Calculate days until/since end
   const getDaysStatus = () => {
     if (!item.endAt) return null;
     const endDate = new Date(item.endAt);
@@ -60,9 +58,19 @@ const HistoryCard = ({ item }) => {
   const daysStatus = getDaysStatus();
 
   return (
-    <div className="group bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:border-gray-200 transition-all duration-300 overflow-hidden">
+    <div
+      className="group rounded-2xl overflow-hidden transition-all duration-300 animate-fade-in-up"
+      style={{
+        background: 'linear-gradient(145deg, var(--bg-card) 0%, var(--bg-surface) 100%)',
+        border: '1px solid var(--border-subtle)',
+        animationDelay: `${index * 50}ms`,
+      }}
+    >
       {/* Card Header */}
-      <div className="relative bg-gradient-to-r from-orange-500 to-red-500 px-6 py-4">
+      <div
+        className="relative px-6 py-4"
+        style={{ background: 'linear-gradient(135deg, #f59e0b 0%, #ef4444 100%)' }}
+      >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
@@ -90,10 +98,13 @@ const HistoryCard = ({ item }) => {
           </div>
 
           {daysStatus && (
-            <div className={`px-4 py-2 rounded-xl text-sm font-bold ${daysStatus.isExpired
-                ? 'bg-red-600 text-white'
-                : 'bg-yellow-400 text-gray-900'
-              }`}>
+            <div
+              className="px-4 py-2 rounded-xl text-sm font-bold"
+              style={{
+                background: daysStatus.isExpired ? 'rgba(239, 68, 68, 0.9)' : 'rgba(245, 158, 11, 0.9)',
+                color: 'white',
+              }}
+            >
               {daysStatus.text}
             </div>
           )}
@@ -104,21 +115,27 @@ const HistoryCard = ({ item }) => {
       <div className="p-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* GPT Account */}
-          <div className="flex items-center gap-3 p-4 bg-blue-50 rounded-xl">
-            <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+          <div
+            className="flex items-center gap-3 p-4 rounded-xl"
+            style={{ background: 'rgba(59, 130, 246, 0.1)', border: '1px solid rgba(59, 130, 246, 0.2)' }}
+          >
+            <div
+              className="w-10 h-10 rounded-lg flex items-center justify-center"
+              style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%)' }}
+            >
               <MdComputer className="w-5 h-5 text-white" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-xs text-blue-600 font-medium uppercase">GPT Account</p>
+              <p className="text-xs text-[var(--accent-blue-light)] font-medium uppercase">GPT Account</p>
               <div className="flex items-center gap-2">
-                <p className="text-gray-900 font-medium truncate">{item.gptAccount}</p>
+                <p className="text-white font-medium truncate">{item.gptAccount}</p>
                 <button
                   onClick={() => copyToClipboard(item.gptAccount, "gptAccount")}
-                  className="p-1 text-gray-400 hover:text-blue-600 rounded transition-colors"
+                  className="p-1 text-[var(--text-muted)] hover:text-[var(--accent-blue)] rounded transition-colors"
                   title="Copy GPT account"
                 >
                   {copiedField === "gptAccount" ? (
-                    <FaCheck className="w-3 h-3 text-green-500" />
+                    <FaCheck className="w-3 h-3 text-[var(--success)]" />
                   ) : (
                     <FaCopy className="w-3 h-3" />
                   )}
@@ -128,22 +145,28 @@ const HistoryCard = ({ item }) => {
           </div>
 
           {/* WhatsApp/FB ID */}
-          <div className="flex items-center gap-3 p-4 bg-green-50 rounded-xl">
-            <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
+          <div
+            className="flex items-center gap-3 p-4 rounded-xl"
+            style={{ background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.2)' }}
+          >
+            <div
+              className="w-10 h-10 rounded-lg flex items-center justify-center"
+              style={{ background: 'linear-gradient(135deg, #10b981 0%, #34d399 100%)' }}
+            >
               <FaWhatsapp className="w-5 h-5 text-white" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-xs text-green-600 font-medium uppercase">WhatsApp/FB ID</p>
+              <p className="text-xs text-[var(--success-light)] font-medium uppercase">WhatsApp/FB ID</p>
               <div className="flex items-center gap-2">
-                <p className="text-gray-900 font-medium truncate">{item.waOrFbId || "N/A"}</p>
+                <p className="text-white font-medium truncate">{item.waOrFbId || "N/A"}</p>
                 {item.waOrFbId && (
                   <button
                     onClick={() => copyToClipboard(item.waOrFbId, "waOrFbId")}
-                    className="p-1 text-gray-400 hover:text-green-600 rounded transition-colors"
+                    className="p-1 text-[var(--text-muted)] hover:text-[var(--success)] rounded transition-colors"
                     title="Copy WhatsApp/FB ID"
                   >
                     {copiedField === "waOrFbId" ? (
-                      <FaCheck className="w-3 h-3 text-green-500" />
+                      <FaCheck className="w-3 h-3 text-[var(--success)]" />
                     ) : (
                       <FaCopy className="w-3 h-3" />
                     )}
@@ -154,37 +177,52 @@ const HistoryCard = ({ item }) => {
           </div>
 
           {/* Order Date */}
-          <div className="flex items-center gap-3 p-4 bg-purple-50 rounded-xl">
-            <div className="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center">
+          <div
+            className="flex items-center gap-3 p-4 rounded-xl"
+            style={{ background: 'rgba(139, 92, 246, 0.1)', border: '1px solid rgba(139, 92, 246, 0.2)' }}
+          >
+            <div
+              className="w-10 h-10 rounded-lg flex items-center justify-center"
+              style={{ background: 'linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%)' }}
+            >
               <FaCalendarAlt className="w-5 h-5 text-white" />
             </div>
             <div>
-              <p className="text-xs text-purple-600 font-medium uppercase">Order Date</p>
-              <p className="text-gray-900 font-medium">{formatDate(item.orderDate)}</p>
+              <p className="text-xs text-[var(--accent-purple-light)] font-medium uppercase">Order Date</p>
+              <p className="text-white font-medium">{formatDate(item.orderDate)}</p>
             </div>
           </div>
 
           {/* End Date */}
-          <div className="flex items-center gap-3 p-4 bg-red-50 rounded-xl">
-            <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center">
+          <div
+            className="flex items-center gap-3 p-4 rounded-xl"
+            style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.2)' }}
+          >
+            <div
+              className="w-10 h-10 rounded-lg flex items-center justify-center"
+              style={{ background: 'linear-gradient(135deg, #ef4444 0%, #f87171 100%)' }}
+            >
               <FaClock className="w-5 h-5 text-white" />
             </div>
             <div>
-              <p className="text-xs text-red-600 font-medium uppercase">Subscription End</p>
-              <p className="text-gray-900 font-medium">{formatDate(item.endAt)}</p>
+              <p className="text-xs text-[var(--error-light)] font-medium uppercase">Subscription End</p>
+              <p className="text-white font-medium">{formatDate(item.endAt)}</p>
             </div>
           </div>
         </div>
 
         {/* Footer - User Info */}
-        <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
-          <div className="flex items-center gap-2 text-sm text-gray-500">
+        <div
+          className="mt-4 pt-4 flex items-center justify-between border-t"
+          style={{ borderColor: 'var(--border-subtle)' }}
+        >
+          <div className="flex items-center gap-2 text-sm text-[var(--text-tertiary)]">
             <FaUserCircle className="w-4 h-4" />
             <span>
               Added by: {item.user?.name || item.user?.email || "Unknown"}
             </span>
           </div>
-          <div className="text-xs text-gray-400">
+          <div className="text-xs text-[var(--text-muted)]">
             Recorded: {formatDateTime(item.createdAt)}
           </div>
         </div>

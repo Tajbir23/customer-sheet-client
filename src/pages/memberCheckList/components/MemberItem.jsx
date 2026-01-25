@@ -20,73 +20,62 @@ const MemberItem = ({ member, gptAccount, data, setData }) => {
 
   return (
     <>
-      <div className={`relative rounded-lg border transition-all duration-200 hover:shadow-md ${
-        isChecked 
-          ? 'bg-white border-green-200' 
-          : 'bg-white border-gray-200'
-      }`}>
-        <div className="p-4">
-          <div className="flex items-center justify-between gap-4">
+      <div className={`relative rounded-xl border transition-all duration-200 group/item ${isChecked
+          ? 'bg-[var(--success)]/5 border-[var(--success)]/20 hover:border-[var(--success)]/40'
+          : 'bg-[var(--bg-elevated)] border-[var(--border-subtle)] hover:border-[var(--accent-blue)]/30'
+        }`}>
+        <div className="p-3">
+          <div className="flex items-center justify-between gap-3">
             {/* Status Icon */}
-            <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
-              isChecked
-                ? 'bg-green-500 text-white'
-                : 'bg-gray-100 text-gray-400'
-            }`}>
-              {isChecked ? <FaCheck size={12} /> : <FaTimes size={12} />}
-            </div>
-            
+            <button
+              onClick={() => setIsOpen(isChecked ? 'update' : 'add')}
+              className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200 ${isChecked
+                  ? 'bg-[var(--success)] text-white shadow-lg shadow-green-500/20 hover:bg-[var(--success)]/90'
+                  : 'bg-[var(--bg-card)] border border-[var(--border-subtle)] text-[var(--text-tertiary)] hover:border-[var(--error)] hover:text-[var(--error)] hover:bg-[var(--error)]/10'
+                }`}
+            >
+              {isChecked ? <FaCheck size={10} /> : <FaTimes size={10} />}
+            </button>
+
             {/* Email Section */}
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
-                <FaEnvelope className={`text-sm ${isChecked ? 'text-green-500' : 'text-gray-400'}`} />
-                <p className="font-medium text-gray-700 truncate">
+                <FaEnvelope className={`text-xs ${isChecked ? 'text-[var(--success)]' : 'text-[var(--text-tertiary)]'}`} />
+                <p className={`font-mono text-sm truncate transition-colors ${isChecked ? 'text-[var(--text-primary)] font-medium' : 'text-[var(--text-secondary)]'}`}>
                   {email}
                 </p>
                 <button
                   onClick={handleCopyEmail}
-                  className="p-1.5 rounded-md hover:bg-gray-100 text-gray-500 transition-colors"
+                  className="p-1.5 rounded-md hover:bg-[var(--bg-hover)] text-[var(--text-tertiary)] hover:text-white transition-colors opacity-0 group-hover/item:opacity-100"
                   title="Copy email"
                 >
                   {copied ? (
-                    <FaCheck className="text-xs text-green-500" />
+                    <FaCheck className="text-[10px] text-[var(--success)]" />
                   ) : (
-                    <FaCopy className="text-xs" />
+                    <FaCopy className="text-[10px]" />
                   )}
                 </button>
               </div>
-              <p className="text-xs text-gray-500 mt-0.5">
-                Team Member
-              </p>
+              <div className="flex items-center gap-2 mt-1">
+                <span className="text-[10px] text-[var(--text-tertiary)] uppercase tracking-wider font-semibold">Team Member</span>
+              </div>
             </div>
 
             {/* Badges */}
-            <div className="flex items-center gap-2 flex-shrink-0">
+            <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
               {reference?._id && (
-                <div className="flex items-center gap-1 bg-blue-50 text-blue-600 px-2.5 py-1 rounded-md text-xs font-medium">
-                  <FaUser className="text-xs" />
+                <div className="flex items-center gap-1 bg-[var(--accent-blue)]/10 text-[var(--accent-blue)] px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider border border-[var(--accent-blue)]/20">
+                  <FaUser className="text-[9px]" />
                   <span>{reference.username}</span>
                 </div>
               )}
-              
+
               {isResell && (
-                <div className="flex items-center gap-1 bg-purple-50 text-purple-600 px-2.5 py-1 rounded-md text-xs font-medium">
-                  <FaStar className="text-xs" />
+                <div className="flex items-center gap-1 bg-[var(--accent-purple)]/10 text-[var(--accent-purple)] px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider border border-[var(--accent-purple)]/20">
+                  <FaStar className="text-[9px]" />
                   <span>Resell</span>
                 </div>
               )}
-              
-              <button 
-                onClick={() => setIsOpen(isChecked ? 'update' : 'add')} 
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
-                  isChecked
-                    ? 'bg-green-500 text-white hover:bg-green-600'
-                    : 'bg-red-500 text-white hover:bg-red-600'
-                }`}
-              >
-                <div className={`w-1.5 h-1.5 rounded-full ${isChecked ? 'bg-green-200' : 'bg-red-200'}`} />
-                <span>{isChecked ? 'Available' : 'Not Available'}</span>
-              </button>
             </div>
           </div>
         </div>

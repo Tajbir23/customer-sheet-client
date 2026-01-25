@@ -1,38 +1,79 @@
 import React from 'react';
-import { FaHome, FaChevronRight, FaTrash } from 'react-icons/fa';
+import { FaHome, FaChevronRight, FaTrash, FaUsers, FaUserMinus, FaUserCheck } from 'react-icons/fa';
 
-const PageHeader = () => {
+const PageHeader = ({ totalAccounts, totalMembers, totalUniqueMembers, loading }) => {
     return (
         <div className="mb-8">
             {/* Breadcrumb */}
-            <nav className="flex items-center space-x-2 text-sm text-gray-500 mb-4">
+            <nav className="flex items-center space-x-2 text-sm text-[var(--text-tertiary)] mb-4">
                 <FaHome className="w-4 h-4" />
                 <FaChevronRight className="w-3 h-3" />
-                <span className="text-gray-900 font-medium">Removed Members</span>
+                <span className="text-white font-medium">Removed Members</span>
             </nav>
-            
+
             {/* Header Content */}
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
                 <div className="flex items-center space-x-4">
-                    <div className="w-12 h-12 bg-red-50 rounded-xl flex items-center justify-center">
-                        <FaTrash className="w-6 h-6 text-red" />
+                    <div className="p-3 bg-[var(--bg-elevated)] rounded-xl border border-[var(--border-subtle)]">
+                        <FaTrash className="w-6 h-6 text-[var(--error)]" />
                     </div>
                     <div>
-                        <h1 className="text-3xl font-bold text-gray-900">Removed Members</h1>
-                        <p className="text-gray-600 mt-1">Manage and track removed team members</p>
+                        <h1 className="text-3xl font-bold text-[var(--text-primary)]">Removed Members</h1>
+                        <p className="text-[var(--text-secondary)] mt-1">Manage and track removed team members</p>
                     </div>
                 </div>
-                
-                {/* Quick Stats */}
-                <div className="hidden lg:flex items-center space-x-6">
-                    <div className="text-center">
-                        <div className="text-2xl font-bold text-gray-900">--</div>
-                        <div className="text-xs text-gray-500 uppercase tracking-wide">Total Accounts</div>
+
+                {/* Stats Cards */}
+                <div className="grid grid-cols-3 gap-4 w-full lg:w-auto">
+                    {/* Total Accounts */}
+                    <div className="bg-[var(--bg-card)] rounded-xl p-4 border border-[var(--border-subtle)]">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 bg-[var(--accent-blue)]/10 rounded-lg flex items-center justify-center">
+                                <FaUsers className="text-[var(--accent-blue)]" />
+                            </div>
+                            <div>
+                                <div className="text-2xl font-bold text-white">
+                                    {loading ? '--' : totalAccounts}
+                                </div>
+                                <div className="text-xs text-[var(--text-tertiary)] uppercase tracking-wide">
+                                    Total Accounts
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div className="w-px h-12 bg-gray-200"></div>
-                    <div className="text-center">
-                        <div className="text-2xl font-bold text-red">--</div>
-                        <div className="text-xs text-gray-500 uppercase tracking-wide">Removed Members</div>
+
+                    {/* Total Removed Members */}
+                    <div className="bg-[var(--bg-card)] rounded-xl p-4 border border-[var(--border-subtle)]">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 bg-[var(--error)]/10 rounded-lg flex items-center justify-center">
+                                <FaUserMinus className="text-[var(--error)]" />
+                            </div>
+                            <div>
+                                <div className="text-2xl font-bold text-[var(--error)]">
+                                    {loading ? '--' : totalMembers}
+                                </div>
+                                <div className="text-xs text-[var(--text-tertiary)] uppercase tracking-wide">
+                                    Removed Members
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Total Unique Members */}
+                    <div className="bg-[var(--bg-card)] rounded-xl p-4 border border-[var(--border-subtle)]">
+                        <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 bg-[var(--warning)]/10 rounded-lg flex items-center justify-center">
+                                <FaUserCheck className="text-[var(--warning)]" />
+                            </div>
+                            <div>
+                                <div className="text-2xl font-bold text-[var(--warning)]">
+                                    {loading ? '--' : totalUniqueMembers}
+                                </div>
+                                <div className="text-xs text-[var(--text-tertiary)] uppercase tracking-wide">
+                                    Unique Members
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -40,4 +81,4 @@ const PageHeader = () => {
     );
 };
 
-export default PageHeader; 
+export default PageHeader;

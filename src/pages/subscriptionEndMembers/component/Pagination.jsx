@@ -1,4 +1,5 @@
 import React from "react";
+import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 
 const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   if (totalPages <= 1) return null;
@@ -41,31 +42,40 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
   const visiblePages = getVisiblePages();
 
   return (
-    <div className="flex items-center justify-center gap-2 mt-8">
+    <div className="flex items-center justify-center gap-2 mt-8 animate-fade-in">
+      {/* Previous Button */}
       <button
         onClick={() => onPageChange(currentPage - 1)}
         disabled={currentPage === 1}
-        className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-          currentPage === 1
-            ? "text-gray-400 cursor-not-allowed"
-            : "text-gray-600 hover:text-orange-600 hover:bg-orange-50"
-        }`}
+        className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all duration-300 ${currentPage === 1
+            ? "text-[var(--text-muted)] cursor-not-allowed"
+            : "text-[var(--text-secondary)] hover:text-white hover:bg-[var(--bg-hover)]"
+          }`}
+        style={{ border: '1px solid var(--border-subtle)' }}
       >
+        <FaChevronLeft className="w-3 h-3" />
         Previous
       </button>
 
+      {/* Page Numbers */}
       {visiblePages.map((page, index) => (
         <React.Fragment key={index}>
           {page === "..." ? (
-            <span className="px-3 py-2 text-gray-400">...</span>
+            <span className="px-3 py-2 text-[var(--text-muted)]">...</span>
           ) : (
             <button
               onClick={() => onPageChange(page)}
-              className={`min-w-[40px] h-10 rounded-lg font-medium transition-colors ${
-                currentPage === page
-                  ? "bg-orange-500 text-white"
-                  : "text-gray-600 hover:text-orange-600 hover:bg-orange-50"
-              }`}
+              className={`min-w-[40px] h-10 rounded-xl font-medium transition-all duration-300 ${currentPage === page
+                  ? "text-white shadow-lg"
+                  : "text-[var(--text-secondary)] hover:text-white hover:bg-[var(--bg-hover)]"
+                }`}
+              style={{
+                background: currentPage === page
+                  ? 'linear-gradient(135deg, #f59e0b 0%, #ef4444 100%)'
+                  : undefined,
+                border: currentPage === page ? 'none' : '1px solid var(--border-subtle)',
+                boxShadow: currentPage === page ? '0 4px 15px rgba(239, 68, 68, 0.4)' : undefined,
+              }}
             >
               {page}
             </button>
@@ -73,16 +83,18 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
         </React.Fragment>
       ))}
 
+      {/* Next Button */}
       <button
         onClick={() => onPageChange(currentPage + 1)}
         disabled={currentPage === totalPages}
-        className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-          currentPage === totalPages
-            ? "text-gray-400 cursor-not-allowed"
-            : "text-gray-600 hover:text-orange-600 hover:bg-orange-50"
-        }`}
+        className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all duration-300 ${currentPage === totalPages
+            ? "text-[var(--text-muted)] cursor-not-allowed"
+            : "text-[var(--text-secondary)] hover:text-white hover:bg-[var(--bg-hover)]"
+          }`}
+        style={{ border: '1px solid var(--border-subtle)' }}
       >
         Next
+        <FaChevronRight className="w-3 h-3" />
       </button>
     </div>
   );

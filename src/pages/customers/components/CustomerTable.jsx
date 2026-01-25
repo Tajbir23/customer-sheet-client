@@ -22,20 +22,24 @@ const formatDate = (dateString) => {
 
 const TableSkeleton = () => {
     return (
-        <div className="animate-pulse">
+        <div className="animate-pulse p-6">
             {/* Header Skeleton */}
-            <div className="h-14 bg-gradient-to-r from-gray-200 to-gray-300 rounded-t-xl mb-1" />
-            
+            <div className="h-12 skeleton rounded-xl mb-4" />
+
             {/* Row Skeletons */}
             {[1, 2, 3, 4, 5].map((item) => (
-                <div key={item} className="flex space-x-4 p-4 border-b border-gray-100">
-                    <div className="h-12 bg-gradient-to-r from-gray-200 to-gray-300 rounded-lg w-1/6" />
-                    <div className="h-12 bg-gradient-to-r from-gray-200 to-gray-300 rounded-lg w-1/5" />
-                    <div className="h-12 bg-gradient-to-r from-gray-200 to-gray-300 rounded-lg w-1/6" />
-                    <div className="h-12 bg-gradient-to-r from-gray-200 to-gray-300 rounded-lg w-1/6" />
-                    <div className="h-12 bg-gradient-to-r from-gray-200 to-gray-300 rounded-lg w-1/6" />
-                    <div className="h-12 bg-gradient-to-r from-gray-200 to-gray-300 rounded-lg w-1/6" />
-                    <div className="h-12 bg-gradient-to-r from-gray-200 to-gray-300 rounded-lg w-1/5" />
+                <div
+                    key={item}
+                    className="flex space-x-4 py-4 border-b border-[var(--border-subtle)]"
+                    style={{ animationDelay: `${item * 100}ms` }}
+                >
+                    <div className="h-10 skeleton rounded-lg w-1/6" />
+                    <div className="h-10 skeleton rounded-lg w-1/5" />
+                    <div className="h-10 skeleton rounded-lg w-1/6" />
+                    <div className="h-10 skeleton rounded-lg w-1/6" />
+                    <div className="h-10 skeleton rounded-lg w-1/6" />
+                    <div className="h-10 skeleton rounded-lg w-1/6" />
+                    <div className="h-10 skeleton rounded-lg w-1/5" />
                 </div>
             ))}
         </div>
@@ -94,8 +98,8 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search, searchSubsc
     };
 
     const handleCustomerUpdate = (updatedCustomer) => {
-        setCustomers(prevCustomers => 
-            prevCustomers.map(customer => 
+        setCustomers(prevCustomers =>
+            prevCustomers.map(customer =>
                 customer?._id === updatedCustomer?._id ? updatedCustomer : customer
             )
         );
@@ -139,11 +143,11 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search, searchSubsc
         const now = new Date();
         const dateStr = now.toISOString().split('T')[0];
         let filename = `customers-${dateStr}`;
-        
+
         if (search) filename += `-search-${search.replace(/[^a-zA-Z0-9]/g, '')}`;
         if (searchSubscriptionEndDate) filename += `-sub-${searchSubscriptionEndDate}`;
         filename += `-page-${currentPage}.${extension}`;
-        
+
         return filename;
     };
 
@@ -154,27 +158,14 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search, searchSubsc
         }
 
         setIsExporting(true);
-        
+
         try {
-            // Prepare CSV headers
             const headers = [
-                'Customer Name',
-                'Email',
-                'Order From',
-                'Contact ID',
-                'Order Date',
-                'Subscription End',
-                'GPT Account',
-                'Payment Status',
-                'Paid Amount',
-                'Payment Method',
-                'Payment Date',
-                'Notes',
-                'Reminder Date',
-                'Reminder Notes'
+                'Customer Name', 'Email', 'Order From', 'Contact ID', 'Order Date',
+                'Subscription End', 'GPT Account', 'Payment Status', 'Paid Amount',
+                'Payment Method', 'Payment Date', 'Notes', 'Reminder Date', 'Reminder Notes'
             ];
 
-            // Prepare CSV data
             const csvData = customers.map(customer => [
                 customer.customerName || '',
                 customer.email || '',
@@ -192,12 +183,10 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search, searchSubsc
                 customer.reminderNote || ''
             ]);
 
-            // Create CSV content
             const csvContent = [
                 headers.join(','),
-                ...csvData.map(row => 
+                ...csvData.map(row =>
                     row.map(field => {
-                        // Escape fields containing commas, quotes, or newlines
                         if (typeof field === 'string' && (field.includes(',') || field.includes('"') || field.includes('\n'))) {
                             return `"${field.replace(/"/g, '""')}"`;
                         }
@@ -206,10 +195,9 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search, searchSubsc
                 )
             ].join('\n');
 
-            // Create and download the file
             const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
             const link = document.createElement('a');
-            
+
             if (link.download !== undefined) {
                 const url = URL.createObjectURL(blob);
                 link.setAttribute('href', url);
@@ -218,7 +206,7 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search, searchSubsc
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
-                
+
                 toast.success(`Exported ${customers.length} customers to CSV successfully`);
             }
         } catch (error) {
@@ -237,25 +225,23 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search, searchSubsc
         }
 
         setIsExporting(true);
-        
+
         try {
-            const doc = new jsPDF('l', 'mm', 'a4'); // Landscape orientation
-            
-            // Add title
+            const doc = new jsPDF('l', 'mm', 'a4');
+
             doc.setFontSize(20);
             doc.setTextColor(40, 40, 40);
             doc.text('Customer Report', 20, 20);
-            
-            // Add subtitle with date and filters
+
             doc.setFontSize(12);
             doc.setTextColor(100, 100, 100);
             const now = new Date();
             let subtitle = `Generated on ${now.toLocaleDateString()} at ${now.toLocaleTimeString()}`;
             let currentY = 30;
-            
+
             doc.text(subtitle, 20, currentY);
             currentY += 6;
-            
+
             if (search || searchSubscriptionEndDate) {
                 let filterText = 'Filters: ';
                 if (search) filterText += `Search: "${search}"`;
@@ -267,13 +253,11 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search, searchSubsc
                 currentY += 2;
             }
 
-            // Table setup
             const startY = currentY + 5;
-            const tableWidth = 257; // A4 landscape width minus margins
+            const tableWidth = 257;
             const rowHeight = 8;
             const headerHeight = 10;
-            
-            // Column definitions
+
             const columns = [
                 { title: 'Customer Name', width: 45 },
                 { title: 'Email', width: 50 },
@@ -283,39 +267,36 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search, searchSubsc
                 { title: 'Payment Status', width: 25 },
                 { title: 'Paid Amount', width: 25 }
             ];
-            
+
             let currentX = 20;
             let currentTableY = startY;
-            
-            // Draw header
-            doc.setFillColor(59, 130, 246); // Blue header
+
+            doc.setFillColor(139, 92, 246);
             doc.rect(20, currentTableY, tableWidth, headerHeight, 'F');
-            
-            doc.setTextColor(255, 255, 255); // White text
+
+            doc.setTextColor(255, 255, 255);
             doc.setFontSize(9);
             doc.setFont(undefined, 'bold');
-            
+
             currentX = 20;
             columns.forEach(col => {
                 doc.text(col.title, currentX + 2, currentTableY + 7);
                 currentX += col.width;
             });
-            
+
             currentTableY += headerHeight;
-            
-            // Draw data rows
+
             doc.setFont(undefined, 'normal');
             doc.setFontSize(8);
-            
+
             customers.forEach((customer, index) => {
-                // Alternate row colors
                 if (index % 2 === 1) {
-                    doc.setFillColor(248, 250, 252); // Light gray
+                    doc.setFillColor(30, 30, 42);
                     doc.rect(20, currentTableY, tableWidth, rowHeight, 'F');
                 }
-                
-                doc.setTextColor(40, 40, 40); // Dark text
-                
+
+                doc.setTextColor(40, 40, 40);
+
                 const rowData = [
                     customer.customerName || '',
                     customer.email || '',
@@ -325,50 +306,45 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search, searchSubsc
                     customer.paymentStatus || '',
                     customer.paidAmount ? `$${customer.paidAmount}` : ''
                 ];
-                
+
                 currentX = 20;
                 columns.forEach((col, colIndex) => {
                     let text = rowData[colIndex];
-                    // Truncate text if too long
                     if (text.length > 20) {
                         text = text.substring(0, 17) + '...';
                     }
                     doc.text(text, currentX + 2, currentTableY + 6);
                     currentX += col.width;
                 });
-                
+
                 currentTableY += rowHeight;
-                
-                // Check if we need a new page
-                if (currentTableY > 180) { // Near bottom of page
+
+                if (currentTableY > 180) {
                     doc.addPage();
                     currentTableY = 20;
-                    
-                    // Redraw header on new page
-                    doc.setFillColor(59, 130, 246);
+
+                    doc.setFillColor(139, 92, 246);
                     doc.rect(20, currentTableY, tableWidth, headerHeight, 'F');
-                    
+
                     doc.setTextColor(255, 255, 255);
                     doc.setFontSize(9);
                     doc.setFont(undefined, 'bold');
-                    
+
                     currentX = 20;
                     columns.forEach(col => {
                         doc.text(col.title, currentX + 2, currentTableY + 7);
                         currentX += col.width;
                     });
-                    
+
                     currentTableY += headerHeight;
                     doc.setFont(undefined, 'normal');
                     doc.setFontSize(8);
                 }
             });
-            
-            // Draw table borders
+
             doc.setDrawColor(200, 200, 200);
             doc.setLineWidth(0.1);
-            
-            // Vertical lines
+
             currentX = 20;
             columns.forEach((col, index) => {
                 if (index < columns.length - 1) {
@@ -376,11 +352,9 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search, searchSubsc
                     doc.line(currentX, startY, currentX, Math.min(currentTableY, 180));
                 }
             });
-            
-            // Horizontal lines
+
             doc.rect(20, startY, tableWidth, Math.min(currentTableY - startY, 180 - startY));
 
-            // Add footer to all pages
             const pageCount = doc.internal.getNumberOfPages();
             doc.setFontSize(8);
             doc.setTextColor(100, 100, 100);
@@ -393,9 +367,8 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search, searchSubsc
                 );
             }
 
-            // Save the PDF
             doc.save(generateFileName('pdf'));
-            
+
             toast.success(`Exported ${customers.length} customers to PDF successfully`);
         } catch (error) {
             console.error('Error exporting PDF:', error);
@@ -409,9 +382,7 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search, searchSubsc
     if (isLoading) {
         return (
             <div className={`w-full ${className}`}>
-                <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
-                    <TableSkeleton />
-                </div>
+                <TableSkeleton />
             </div>
         );
     }
@@ -419,33 +390,42 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search, searchSubsc
     return (
         <div className={`w-full ${className}`}>
             {/* Table Controls */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 p-6 bg-white rounded-t-2xl border-b border-gray-100">
+            <div
+                className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 p-6 border-b"
+                style={{ borderColor: 'var(--border-subtle)' }}
+            >
                 <div className="flex items-center gap-4">
-                    <PageSizeSelector 
+                    <PageSizeSelector
                         pageSize={pageSize}
                         onPageSizeChange={handlePageSizeChange}
                     />
-                    <div className="text-sm text-gray-600 bg-gray-50 px-3 py-2 rounded-lg font-medium">
-                        Showing {customers.length ? (currentPage - 1) * pageSize + 1 : 0} to {Math.min(currentPage * pageSize, totalItems)} of {totalItems} entries
+                    <div
+                        className="text-sm px-4 py-2 rounded-xl font-medium"
+                        style={{
+                            background: 'var(--bg-surface)',
+                            color: 'var(--text-tertiary)',
+                        }}
+                    >
+                        Showing {customers.length ? (currentPage - 1) * pageSize + 1 : 0} to {Math.min(currentPage * pageSize, totalItems)} of {totalItems}
                     </div>
                 </div>
-                
+
                 {/* Export Actions */}
                 <div className="flex items-center gap-3 relative">
                     <div className="relative">
-                        <button 
+                        <button
                             onClick={() => setShowExportDropdown(!showExportDropdown)}
                             disabled={isExporting || customers.length === 0}
-                            className={`flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
-                                isExporting || customers.length === 0
-                                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                                    : 'text-gray-600 bg-gray-100 hover:bg-gray-200 hover:text-gray-800'
-                            }`}
+                            className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-xl transition-all duration-300 ${isExporting || customers.length === 0
+                                    ? 'bg-[var(--bg-surface)] text-[var(--text-muted)] cursor-not-allowed'
+                                    : 'bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:text-white hover:bg-[var(--bg-hover)]'
+                                }`}
+                            style={{ border: '1px solid var(--border-subtle)' }}
                             title={customers.length === 0 ? 'No data to export' : 'Export current page data'}
                         >
                             {isExporting ? (
                                 <>
-                                    <svg className="w-4 h-4 animate-spin" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg className="w-4 h-4 animate-rotate" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                                     </svg>
                                     Exporting...
@@ -462,33 +442,51 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search, searchSubsc
                                 </>
                             )}
                         </button>
-                        
+
                         {/* Export Dropdown */}
                         {showExportDropdown && !isExporting && customers.length > 0 && (
-                            <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-200 z-10">
+                            <div
+                                className="absolute right-0 mt-2 w-52 rounded-xl shadow-xl z-10 overflow-hidden animate-fade-in-down"
+                                style={{
+                                    background: 'var(--bg-card)',
+                                    border: '1px solid var(--border-subtle)',
+                                }}
+                            >
                                 <div className="py-2">
                                     <button
                                         onClick={handleExportCSV}
-                                        className="flex items-center gap-3 w-full px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-200"
+                                        className="flex items-center gap-3 w-full px-4 py-3 text-sm transition-all duration-200 hover:bg-[var(--bg-hover)]"
+                                        style={{ color: 'var(--text-secondary)' }}
                                     >
-                                        <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                        </svg>
-                                        <div>
-                                            <div className="font-medium">Export as CSV</div>
-                                            <div className="text-xs text-gray-500">Spreadsheet format</div>
+                                        <div
+                                            className="p-1.5 rounded-lg"
+                                            style={{ background: 'rgba(16, 185, 129, 0.15)' }}
+                                        >
+                                            <svg className="w-4 h-4 text-[var(--success)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                                            </svg>
+                                        </div>
+                                        <div className="text-left">
+                                            <div className="font-medium text-white">Export as CSV</div>
+                                            <div className="text-xs text-[var(--text-muted)]">Spreadsheet format</div>
                                         </div>
                                     </button>
                                     <button
                                         onClick={handleExportPDF}
-                                        className="flex items-center gap-3 w-full px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-colors duration-200"
+                                        className="flex items-center gap-3 w-full px-4 py-3 text-sm transition-all duration-200 hover:bg-[var(--bg-hover)]"
+                                        style={{ color: 'var(--text-secondary)' }}
                                     >
-                                        <svg className="w-4 h-4 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                                        </svg>
-                                        <div>
-                                            <div className="font-medium">Export as PDF</div>
-                                            <div className="text-xs text-gray-500">Document format</div>
+                                        <div
+                                            className="p-1.5 rounded-lg"
+                                            style={{ background: 'rgba(239, 68, 68, 0.15)' }}
+                                        >
+                                            <svg className="w-4 h-4 text-[var(--error)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                            </svg>
+                                        </div>
+                                        <div className="text-left">
+                                            <div className="font-medium text-white">Export as PDF</div>
+                                            <div className="text-xs text-[var(--text-muted)]">Document format</div>
                                         </div>
                                     </button>
                                 </div>
@@ -499,30 +497,33 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search, searchSubsc
             </div>
 
             {/* Table */}
-            <div className="bg-white overflow-hidden">
+            <div className="overflow-hidden">
                 {customers.length === 0 ? (
                     <div className="text-center py-16">
-                        <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
-                            <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <div
+                            className="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center"
+                            style={{ background: 'var(--bg-surface)' }}
+                        >
+                            <svg className="w-8 h-8 text-[var(--text-muted)]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
                             </svg>
                         </div>
-                        <h3 className="text-lg font-medium text-gray-900 mb-2">No customers found</h3>
-                        <p className="text-gray-500">
-                            {search || searchSubscriptionEndDate 
-                                ? "Try adjusting your search criteria" 
+                        <h3 className="text-lg font-medium text-white mb-2">No customers found</h3>
+                        <p className="text-[var(--text-tertiary)]">
+                            {search || searchSubscriptionEndDate
+                                ? "Try adjusting your search criteria"
                                 : "Get started by adding your first customer"
                             }
                         </p>
                     </div>
                 ) : (
                     <div className="overflow-x-auto">
-                        <table className="min-w-full divide-y divide-gray-100">
-                            <TableHeader 
+                        <table className="min-w-full">
+                            <TableHeader
                                 sortConfig={sortConfig}
                                 onSort={handleSort}
                             />
-                            <tbody className="bg-white divide-y divide-gray-50">
+                            <tbody>
                                 {customers?.map((item, index) => (
                                     <TableRow
                                         key={item._id}
@@ -541,15 +542,18 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search, searchSubsc
 
             {/* Close dropdown when clicking outside */}
             {showExportDropdown && (
-                <div 
-                    className="fixed inset-0 z-5" 
+                <div
+                    className="fixed inset-0 z-5"
                     onClick={() => setShowExportDropdown(false)}
                 />
             )}
 
             {/* Pagination */}
             {customers.length > 0 && (
-                <div className="bg-white p-6 rounded-b-2xl border-t border-gray-100">
+                <div
+                    className="p-6 border-t"
+                    style={{ borderColor: 'var(--border-subtle)' }}
+                >
                     <Pagination
                         currentPage={currentPage}
                         totalPages={totalPages}

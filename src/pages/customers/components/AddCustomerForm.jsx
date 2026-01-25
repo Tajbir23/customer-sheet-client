@@ -10,16 +10,16 @@ const AddCustomerForm = ({ setIsOpen, className }) => {
 
   useEffect(() => {
     let isMounted = true
-    
+
     const fetchReferences = async () => {
       const response = await handleApi("/references", "GET")
       if (isMounted && response?.success) {
         setReferences(response.data)
       }
     }
-    
+
     fetchReferences()
-    
+
     return () => {
       isMounted = false
       isMountedRef.current = false
@@ -35,7 +35,7 @@ const AddCustomerForm = ({ setIsOpen, className }) => {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setIsSubmitting(true)
-    
+
     const formData = e.target
     const data = {
       customerName: formData.customerName.value,
@@ -57,7 +57,7 @@ const AddCustomerForm = ({ setIsOpen, className }) => {
 
     try {
       const response = await handleApi("/customers/add", "POST", data)
-      
+
       if (isMountedRef.current && response?.success) {
         e.target.reset()
         toast.success("Customer added successfully")
@@ -75,68 +75,74 @@ const AddCustomerForm = ({ setIsOpen, className }) => {
     }
   }
 
+  // Styles for inputs to avoid repetition
+  const inputClass = "w-full px-4 py-2.5 rounded-xl border transition-all duration-200 focus:outline-none focus:ring-1 focus:ring-[var(--accent-purple)] bg-[var(--bg-surface)] border-[var(--border-subtle)] text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:border-[var(--accent-purple)]"
+  const labelClass = "block text-sm font-semibold text-[var(--text-secondary)] mb-1.5"
+  const sectionIconClass = "w-8 h-8 rounded-lg flex items-center justify-center mr-3"
+
   return (
-    <div className={`fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4 overflow-y-auto ${className}`}>
-      <div className="bg-white rounded-lg w-full max-w-5xl max-h-[95vh] overflow-y-auto shadow-lg border border-gray-200 my-8">
+    <div className={`fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto ${className}`}>
+      {/* Backdrop */}
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsOpen(false)}></div>
+
+      <div className="relative bg-[var(--bg-card)] rounded-2xl w-full max-w-5xl max-h-[90vh] overflow-y-auto shadow-2xl border border-[var(--border-subtle)] animate-scale-in my-8">
         {/* Header */}
-        <div className="bg-blue p-6 rounded-t-lg">
-          <div className="flex items-center justify-between">
-            <div>
-              <h2 className="text-xl font-semibold text-white mb-1">Add New Customer</h2>
-              <p className="text-white/80 text-sm">Fill in the customer information below</p>
-            </div>
-            <button 
-              onClick={() => setIsOpen(false)}
-              className="p-2 bg-white bg-opacity-20 hover:bg-opacity-30 rounded-lg transition-colors"
-              title="Close"
-            >
-              <FaTimes className="w-4 h-4 text-white" />
-            </button>
+        <div className="sticky top-0 z-10 px-6 py-4 border-b border-[var(--border-subtle)] bg-[var(--bg-card)]/95 backdrop-blur-md flex items-center justify-between">
+          <div>
+            <h2 className="text-xl font-bold text-[var(--text-primary)]">Add New Customer</h2>
+            <p className="text-[var(--text-secondary)] text-sm">Enter the details for the new customer</p>
           </div>
+          <button
+            onClick={() => setIsOpen(false)}
+            className="p-2 rounded-lg hover:bg-[var(--bg-hover)] text-[var(--text-secondary)] hover:text-white transition-colors"
+            title="Close"
+          >
+            <FaTimes className="w-5 h-5" />
+          </button>
         </div>
 
         {/* Form */}
-        <form className="p-6 space-y-6" onSubmit={handleSubmit}>
+        <form className="p-6 space-y-8" onSubmit={handleSubmit}>
           {/* Basic Information */}
-          <div className="space-y-4">
-            <div className="flex items-center mb-4">
-              <div className="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center mr-3">
-                <FaUser className="w-4 h-4 text-blue" />
+          <div className="space-y-6">
+            <div className="flex items-center pb-2 border-b border-[var(--border-subtle)]">
+              <div className={`bg-[var(--accent-blue)]/10 ${sectionIconClass}`}>
+                <FaUser className="w-4 h-4 text-[var(--accent-blue)]" />
               </div>
               <div>
-                <h3 className="text-lg font-medium text-gray-900">Basic Information</h3>
-                <p className="text-sm text-gray-600">Customer personal details</p>
+                <h3 className="text-lg font-bold text-[var(--text-primary)]">Basic Information</h3>
+                <p className="text-sm text-[var(--text-tertiary)]">Personal details</p>
               </div>
             </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">Customer Name *</label>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div>
+                <label className={labelClass}>Customer Name *</label>
                 <input
                   type="text"
                   name="customerName"
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue focus:ring-opacity-20 focus:border-blue transition-colors"
+                  className={inputClass}
                   placeholder="Enter full name"
                 />
               </div>
 
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">Email Address *</label>
+              <div>
+                <label className={labelClass}>Email Address *</label>
                 <input
                   type="email"
                   name="email"
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue focus:ring-opacity-20 focus:border-blue transition-colors"
+                  className={inputClass}
                   placeholder="customer@example.com"
                 />
               </div>
 
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">Reference</label>
+              <div>
+                <label className={labelClass}>Reference</label>
                 <select
                   name="reference"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue focus:ring-opacity-20 focus:border-blue transition-colors"
+                  className={inputClass}
                 >
                   <option value="">Select reference</option>
                   {references.map((reference) => (
@@ -148,24 +154,24 @@ const AddCustomerForm = ({ setIsOpen, className }) => {
           </div>
 
           {/* Order Information */}
-          <div className="space-y-4 pt-6 border-t border-gray-200">
-            <div className="flex items-center mb-4">
-              <div className="w-8 h-8 bg-green-50 rounded-lg flex items-center justify-center mr-3">
-                <FaShoppingCart className="w-4 h-4 text-green" />
+          <div className="space-y-6">
+            <div className="flex items-center pb-2 border-b border-[var(--border-subtle)]">
+              <div className={`bg-[var(--success)]/10 ${sectionIconClass}`}>
+                <FaShoppingCart className="w-4 h-4 text-[var(--success)]" />
               </div>
               <div>
-                <h3 className="text-lg font-medium text-gray-900">Order Information</h3>
-                <p className="text-sm text-gray-600">Order source and subscription details</p>
+                <h3 className="text-lg font-bold text-[var(--text-primary)]">Order Information</h3>
+                <p className="text-sm text-[var(--text-tertiary)]">Source and subscription details</p>
               </div>
             </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">Order Source *</label>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div>
+                <label className={labelClass}>Order Source *</label>
                 <select
                   name="orderFrom"
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue focus:ring-opacity-20 focus:border-blue transition-colors"
+                  className={inputClass}
                 >
                   <option value="facebook">Facebook</option>
                   <option value="whatsapp">WhatsApp</option>
@@ -173,91 +179,91 @@ const AddCustomerForm = ({ setIsOpen, className }) => {
                 </select>
               </div>
 
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">Contact ID</label>
+              <div>
+                <label className={labelClass}>Contact ID</label>
                 <input
                   type="text"
                   name="waOrFbId"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue focus:ring-opacity-20 focus:border-blue transition-colors"
+                  className={inputClass}
                   placeholder="Facebook/WhatsApp ID"
                 />
               </div>
 
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">Order Date *</label>
+              <div>
+                <label className={labelClass}>Order Date *</label>
                 <input
                   type="date"
                   name="orderDate"
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue focus:ring-opacity-20 focus:border-blue transition-colors"
+                  className={`${inputClass} [color-scheme:dark]`}
                 />
               </div>
 
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">GPT Account</label>
+              <div>
+                <label className={labelClass}>GPT Account</label>
                 <input
                   type="text"
                   name="gptAccount"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue focus:ring-opacity-20 focus:border-blue transition-colors"
+                  className={inputClass}
                   placeholder="GPT account identifier"
                 />
               </div>
 
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">Subscription Duration (Days) *</label>
+              <div>
+                <label className={labelClass}>Subscription Duration (Days) *</label>
                 <input
                   type="number"
                   name="subscriptionEnd"
                   min="1"
                   required
                   placeholder="30"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue focus:ring-opacity-20 focus:border-blue transition-colors"
+                  className={inputClass}
                 />
               </div>
             </div>
           </div>
 
           {/* Payment Information */}
-          <div className="space-y-4 pt-6 border-t border-gray-200">
-            <div className="flex items-center mb-4">
-              <div className="w-8 h-8 bg-orange-50 rounded-lg flex items-center justify-center mr-3">
-                <FaCreditCard className="w-4 h-4 text-orange" />
+          <div className="space-y-6">
+            <div className="flex items-center pb-2 border-b border-[var(--border-subtle)]">
+              <div className={`bg-[var(--warning)]/10 ${sectionIconClass}`}>
+                <FaCreditCard className="w-4 h-4 text-[var(--warning)]" />
               </div>
               <div>
-                <h3 className="text-lg font-medium text-gray-900">Payment Information</h3>
-                <p className="text-sm text-gray-600">Payment details and status</p>
+                <h3 className="text-lg font-bold text-[var(--text-primary)]">Payment Information</h3>
+                <p className="text-sm text-[var(--text-tertiary)]">Status and method</p>
               </div>
             </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">Payment Status *</label>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div>
+                <label className={labelClass}>Payment Status *</label>
                 <select
                   name="paymentStatus"
                   required
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue focus:ring-opacity-20 focus:border-blue transition-colors"
+                  className={inputClass}
                 >
                   <option value="paid">Paid</option>
                   <option value="pending">Pending</option>
                 </select>
               </div>
 
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">Amount Paid</label>
+              <div>
+                <label className={labelClass}>Amount Paid</label>
                 <input
                   type="number"
                   name="paidAmount"
                   step="0.01"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue focus:ring-opacity-20 focus:border-blue transition-colors"
+                  className={inputClass}
                   placeholder="0.00"
                 />
               </div>
 
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">Payment Method</label>
+              <div>
+                <label className={labelClass}>Payment Method</label>
                 <select
                   name="paymentMethod"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue focus:ring-opacity-20 focus:border-blue transition-colors"
+                  className={inputClass}
                 >
                   <option value="cash">Cash</option>
                   <option value="bank">Bank Transfer</option>
@@ -266,56 +272,56 @@ const AddCustomerForm = ({ setIsOpen, className }) => {
                 </select>
               </div>
 
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">Payment Date</label>
+              <div>
+                <label className={labelClass}>Payment Date</label>
                 <input
                   type="date"
                   name="paymentDate"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue focus:ring-opacity-20 focus:border-blue transition-colors"
+                  className={`${inputClass} [color-scheme:dark]`}
                 />
               </div>
             </div>
           </div>
 
           {/* Notes & Reminders */}
-          <div className="space-y-4 pt-6 border-t border-gray-200">
-            <div className="flex items-center mb-4">
-              <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center mr-3">
-                <FaStickyNote className="w-4 h-4 text-gray-600" />
+          <div className="space-y-6">
+            <div className="flex items-center pb-2 border-b border-[var(--border-subtle)]">
+              <div className={`bg-[var(--accent-purple)]/10 ${sectionIconClass}`}>
+                <FaStickyNote className="w-4 h-4 text-[var(--accent-purple)]" />
               </div>
               <div>
-                <h3 className="text-lg font-medium text-gray-900">Notes & Reminders</h3>
-                <p className="text-sm text-gray-600">Additional information and reminders</p>
+                <h3 className="text-lg font-bold text-[var(--text-primary)]">Notes & Reminders</h3>
+                <p className="text-sm text-[var(--text-tertiary)]">Additional details</p>
               </div>
             </div>
-            
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-gray-700">Customer Notes</label>
+
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div>
+                <label className={labelClass}>Customer Notes</label>
                 <textarea
                   name="note"
                   rows="4"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue focus:ring-opacity-20 focus:border-blue transition-colors resize-none"
+                  className={`${inputClass} resize-none`}
                   placeholder="Add any additional notes about the customer..."
                 ></textarea>
               </div>
 
-              <div className="space-y-4">
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700">Reminder Date</label>
+              <div className="space-y-6">
+                <div>
+                  <label className={labelClass}>Reminder Date</label>
                   <input
                     type="date"
                     name="reminderDate"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue focus:ring-opacity-20 focus:border-blue transition-colors"
+                    className={`${inputClass} [color-scheme:dark]`}
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700">Reminder Notes</label>
+                <div>
+                  <label className={labelClass}>Reminder Notes</label>
                   <textarea
                     name="reminderNote"
                     rows="2"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue focus:ring-opacity-20 focus:border-blue transition-colors resize-none"
+                    className={`${inputClass} resize-none`}
                     placeholder="What to remember about this customer..."
                   ></textarea>
                 </div>
@@ -324,20 +330,19 @@ const AddCustomerForm = ({ setIsOpen, className }) => {
           </div>
 
           {/* Form Actions */}
-          <div className="flex flex-col sm:flex-row gap-3 pt-6 border-t border-gray-200">
+          <div className="flex flex-col sm:flex-row gap-4 pt-6 mt-8 border-t border-[var(--border-subtle)] sticky bottom-0 bg-[var(--bg-card)] -mx-6 px-6 pb-2">
             <button
               type="submit"
               disabled={isSubmitting}
-              className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-lg font-medium transition-colors ${
-                isSubmitting 
-                  ? 'bg-gray-400 text-white cursor-not-allowed' 
-                  : 'bg-blue text-white hover:bg-blue-600'
-              }`}
+              className={`flex-1 flex items-center justify-center gap-2 py-3 px-6 rounded-xl font-bold transition-all duration-200 shadow-lg ${isSubmitting
+                  ? 'bg-[var(--bg-elevated)] text-[var(--text-muted)] cursor-not-allowed'
+                  : 'bg-[var(--accent-blue)] hover:bg-[var(--accent-blue-light)] text-white hover:shadow-blue-500/25'
+                }`}
             >
               {isSubmitting ? (
                 <>
                   <FaSpinner className="w-4 h-4 animate-spin" />
-                  Adding Customer...
+                  Adding...
                 </>
               ) : (
                 <>
@@ -346,11 +351,11 @@ const AddCustomerForm = ({ setIsOpen, className }) => {
                 </>
               )}
             </button>
-            <button 
+            <button
               type="button"
-              onClick={() => setIsOpen(false)} 
+              onClick={() => setIsOpen(false)}
               disabled={isSubmitting}
-              className="flex-1 py-3 px-4 bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 py-3 px-6 bg-[var(--bg-elevated)] hover:bg-[var(--bg-hover)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] border border-[var(--border-subtle)] font-bold rounded-xl transition-all duration-200"
             >
               Cancel
             </button>
@@ -359,6 +364,6 @@ const AddCustomerForm = ({ setIsOpen, className }) => {
       </div>
     </div>
   )
-}   
+}
 
 export default AddCustomerForm

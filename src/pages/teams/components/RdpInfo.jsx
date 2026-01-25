@@ -6,7 +6,7 @@ import { toast } from 'react-toastify'
 const RdpInfo = ({ team, onRdpOpen, onRdpClose }) => {
   const [rdpData, setRdpData] = useState([])
   const [loading, setLoading] = useState(false)
-  
+
   useEffect(() => {
     let isMounted = true
 
@@ -14,7 +14,7 @@ const RdpInfo = ({ team, onRdpOpen, onRdpClose }) => {
       try {
         setLoading(true)
         const response = await handleApi('/gptTeam/rdp-info', 'GET')
-        
+
         if (isMounted && response.success) {
           setRdpData(response.data || [])
         }
@@ -37,24 +37,24 @@ const RdpInfo = ({ team, onRdpOpen, onRdpClose }) => {
     }
   }, [])
 
-  const handleAction = async(action, hostname) => {
+  const handleAction = async (action, hostname) => {
     try {
       const data = {
-          action,
-          rdpId: hostname,
-          location: team.location,
-          gptAccount: team.gptAccount
+        action,
+        rdpId: hostname,
+        location: team.location,
+        gptAccount: team.gptAccount
       }
-      
+
       console.log('RDP Action:', action, 'Hostname:', hostname)
-      
+
       const response = await handleApi('/rc-gpt-account', 'POST', data)
-      
+
       console.log('API Response:', response)
-      
+
       if (response.success) {
         toast.success(response.message)
-        
+
         // Update openOn list in parent component
         if (action === 'open' && onRdpOpen) {
           console.log('Calling onRdpOpen with:', hostname)
@@ -78,8 +78,8 @@ const RdpInfo = ({ team, onRdpOpen, onRdpClose }) => {
       hash = hostname.charCodeAt(i) + ((hash << 5) - hash)
     }
     const colors = [
-      'bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-pink-500', 
-      'bg-indigo-500', 'bg-yellow-500', 'bg-red-500', 'bg-teal-500'
+      'bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-pink-500',
+      'bg-indigo-500', 'bg-amber-500', 'bg-red-500', 'bg-teal-500'
     ]
     return colors[Math.abs(hash) % colors.length]
   }
@@ -94,7 +94,7 @@ const RdpInfo = ({ team, onRdpOpen, onRdpClose }) => {
       {/* RDP Data Display */}
       {loading ? (
         <div className="flex items-center justify-center py-8">
-          <FaSpinner className="animate-spin text-2xl text-gray-400" />
+          <FaSpinner className="animate-spin text-2xl text-[var(--text-tertiary)]" />
         </div>
       ) : rdpData.length > 0 ? (
         <div className="grid gap-4">
@@ -102,46 +102,45 @@ const RdpInfo = ({ team, onRdpOpen, onRdpClose }) => {
             <div
               key={rdp._id}
               className={`
-                relative p-4 rounded-lg border transition-all duration-200 group hover:shadow-md
-                ${team?.isActive 
-                  ? 'bg-white border-gray-200 hover:bg-blue-50 hover:border-blue-200' 
-                  : 'bg-white/95 border-white/50 hover:bg-white shadow-sm backdrop-blur-sm'
+                relative p-4 rounded-xl border transition-all duration-300 group hover:scale-[1.01] hover:shadow-lg
+                ${team?.isActive
+                  ? 'bg-[var(--bg-card)] border-[var(--border-subtle)] hover:border-[var(--accent-blue)] hover:bg-[var(--bg-elevated)]'
+                  : 'bg-[var(--bg-card)] border-[var(--border-subtle)] opacity-90'
                 }
               `}
             >
               <div className="flex items-center gap-3">
                 {/* Avatar */}
                 <div className={`
-                  relative w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-semibold
+                  relative w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold shadow-md
                   ${getAvatarColor(rdp.hostname)}
                   ${team?.isActive ? '' : 'opacity-75'}
                 `}>
                   {getInitials(rdp.hostname)}
-                  
+
                   {/* Status Indicator */}
                   <div className={`
-                    absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white
-                    ${team?.isActive ? 'bg-green-500' : 'bg-red-500'}
+                    absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-[var(--bg-card)]
+                    ${team?.isActive ? 'bg-[var(--success)]' : 'bg-[var(--error)]'}
                   `} />
                 </div>
 
                 {/* RDP Info */}
                 <div className="flex-grow min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <FaDesktop className={`w-4 h-4 flex-shrink-0 ${
-                      team?.isActive 
-                        ? 'text-gray-400' 
-                        : 'text-gray-600'
-                    }`} />
-                    <span className="text-sm truncate font-semibold text-gray-900">
+                    <FaDesktop className={`w-3.5 h-3.5 flex-shrink-0 ${team?.isActive
+                        ? 'text-[var(--text-secondary)]'
+                        : 'text-[var(--text-tertiary)]'
+                      }`} />
+                    <span className="text-sm truncate font-semibold text-white">
                       {rdp.hostname}
                     </span>
                   </div>
-                  
+
                   {/* IP Address */}
                   <div className="flex items-center gap-2">
-                    <FaNetworkWired className="w-3 h-3 text-gray-400" />
-                    <span className="text-xs text-gray-500">
+                    <FaNetworkWired className="w-3 h-3 text-[var(--text-tertiary)]" />
+                    <span className="text-xs text-[var(--text-muted)] font-mono">
                       {rdp.ipAddress}
                     </span>
                   </div>
@@ -152,15 +151,12 @@ const RdpInfo = ({ team, onRdpOpen, onRdpClose }) => {
                   {/* Open Button */}
                   <button
                     onClick={() => handleAction('open', rdp.hostname)}
-                    className={`
+                    className="
                       opacity-0 group-hover:opacity-100 transition-all duration-200 
-                      p-2 rounded-lg hover:scale-105 active:scale-95
-                      ${team?.isActive 
-                        ? 'hover:bg-green-100 text-green-600 hover:text-green-700'
-                        : 'hover:bg-green-200 text-green-700 hover:text-green-800'
-                      }
-                      focus:outline-none focus:opacity-100 focus:ring-2 focus:ring-green-500/20
-                    `}
+                      p-2 rounded-lg hover:scale-110 active:scale-95
+                      hover:bg-[var(--success-bg)] text-[var(--text-tertiary)] hover:text-[var(--success-light)]
+                      focus:outline-none focus:opacity-100
+                    "
                     title="Open RDP"
                   >
                     <FaPlay className="w-3.5 h-3.5" />
@@ -169,15 +165,12 @@ const RdpInfo = ({ team, onRdpOpen, onRdpClose }) => {
                   {/* Close Button */}
                   <button
                     onClick={() => handleAction('close', rdp.hostname)}
-                    className={`
+                    className="
                       opacity-0 group-hover:opacity-100 transition-all duration-200 
-                      p-2 rounded-lg hover:scale-105 active:scale-95
-                      ${team?.isActive 
-                        ? 'hover:bg-orange-100 text-orange-600 hover:text-orange-700'
-                        : 'hover:bg-orange-200 text-orange-700 hover:text-orange-800'
-                      }
-                      focus:outline-none focus:opacity-100 focus:ring-2 focus:ring-orange-500/20
-                    `}
+                      p-2 rounded-lg hover:scale-110 active:scale-95
+                      hover:bg-[var(--warning-bg)] text-[var(--text-tertiary)] hover:text-[var(--warning-light)]
+                      focus:outline-none focus:opacity-100
+                    "
                     title="Close RDP"
                   >
                     <FaStop className="w-3.5 h-3.5" />
@@ -189,10 +182,10 @@ const RdpInfo = ({ team, onRdpOpen, onRdpClose }) => {
         </div>
       ) : (
         <div className="text-center py-12">
-          <div className="bg-gray-100 rounded-3xl p-8 max-w-sm mx-auto">
-            <FaDesktop className="w-16 h-16 mx-auto mb-4 text-gray-400" />
-            <h4 className="text-lg font-semibold text-gray-900 mb-2">No RDP Information</h4>
-            <p className="text-gray-600">No RDP servers are currently configured for this team</p>
+          <div className="bg-[var(--bg-card)] rounded-3xl p-8 max-w-sm mx-auto border border-[var(--border-subtle)] border-dashed">
+            <FaDesktop className="w-16 h-16 mx-auto mb-4 text-[var(--text-muted)]" />
+            <h4 className="text-lg font-semibold text-white mb-2">No RDP Information</h4>
+            <p className="text-[var(--text-tertiary)]">No RDP servers are currently configured for this team</p>
           </div>
         </div>
       )}
@@ -201,4 +194,3 @@ const RdpInfo = ({ team, onRdpOpen, onRdpClose }) => {
 }
 
 export default RdpInfo
-

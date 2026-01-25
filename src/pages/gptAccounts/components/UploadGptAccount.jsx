@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 import gptSecretToCode from '../../../libs/gptSecretToCode'
 import handleApi from '../../../libs/handleAPi'
 import { toast } from 'react-toastify'
+import { FaTimes, FaCloudUploadAlt, FaExclamationTriangle, FaCheckCircle, FaSpinner } from 'react-icons/fa'
 
 const UploadGptAccount = ({ setIsOpen }) => {
     const [formData, setFormData] = useState({
@@ -14,6 +15,7 @@ const UploadGptAccount = ({ setIsOpen }) => {
     const [error, setError] = useState('')
     const [totpCode, setTotpCode] = useState('')
     const [timeLeft, setTimeLeft] = useState(30)
+    const [isSubmitting, setIsSubmitting] = useState(false)
 
     // Effect for TOTP code generation and countdown
     useEffect(() => {
@@ -65,7 +67,7 @@ const UploadGptAccount = ({ setIsOpen }) => {
             if (imageItem) {
                 const file = imageItem.getAsFile()
                 setSelectedFile(file)
-                
+
                 try {
                     const result = await QrScanner.scanImage(file)
                     parseOtpAuthUrl(result)
@@ -98,7 +100,7 @@ const UploadGptAccount = ({ setIsOpen }) => {
             }
 
             const parsedUrl = new URL(url)
-            
+
             const issuer = parsedUrl.searchParams.get('issuer')
             if (issuer !== 'OpenAI') {
                 throw new Error('This QR code is not from Chat gpt.')
@@ -159,146 +161,154 @@ const UploadGptAccount = ({ setIsOpen }) => {
         }
     }
 
-    const handleSubmit = async(e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
-        // TODO: Handle form submission
+        setIsSubmitting(true)
         try {
             const response = await handleApi('/gpt-account/add', 'POST', formData)
-            if(response.success){
+            if (response.success) {
                 toast.success('Account added successfully')
                 setIsOpen(false)
-            }else{
+            } else {
                 toast.error('Failed to add account')
             }
         } catch (error) {
             toast.error(error.message)
+        } finally {
+            setIsSubmitting(false)
         }
-        setIsOpen(false)
     }
 
+    const inputClass = "w-full px-4 py-2.5 rounded-xl border transition-all duration-200 focus:outline-none focus:ring-1 focus:ring-[var(--accent-purple)] bg-[var(--bg-surface)] border-[var(--border-subtle)] text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:border-[var(--accent-purple)]"
+    const labelClass = "block text-sm font-semibold text-[var(--text-secondary)] mb-1.5"
+
     return (
-        <div className="fixed inset-0 backdrop-blur-sm bg-white/30 flex items-center justify-center p-4 z-50">
-            <div className="bg-white rounded-lg shadow-xl w-full max-w-xl max-h-[90vh] flex flex-col">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsOpen(false)}></div>
+            <div className="relative bg-[var(--bg-card)] rounded-2xl w-full max-w-xl max-h-[90vh] flex flex-col shadow-2xl border border-[var(--border-subtle)] animate-scale-in">
                 {/* Modal Header - Fixed */}
-                <div className="flex justify-between items-center p-6 border-b shrink-0">
-                    <h2 className="text-xl font-semibold text-gray-800">Upload GPT Account</h2>
-                    <button 
+                <div className="flex justify-between items-center px-6 py-4 border-b border-[var(--border-subtle)] bg-[var(--bg-card)] rounded-t-2xl">
+                    <h2 className="text-xl font-bold text-[var(--text-primary)]">Upload GPT Account</h2>
+                    <button
                         onClick={() => setIsOpen(false)}
-                        className="text-gray-500 hover:text-gray-700"
+                        className="p-2 rounded-lg hover:bg-[var(--bg-hover)] text-[var(--text-secondary)] hover:text-white transition-colors"
                     >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
+                        <FaTimes className="w-5 h-5" />
                     </button>
                 </div>
 
                 {/* Modal Body - Scrollable */}
-                <div className="p-6 overflow-y-auto flex-grow">
-                    <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="p-6 overflow-y-auto flex-grow custom-scrollbar">
+                    <form onSubmit={handleSubmit} className="space-y-6">
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className={labelClass}>
                                 Email Address
                             </label>
-                            <input 
-                                type="text" 
-                                name='gpt_account_email' 
-                                required 
-                                placeholder='Enter your email' 
-                                value={formData.gptAccount} 
+                            <input
+                                type="text"
+                                name='gpt_account_email'
+                                required
+                                placeholder='Enter your email'
+                                value={formData.gptAccount}
                                 onChange={handleChange}
                                 onPaste={handleTextPaste}
                                 autoComplete="off"
-                                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className={inputClass}
                             />
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className={labelClass}>
                                 Password
                             </label>
-                            <input 
-                                type="password" 
-                                name='gpt_account_pass' 
-                                required 
-                                placeholder='Enter your password' 
-                                value={formData.password} 
+                            <input
+                                type="password"
+                                name='gpt_account_pass'
+                                required
+                                placeholder='Enter your password'
+                                value={formData.password}
                                 onChange={handleChange}
                                 autoComplete="new-password"
-                                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className={inputClass}
                             />
                         </div>
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className={labelClass}>
                                 2FA Secret
                             </label>
-                            <input 
-                                type="text" 
-                                name='secret' 
-                                required 
-                                placeholder='Enter Chat gpt secret' 
-                                value={formData.secret} 
+                            <input
+                                type="text"
+                                name='secret'
+                                required
+                                placeholder='Enter Chat gpt secret'
+                                value={formData.secret}
                                 onChange={handleChange}
                                 onPaste={handleTextPaste}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className={inputClass}
                             />
                         </div>
 
                         {totpCode && (
-                            <div className="p-4 bg-blue-50 rounded-md">
+                            <div className="p-4 rounded-xl border border-[var(--accent-blue)]/20"
+                                style={{ background: 'rgba(59, 130, 246, 0.1)' }}>
                                 <div className="flex justify-between items-center">
                                     <div>
-                                        <label className="block text-sm font-medium text-blue-700 mb-1">
-                                            2FA Code
+                                        <label className="block text-xs font-bold text-[var(--accent-blue)] mb-1 uppercase tracking-wider">
+                                            2FA Code Check
                                         </label>
-                                        <div className="text-2xl font-mono font-bold text-blue-700 tracking-wider">
+                                        <div className="text-2xl font-mono font-bold text-[var(--text-primary)] tracking-widest">
                                             {totpCode}
                                         </div>
                                     </div>
-                                    <div className="text-sm text-blue-600 font-medium">
-                                        Refreshes in: {timeLeft}s
+                                    <div className="text-xs font-mono font-medium px-2 py-1 rounded bg-[var(--bg-surface)] border border-[var(--border-subtle)]"
+                                        style={{ color: timeLeft < 10 ? 'var(--error)' : 'var(--text-secondary)' }}>
+                                        {timeLeft}s
                                     </div>
                                 </div>
                             </div>
                         )}
 
                         <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                            <label className={labelClass}>
                                 QR Code
                             </label>
-                            <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
-                                <div className="space-y-1 text-center">
-                                    <svg className="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
-                                        <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
-                                    </svg>
-                                    <div className="flex text-sm text-gray-600">
-                                        <label htmlFor="qr-upload" className="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
+                            <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-dashed rounded-xl transition-colors hover:border-[var(--accent-purple)] group"
+                                style={{
+                                    borderColor: 'var(--border-subtle)',
+                                    background: 'var(--bg-surface)'
+                                }}>
+                                <div className="space-y-2 text-center">
+                                    <FaCloudUploadAlt className="mx-auto h-12 w-12 text-[var(--text-tertiary)] group-hover:text-[var(--accent-purple)] transition-colors" />
+                                    <div className="flex text-sm text-[var(--text-secondary)] justify-center">
+                                        <label htmlFor="qr-upload" className="relative cursor-pointer rounded-md font-medium text-[var(--accent-purple)] hover:text-[var(--accent-purple-light)] focus-within:outline-none">
                                             <span>Upload a file</span>
-                                            <input 
+                                            <input
                                                 id="qr-upload"
-                                                type="file" 
-                                                name='qr-code' 
+                                                type="file"
+                                                name='qr-code'
                                                 onChange={handleQrChange}
                                                 className="sr-only"
                                             />
                                         </label>
                                         <p className="pl-1">or drag and drop</p>
                                     </div>
-                                    <p className="text-xs text-gray-500">
+                                    <p className="text-xs text-[var(--text-tertiary)]">
                                         You can also paste an image directly (Ctrl+V)
                                     </p>
                                 </div>
                             </div>
                             {selectedFile && (
-                                <p className="mt-2 text-sm text-green-600">
-                                    File selected: {selectedFile.name}
+                                <p className="mt-2 text-sm text-[var(--success)] flex items-center gap-1">
+                                    <FaCheckCircle /> File selected: {selectedFile.name}
                                 </p>
                             )}
                         </div>
 
                         {error && (
-                            <div className="p-4 bg-red-50 rounded-md">
-                                <p className="text-sm text-red-600">
+                            <div className="p-3 rounded-xl border border-[var(--error)]/30 bg-[var(--error-bg)] flex items-start gap-2">
+                                <FaExclamationTriangle className="text-[var(--error)] mt-0.5 shrink-0" />
+                                <p className="text-sm text-[var(--error)] font-medium">
                                     {error}
                                 </p>
                             </div>
@@ -307,19 +317,22 @@ const UploadGptAccount = ({ setIsOpen }) => {
                 </div>
 
                 {/* Modal Footer - Fixed */}
-                <div className="flex justify-end gap-4 p-6 border-t shrink-0">
+                <div className="flex justify-end gap-3 p-6 border-t border-[var(--border-subtle)] bg-[var(--bg-card)] rounded-b-2xl">
                     <button
                         type="button"
                         onClick={() => setIsOpen(false)}
-                        className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                        disabled={isSubmitting}
+                        className="px-4 py-2 text-sm font-bold text-[var(--text-secondary)] hover:text-[var(--text-primary)] bg-[var(--bg-elevated)] hover:bg-[var(--bg-hover)] border border-[var(--border-subtle)] rounded-xl transition-colors"
                     >
                         Cancel
                     </button>
                     <button
                         onClick={handleSubmit}
                         type="button"
-                        className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                        disabled={isSubmitting}
+                        className="px-6 py-2 text-sm font-bold text-white bg-[var(--accent-blue)] border border-transparent rounded-xl hover:bg-[var(--accent-blue-light)] hover:shadow-lg hover:shadow-blue-500/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all flex items-center gap-2"
                     >
+                        {isSubmitting && <FaSpinner className="animate-spin" />}
                         Upload Account
                     </button>
                 </div>

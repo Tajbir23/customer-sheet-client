@@ -1,5 +1,5 @@
 import React from "react";
-import { FaExclamationCircle, FaSearch } from "react-icons/fa";
+import { FaExclamationCircle, FaSearch, FaTimes } from "react-icons/fa";
 import TeamGrid from "./TeamGrid";
 
 const InactiveTeamsSection = ({
@@ -18,17 +18,19 @@ const InactiveTeamsSection = ({
     if (!inActiveData || inActiveData.length === 0) return null;
 
     return (
-        <div className="mb-8">
-            {/* Red Header Section */}
-            <div className="bg-gradient-to-r from-red-100 to-rose-100 border border-red-200 rounded-xl px-6 py-4 mb-4">
+        <div className="mb-8 animate-fade-in">
+            {/* Header Section */}
+            <div className="rounded-xl px-6 py-4 mb-4 border border-[var(--error)]/30"
+                style={{ background: 'var(--bg-card)' }}>
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                     <div className="flex items-center gap-3">
-                        <div className="p-2 bg-red-500 rounded-lg">
-                            <FaExclamationCircle className="text-white text-lg" />
+                        <div className="p-2 rounded-lg"
+                            style={{ background: 'var(--error-bg)', color: 'var(--error)' }}>
+                            <FaExclamationCircle className="text-lg" />
                         </div>
                         <div>
-                            <h3 className="text-lg font-bold text-red-800">Inactive Teams</h3>
-                            <p className="text-sm text-red-600">
+                            <h3 className="text-lg font-bold text-[var(--text-primary)]">Inactive Teams</h3>
+                            <p className="text-sm text-[var(--text-secondary)]">
                                 {inactiveSearch ? (
                                     <>
                                         {filteredInactiveData.length} of {inActiveData.length} team
@@ -44,21 +46,35 @@ const InactiveTeamsSection = ({
                         </div>
                     </div>
                     {/* Search Input for Inactive Teams */}
-                    <div className="relative">
-                        <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-red-400" />
+                    <div className="relative group">
+                        <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)] group-focus-within:text-[var(--error)] transition-colors" />
                         <input
                             type="text"
                             placeholder="Search inactive teams..."
                             value={inactiveSearch}
                             onChange={(e) => setInactiveSearch(e.target.value)}
-                            className="pl-10 pr-4 py-2 border border-red-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-400 focus:border-red-400 bg-white text-sm w-full sm:w-64"
+                            className="pl-10 pr-10 py-2.5 rounded-xl text-sm w-full sm:w-64 focus:outline-none focus:ring-1 transition-all duration-200"
+                            style={{
+                                background: 'var(--bg-surface)',
+                                border: '1px solid var(--border-subtle)',
+                                color: 'var(--text-primary)',
+                                borderColor: 'var(--border-subtle)',
+                            }}
+                            onFocus={(e) => {
+                                e.target.style.borderColor = 'var(--error)';
+                                e.target.style.boxShadow = '0 0 0 1px var(--error)';
+                            }}
+                            onBlur={(e) => {
+                                e.target.style.borderColor = 'var(--border-subtle)';
+                                e.target.style.boxShadow = 'none';
+                            }}
                         />
                         {inactiveSearch && (
                             <button
                                 onClick={() => setInactiveSearch("")}
-                                className="absolute right-3 top-1/2 -translate-y-1/2 text-red-400 hover:text-red-600"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-[var(--bg-hover)] text-[var(--text-tertiary)] hover:text-[var(--error)] transition-colors"
                             >
-                                ×
+                                <FaTimes />
                             </button>
                         )}
                     </div>
@@ -77,14 +93,15 @@ const InactiveTeamsSection = ({
                     userId={userId}
                 />
             ) : (
-                <div className="text-center py-8 bg-red-50 rounded-xl border border-red-200">
-                    <FaSearch className="mx-auto text-red-300 text-3xl mb-3" />
-                    <p className="text-red-600 font-medium">
-                        No inactive teams match "{inactiveSearch}"
+                <div className="text-center py-8 rounded-xl border border-dashed border-[var(--border-subtle)]"
+                    style={{ background: 'var(--bg-card)' }}>
+                    <FaSearch className="mx-auto text-[var(--text-tertiary)] text-3xl mb-3" />
+                    <p className="font-medium text-[var(--text-secondary)]">
+                        No inactive teams match "<span className="text-[var(--error)]">{inactiveSearch}</span>"
                     </p>
                     <button
                         onClick={() => setInactiveSearch("")}
-                        className="mt-2 text-sm text-red-500 hover:text-red-700 underline"
+                        className="mt-2 text-sm text-[var(--accent-blue)] hover:text-[var(--accent-blue-light)] underline"
                     >
                         Clear search
                     </button>

@@ -1,5 +1,5 @@
 import React from 'react'
-import { FaSearch, FaTimes } from 'react-icons/fa'
+import { FaSearch, FaTimes, FaLayerGroup } from 'react-icons/fa'
 
 const SearchBar = ({ search, onSearchChange, isLoading }) => {
   const handleClear = () => {
@@ -7,59 +7,57 @@ const SearchBar = ({ search, onSearchChange, isLoading }) => {
   }
 
   return (
-    <div className="max-w-2xl mx-auto mb-8">
+    <div className="max-w-2xl mx-auto mb-8 animate-fade-in-down">
       <div className="text-center mb-6">
-        <h1 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-2">
+        <div className="flex items-center justify-center gap-3 mb-3">
+          <div className="p-3 rounded-xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)]">
+            <FaLayerGroup className="w-6 h-6 text-[var(--accent-purple)]" />
+          </div>
+        </div>
+        <h1 className="text-3xl sm:text-4xl font-bold mb-2 text-white">
           Team Management
         </h1>
-        <p className="text-gray-600 text-lg">Search and manage your GPT teams</p>
+        <p className="text-[var(--text-secondary)] text-lg font-medium">Search and manage your GPT teams</p>
       </div>
-      
-      <div className="relative group">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-purple-500 rounded-2xl blur opacity-25 group-hover:opacity-40 transition-opacity duration-300"></div>
-        <div className="relative bg-white rounded-2xl border border-gray-200 shadow-lg">
-          <div className="flex items-center p-4">
-            <div className="flex items-center justify-center w-12 h-12 bg-gradient-to-r from-blue-500 to-purple-500 rounded-xl mr-4">
-              <FaSearch className="text-white text-lg" />
-            </div>
-            
-            <div className="flex-1">
-              <label htmlFor="search" className="block text-sm font-bold text-gray-700 mb-1">
-                Search Teams
-              </label>
-              <input
-                id="search"
-                type="text"
-                placeholder="Search by GPT account or member email..."
-                value={search}
-                onChange={onSearchChange}
-                disabled={isLoading}
-                className="w-full text-lg font-medium text-gray-900 placeholder-gray-500 border-none outline-none bg-transparent disabled:opacity-50"
-              />
-            </div>
-            
-            {search && (
-              <button
-                onClick={handleClear}
-                className="flex items-center justify-center w-10 h-10 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors duration-200 ml-2"
-                title="Clear search"
-              >
-                <FaTimes className="text-gray-600 text-sm" />
-              </button>
-            )}
-          </div>
-          
-          {search && (
-            <div className="px-4 pb-3">
-              <div className="text-sm text-gray-600">
-                Searching for: <span className="font-semibold text-gray-900">"{search}"</span>
-              </div>
-            </div>
-          )}
+
+      <div className="relative group max-w-xl mx-auto">
+        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+          <FaSearch className="text-[var(--text-tertiary)] group-focus-within:text-[var(--accent-purple)] transition-colors duration-200" />
         </div>
+
+        <input
+          id="search"
+          type="text"
+          placeholder="Search by GPT account or member email..."
+          value={search}
+          onChange={onSearchChange}
+          disabled={isLoading}
+          className="
+            w-full pl-11 pr-12 py-3.5 
+            bg-[var(--bg-card)] 
+            border border-[var(--border-subtle)] 
+            rounded-xl 
+            text-[var(--text-primary)] 
+            placeholder-[var(--text-muted)]
+            focus:outline-none focus:border-[var(--accent-purple)] focus:ring-1 focus:ring-[var(--accent-purple)]
+            transition-all duration-200
+            shadow-sm hover:border-[var(--border-default)]
+          "
+        />
+
+        {search && (
+          <button
+            onClick={handleClear}
+            className="absolute inset-y-0 right-0 pr-3 flex items-center"
+          >
+            <div className="p-1 rounded-full hover:bg-[var(--bg-hover)] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors">
+              <FaTimes className="w-4 h-4" />
+            </div>
+          </button>
+        )}
       </div>
     </div>
   )
 }
 
-export default SearchBar 
+export default SearchBar

@@ -5,35 +5,35 @@ const ResultsSummary = ({ searchEmail, membersCount, loading }) => {
     if (loading) return null;
 
     return (
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm mb-6 overflow-hidden">
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 px-6 py-4 border-b border-gray-100">
+        <div className="bg-[var(--bg-card)] rounded-2xl border border-[var(--border-subtle)] mb-6 overflow-hidden">
+            <div className="px-6 py-4">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
-                        <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <div className="w-8 h-8 bg-[var(--accent-blue)]/10 rounded-lg flex items-center justify-center">
                             {searchEmail ? (
-                                <FaSearch className="w-4 h-4 text-blue" />
+                                <FaSearch className="w-4 h-4 text-[var(--accent-blue)]" />
                             ) : (
-                                <FaInfoCircle className="w-4 h-4 text-blue" />
+                                <FaInfoCircle className="w-4 h-4 text-[var(--accent-blue)]" />
                             )}
                         </div>
                         <div>
-                            <div className="text-sm font-medium text-gray-700">
+                            <div className="text-sm font-medium text-[var(--text-secondary)]">
                                 {searchEmail ? (
-                                    <>Search results for "<span className="font-bold text-blue">{searchEmail}</span>"</>
+                                    <>Search results for "<span className="font-bold text-[var(--accent-blue)]">{searchEmail}</span>"</>
                                 ) : (
                                     <>All removed members</>
                                 )}
                             </div>
-                            <div className="text-xs text-gray-500 mt-0.5">
+                            <div className="text-xs text-[var(--text-tertiary)] mt-0.5">
                                 {searchEmail ? 'Filtered results' : 'Complete dataset'}
                             </div>
                         </div>
                     </div>
                     <div className="text-right">
-                        <div className="text-2xl font-bold text-gray-900">
+                        <div className="text-2xl font-bold text-white">
                             {membersCount}
                         </div>
-                        <div className="text-xs text-gray-500 uppercase tracking-wide">
+                        <div className="text-xs text-[var(--text-tertiary)] uppercase tracking-wide">
                             Result{membersCount !== 1 ? 's' : ''} Found
                         </div>
                     </div>
@@ -43,4 +43,4 @@ const ResultsSummary = ({ searchEmail, membersCount, loading }) => {
     );
 };
 
-export default ResultsSummary; 
+export default ResultsSummary;

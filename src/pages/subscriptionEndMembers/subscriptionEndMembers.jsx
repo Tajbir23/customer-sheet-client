@@ -94,9 +94,9 @@ const SubscriptionEndMembers = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="min-h-screen p-6 md:p-8 lg:p-10 max-w-7xl mx-auto">
       <Helmet>
-        <title>Subscription End History</title>
+        <title>Subscription End History - Customer Sheet</title>
       </Helmet>
 
       <PageHeader />
@@ -130,8 +130,8 @@ const SubscriptionEndMembers = () => {
         ) : (
           <>
             <div className="space-y-4">
-              {data.map((item) => (
-                <HistoryCard key={item._id} item={item} />
+              {data.map((item, index) => (
+                <HistoryCard key={item._id} item={item} index={index} />
               ))}
             </div>
             <Pagination

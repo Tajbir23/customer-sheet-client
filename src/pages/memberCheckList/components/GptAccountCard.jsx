@@ -5,7 +5,7 @@ import { FaEnvelope, FaUsers, FaClock, FaCalendarAlt, FaCopy, FaCheck } from 're
 const GptAccountCard = ({ accountData, data, setData }) => {
   const { gptAccount, members, createdAt } = accountData
   const [copied, setCopied] = useState(false)
-  
+
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       year: 'numeric',
@@ -35,121 +35,125 @@ const GptAccountCard = ({ accountData, data, setData }) => {
   const completionPercentage = members.length > 0 ? Math.round((checkedMembers / members.length) * 100) : 0
 
   return (
-    <div className="group relative">
-      {/* Card */}
-      <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:border-gray-200">
-        {/* Card Header */}
-        <div className="relative bg-gradient-to-br from-blue-600 via-blue-700 to-purple-700 p-8 text-white overflow-hidden">
-          {/* Background Pattern */}
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-white rounded-full -translate-y-16 translate-x-16"></div>
-            <div className="absolute bottom-0 left-0 w-24 h-24 bg-white rounded-full translate-y-12 -translate-x-12"></div>
-          </div>
-          
-          <div className="relative z-10">
-            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-6">
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="bg-white/20 p-3 rounded-xl backdrop-blur-sm">
-                    <FaEnvelope className="text-white text-lg" />
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2">
-                      <h3 className="text-xl sm:text-2xl font-bold text-white truncate">
-                        {gptAccount}
-                      </h3>
-                      <button
-                        onClick={handleCopyEmail}
-                        className="flex-shrink-0 p-2 bg-white/20 hover:bg-white/30 rounded-lg transition-all duration-200 backdrop-blur-sm group/copy"
-                        title="Copy email"
-                      >
-                        {copied ? (
-                          <FaCheck className="text-green-300 text-sm" />
-                        ) : (
-                          <FaCopy className="text-white text-sm group-hover/copy:scale-110 transition-transform" />
-                        )}
-                      </button>
-                    </div>
-                    <p className="text-blue-100 text-sm font-medium">GPT Account</p>
-                  </div>
+    <div className="rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-card)] overflow-hidden transition-all duration-300 hover:shadow-md hover:border-[var(--border-default)] group h-full">
+      {/* Card Header */}
+      <div className="px-5 py-4 border-b border-[var(--border-subtle)] bg-[var(--bg-surface)]">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-3">
+              <div className="p-2.5 rounded-xl bg-[var(--bg-elevated)] border border-[var(--border-subtle)] group-hover:border-[var(--accent-purple)]/50 transition-colors">
+                <FaEnvelope className="text-[var(--accent-purple)] text-lg" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-2">
+                  <h3 className="text-base font-bold text-white truncate" title={gptAccount}>
+                    {gptAccount}
+                  </h3>
+                  <button
+                    onClick={handleCopyEmail}
+                    className="flex-shrink-0 p-1.5 rounded-lg text-[var(--text-tertiary)] hover:text-white hover:bg-[var(--bg-hover)] transition-all duration-200"
+                    title="Copy email"
+                  >
+                    {copied ? (
+                      <FaCheck className="text-[var(--success)] text-xs" />
+                    ) : (
+                      <FaCopy className="text-xs" />
+                    )}
+                  </button>
                 </div>
-                
-                <div className="flex items-center gap-4 text-blue-100">
-                  <div className="flex items-center gap-2">
-                    <FaCalendarAlt className="text-sm" />
-                    <span className="text-sm font-medium">{formatDate(createdAt)}</span>
+                <div className="flex items-center gap-3 text-xs text-[var(--text-secondary)] mt-0.5">
+                  <div className="flex items-center gap-1.5">
+                    <FaCalendarAlt className="opacity-70" />
+                    <span>{formatDate(createdAt)}</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <FaClock className="text-sm" />
-                    <span className="text-sm font-medium">{formatTime(createdAt)}</span>
+                  <span className="w-1 h-1 rounded-full bg-[var(--text-tertiary)]"></span>
+                  <div className="flex items-center gap-1.5">
+                    <FaClock className="opacity-70" />
+                    <span>{formatTime(createdAt)}</span>
                   </div>
                 </div>
               </div>
-              
-              <div className="text-center sm:text-right">
-                <div className="bg-white/20 backdrop-blur-sm rounded-2xl p-4 mb-3">
-                  <div className="flex items-center justify-center gap-2 mb-2">
-                    <FaUsers className="text-white text-lg" />
-                    <span className="text-2xl font-bold text-white">{members.length}</span>
-                  </div>
-                  <p className="text-blue-100 text-sm font-medium">Members</p>
-                </div>
-                
-                {/* Completion Badge */}
-                <div className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold ${
-                  completionPercentage === 100 
-                    ? 'bg-green-500/20 text-green-100 border border-green-400/30' 
-                    : completionPercentage >= 50 
-                    ? 'bg-yellow-500/20 text-yellow-100 border border-yellow-400/30'
-                    : 'bg-red-500/20 text-red-100 border border-red-400/30'
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between sm:justify-end gap-4 min-w-[140px]">
+            <div className="text-right">
+              <div className="flex items-center justify-end gap-1.5 text-white font-bold text-lg leading-none">
+                <FaUsers className="text-[var(--text-tertiary)] text-xs" />
+                <span>{members.length}</span>
+              </div>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-[var(--text-tertiary)] mt-1">Members</p>
+            </div>
+
+            {/* Completion Ring */}
+            <div className="relative w-10 h-10 flex items-center justify-center">
+              <svg className="w-full h-full transform -rotate-90">
+                <circle
+                  cx="20"
+                  cy="20"
+                  r="16"
+                  stroke="var(--bg-elevated)"
+                  strokeWidth="4"
+                  fill="transparent"
+                />
+                <circle
+                  cx="20"
+                  cy="20"
+                  r="16"
+                  stroke={completionPercentage === 100 ? 'var(--success)' : completionPercentage >= 50 ? 'var(--warning)' : 'var(--error)'}
+                  strokeWidth="4"
+                  fill="transparent"
+                  strokeDasharray={100}
+                  strokeDashoffset={100 - completionPercentage}
+                  strokeLinecap="round"
+                  className="transition-all duration-500 ease-out"
+                />
+              </svg>
+              <span className={`absolute text-[10px] font-bold ${completionPercentage === 100 ? 'text-[var(--success)]' : completionPercentage >= 50 ? 'text-[var(--warning)]' : 'text-[var(--error)]'
                 }`}>
-                  <div className={`w-2 h-2 rounded-full ${
-                    completionPercentage === 100 ? 'bg-green-400' 
-                    : completionPercentage >= 50 ? 'bg-yellow-400' 
-                    : 'bg-red-400'
-                  }`}></div>
-                  {completionPercentage}% Complete
-                </div>
-              </div>
+                {completionPercentage}%
+              </span>
             </div>
-          </div>
-        </div>
-        
-        {/* Members Section */}
-        <div className="p-8">
-          <div className="flex items-center justify-between mb-6">
-            <h4 className="text-xl font-bold text-gray-900">Team Members</h4>
-            <div className="text-sm text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
-              {checkedMembers} of {members.length} checked
-            </div>
-          </div>
-          
-          {/* Members List */}
-          <div className="space-y-4 max-h-80 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-            {members.length === 0 ? (
-              <div className="text-center py-8">
-                <div className="text-gray-400 text-4xl mb-3">👥</div>
-                <p className="text-gray-500 font-medium">No members found</p>
-              </div>
-            ) : (
-              members.map((member, index) => (
-                <div
-                  key={member._id}
-                  className="transform transition-all duration-200"
-                  style={{
-                    animationDelay: `${index * 50}ms`
-                  }}
-                >
-                  <MemberItem member={member} gptAccount={gptAccount} data={data} setData={setData} />
-                </div>
-              ))
-            )}
           </div>
         </div>
       </div>
-      
-      {/* Hover Glow Effect */}
-      <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-blue-400/20 to-purple-400/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10 blur-xl"></div>
+
+      {/* Members Section */}
+      <div className="p-0">
+        <div className="flex items-center justify-between px-5 py-3 border-b border-[var(--border-subtle)] bg-[var(--bg-card)]/50">
+          <h4 className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider">Team Members</h4>
+          <div className={`text-[10px] font-bold px-2 py-0.5 rounded border ${checkedMembers === members.length
+            ? 'bg-[var(--success)]/10 text-[var(--success)] border-[var(--success)]/20'
+            : 'bg-[var(--bg-elevated)] text-[var(--text-tertiary)] border-[var(--border-subtle)]'
+            }`}>
+            {checkedMembers}/{members.length} CHECKED
+          </div>
+        </div>
+
+        {/* Members List */}
+        <div className="max-h-[320px] overflow-y-auto custom-scrollbar p-5 space-y-3">
+          {members.length === 0 ? (
+            <div className="text-center py-8">
+              <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-[var(--bg-surface)] flex items-center justify-center">
+                <FaUsers className="text-[var(--text-muted)]" />
+              </div>
+              <p className="text-[var(--text-secondary)] text-sm font-medium">No members found</p>
+            </div>
+          ) : (
+            members.map((member, index) => (
+              <div
+                key={member._id}
+                className="animate-fade-in-up"
+                style={{
+                  animationDelay: `${index * 30}ms`
+                }}
+              >
+                <MemberItem member={member} gptAccount={gptAccount} data={data} setData={setData} />
+              </div>
+            ))
+          )}
+        </div>
+      </div>
     </div>
   )
 }

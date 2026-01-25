@@ -208,22 +208,14 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
 
   // Handle RDP open/close actions
   const handleRdpOpen = (hostname) => {
-    console.log('handleRdpOpen called with:', hostname)
-    console.log('Current openOnList:', openOnList)
     if (!openOnList.includes(hostname)) {
       const newList = [...openOnList, hostname]
-      console.log('Adding to list, new list:', newList)
       setOpenOnList(newList);
-    } else {
-      console.log('Hostname already in list')
     }
   };
 
   const handleRdpClose = (hostname) => {
-    console.log('handleRdpClose called with:', hostname)
-    console.log('Current openOnList:', openOnList)
     const newList = openOnList.filter(item => item !== hostname)
-    console.log('After filtering, new list:', newList)
     setOpenOnList(newList);
   };
 
@@ -234,8 +226,8 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
         <div className={`
             relative overflow-hidden rounded-3xl transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl
             ${team.isActive
-            ? 'bg-white shadow-xl border border-gray-100'
-            : 'bg-gradient-to-br from-red-50 to-red-100 shadow-lg border border-red-200'
+            ? 'glass-card border-[var(--border-subtle)]'
+            : 'bg-[var(--bg-elevated)] opacity-90 border-[var(--error)]/30'
           }
           `}>
 
@@ -243,12 +235,12 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
           <div className={`
               relative p-8 overflow-hidden
               ${team.isActive
-              ? 'bg-gradient-to-br from-blue-600 via-blue-700 to-purple-700'
-              : 'bg-gradient-to-br from-red-500 via-red-600 to-red-700'
+              ? 'bg-gradient-to-br from-[var(--bg-hover)] to-[var(--bg-card)]'
+              : 'bg-gradient-to-br from-[var(--error-bg)] to-transparent'
             }
             `}>
             {/* Background Pattern */}
-            <div className="absolute inset-0 opacity-10">
+            <div className="absolute inset-0 opacity-5">
               <div className="absolute top-0 right-0 w-32 h-32 bg-white rounded-full -translate-y-16 translate-x-16"></div>
               <div className="absolute bottom-0 left-0 w-24 h-24 bg-white rounded-full translate-y-12 -translate-x-12"></div>
             </div>
@@ -257,24 +249,24 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
               {/* Status Row */}
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
-                  <div className={`w-3 h-3 rounded-full ${team.isActive ? 'bg-green-400' : 'bg-red-300'} ${justToggled ? 'animate-ping' : 'animate-pulse'}`} />
-                  <span className={`text-white/90 text-sm font-semibold transition-all duration-300 ${justToggled ? 'scale-110' : ''}`}>
-                    {team.isActive ? 'Active Team' : 'Inactive Team'}
+                  <div className={`w-3 h-3 rounded-full ${team.isActive ? 'bg-[var(--success)] shadow-[0_0_8px_var(--success)]' : 'bg-[var(--error)] shadow-[0_0_8px_var(--error)]'} ${justToggled ? 'animate-ping' : 'animate-pulse'}`} />
+                  <span className={`text-white text-sm font-bold tracking-wide transition-all duration-300 ${justToggled ? 'scale-110' : ''}`}>
+                    {team.isActive ? 'ACTIVE TEAM' : 'INACTIVE TEAM'}
                   </span>
                   {/* Status change indicator */}
                   {justToggled && (
-                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-bold bg-white/30 text-white animate-pulse">
+                    <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-bold bg-[var(--success-bg)] text-[var(--success-light)] animate-pulse">
                       ✓ Updated!
                     </span>
                   )}
                 </div>
                 <div className="flex items-center gap-3">
                   {/* Simple Member Count Badge */}
-                  <div className="bg-white/20 backdrop-blur-sm rounded-full px-3 py-1 flex items-center gap-2">
-                    <FaUserFriends className="text-white text-sm" />
+                  <div className="bg-white/10 backdrop-blur-md rounded-full px-3 py-1 flex items-center gap-2 border border-white/5">
+                    <FaUserFriends className="text-[var(--text-secondary)] text-sm" />
                     <span className="text-white text-sm font-bold">{team.members.length}</span>
                   </div>
-                  <div className={`bg-white/20 backdrop-blur-sm rounded-2xl p-2 transition-all duration-300 ${justToggled ? 'ring-4 ring-white/50 scale-110' : ''}`}>
+                  <div className={`transition-all duration-300 ${justToggled ? 'scale-110' : ''}`}>
                     <ToggleButton
                       isActive={team.isActive}
                       isLoading={isToggling === team._id}
@@ -291,10 +283,10 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
                   {openOnList.map((openOn, index) => (
                     <div
                       key={index}
-                      className="inline-flex items-center gap-2 bg-white text-gray-900 rounded-lg px-4 py-2 shadow-lg border-2 border-white/50 hover:shadow-xl transition-all duration-200 hover:scale-105"
+                      className="inline-flex items-center gap-2 bg-[var(--bg-surface)] text-[var(--text-primary)] rounded-lg px-3 py-1.5 shadow-md border border-[var(--border-subtle)] hover:border-[var(--success)] transition-all duration-200 hover:scale-105"
                     >
-                      <div className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse shadow-sm"></div>
-                      <span className="text-sm font-bold">
+                      <div className="w-2 h-2 bg-[var(--success)] rounded-full animate-pulse shadow-sm"></div>
+                      <span className="text-xs font-bold font-mono tracking-wide">
                         {openOn}
                       </span>
                     </div>
@@ -304,31 +296,31 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
               {/* Account Info */}
               <div className="mb-6">
                 <div className="flex items-center gap-3 mb-3">
-                  <div className="bg-white/20 p-3 rounded-xl backdrop-blur-sm">
-                    <FaEnvelope className="text-white text-lg" />
+                  <div className={`p-3 rounded-xl backdrop-blur-sm shadow-inner ${team.isActive ? 'bg-[var(--accent-purple)]/20' : 'bg-white/5'}`}>
+                    <FaEnvelope className={`text-lg ${team.isActive ? 'text-[var(--accent-purple-light)]' : 'text-[var(--text-tertiary)]'}`} />
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
-                      <h3 className="text-xl font-bold text-white truncate">
+                      <h3 className="text-xl font-bold text-white truncate group-hover:text-[var(--accent-blue-light)] transition-colors">
                         {team.gptAccount}
                       </h3>
                       <button
                         onClick={handleCopyEmail}
-                        className="flex-shrink-0 p-2 bg-white/20 hover:bg-white/30 rounded-lg transition-all duration-200 backdrop-blur-sm group/copy"
+                        className="flex-shrink-0 p-2 bg-white/5 hover:bg-white/10 rounded-lg transition-all duration-200 group/copy"
                         title="Copy email"
                       >
                         {copied ? (
-                          <FaCheck className="text-green-300 text-sm" />
+                          <FaCheck className="text-[var(--success)] text-sm" />
                         ) : (
-                          <FaCopy className="text-white text-sm group-hover/copy:scale-110 transition-transform" />
+                          <FaCopy className="text-[var(--text-tertiary)] text-sm group-hover/copy:text-white transition-colors" />
                         )}
                       </button>
                     </div>
-                    <p className="text-white/80 text-sm font-medium">GPT Account</p>
+                    <p className="text-[var(--text-secondary)] text-sm font-medium">GPT Account</p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-2 text-white/70 ml-16">
+                <div className="flex items-center gap-2 text-[var(--text-tertiary)] ml-16">
                   <FaServer className="text-sm" />
                   <span className="text-sm font-medium capitalize">{team.server}</span>
                 </div>
@@ -340,26 +332,27 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
                 <div className="relative">
                   <button
                     onClick={handleToggleMemberActions}
-                    className="flex items-center gap-1.5 bg-purple-500/80 hover:bg-purple-600 backdrop-blur-sm rounded-xl px-3 py-2 transition-all duration-200 text-white font-medium shadow-lg shadow-purple-500/25"
+                    className="flex items-center gap-1.5 bg-[var(--accent-purple)] hover:bg-[var(--accent-purple-dark)] text-white rounded-xl px-3 py-2 transition-all duration-200 font-medium shadow-lg shadow-purple-900/20"
                   >
                     <FaUserPlus className="text-xs" />
                     <span className="text-xs">Actions</span>
                     {showMemberActions ? <FaChevronUp className="text-xs" /> : <FaChevronDown className="text-xs" />}
                   </button>
                   {showMemberActions && (
-                    <div className="absolute bottom-full left-0 mb-2 bg-white rounded-xl shadow-2xl border border-gray-200 py-2 z-[100] min-w-[150px]">
+                    <div className="absolute bottom-full left-0 mb-2 rounded-xl shadow-2xl border border-[var(--border-subtle)] py-2 z-[100] min-w-[150px] overflow-hidden"
+                      style={{ background: 'var(--bg-elevated)' }}>
                       <button
                         onClick={() => { setShowInviteModal(true); setShowMemberActions(false); }}
-                        className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 hover:bg-purple-50 hover:text-purple-700 transition-colors"
+                        className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-white transition-colors"
                       >
-                        <FaPaperPlane className="text-purple-500" />
+                        <FaPaperPlane className="text-[var(--accent-purple)]" />
                         Invite Member
                       </button>
                       <button
                         onClick={() => { setShowRemoveModal(true); setShowMemberActions(false); }}
-                        className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-700 hover:bg-red-50 hover:text-red-700 transition-colors"
+                        className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--error-light)] transition-colors"
                       >
-                        <FaUserMinus className="text-red-500" />
+                        <FaUserMinus className="text-[var(--error)]" />
                         Remove Member
                       </button>
                     </div>
@@ -369,17 +362,17 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
                 <button
                   onClick={handleCopyCookie}
                   disabled={cookieLoading}
-                  className={`flex items-center gap-1.5 backdrop-blur-sm rounded-xl px-3 py-2 transition-all duration-200 font-medium ${cookieCopied
-                    ? 'bg-green-500 text-white'
+                  className={`flex items-center gap-1.5 border border-[var(--border-subtle)] rounded-xl px-3 py-2 transition-all duration-200 font-medium ${cookieCopied
+                    ? 'bg-[var(--success-bg)] text-[var(--success-light)] border-[var(--success)]'
                     : cookieLoading
-                      ? 'bg-white/30 text-white cursor-wait'
-                      : 'bg-white/20 hover:bg-white/30 text-white'
+                      ? 'bg-[var(--bg-surface)] text-[var(--text-muted)] cursor-wait'
+                      : 'bg-[var(--bg-surface)] hover:bg-[var(--bg-hover)] text-[var(--text-secondary)] hover:border-[var(--text-tertiary)]'
                     }`}
                   title="Copy cookies"
                 >
                   {cookieLoading ? (
                     <>
-                      <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                      <div className="w-3 h-3 border-2 border-[var(--text-muted)] border-t-transparent rounded-full animate-spin" />
                       <span className="text-xs">Loading...</span>
                     </>
                   ) : cookieCopied ? (
@@ -397,7 +390,7 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
 
                 <button
                   onClick={handleToggleRdp}
-                  className="flex items-center gap-1.5 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-xl px-3 py-2 transition-all duration-200 text-white font-medium"
+                  className="flex items-center gap-1.5 bg-[var(--bg-surface)] hover:bg-[var(--bg-hover)] border border-[var(--border-subtle)] rounded-xl px-3 py-2 transition-all duration-200 text-[var(--text-secondary)] font-medium"
                 >
                   <FaServer className="text-xs" />
                   <span className="text-xs">RDP</span>
@@ -406,7 +399,7 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
 
                 <button
                   onClick={handleToggleMembers}
-                  className="flex items-center gap-1.5 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-xl px-3 py-2 transition-all duration-200 text-white font-medium"
+                  className="flex items-center gap-1.5 bg-[var(--bg-surface)] hover:bg-[var(--bg-hover)] border border-[var(--border-subtle)] rounded-xl px-3 py-2 transition-all duration-200 text-[var(--text-secondary)] font-medium"
                 >
                   <FaUserFriends className="text-xs" />
                   <span className="text-xs">Members</span>
@@ -416,7 +409,7 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
                 {team.allMembers && team.allMembers.length > 0 && (
                   <button
                     onClick={handleToggleAllMembers}
-                    className="flex items-center gap-1.5 bg-orange-500/80 hover:bg-orange-600 backdrop-blur-sm rounded-xl px-3 py-2 transition-all duration-200 text-white font-medium shadow-lg shadow-orange-500/25"
+                    className="flex items-center gap-1.5 bg-[var(--warning-bg)] hover:bg-[var(--warning)]/20 border border-[var(--warning)]/30 text-[var(--warning-light)] backdrop-blur-sm rounded-xl px-3 py-2 transition-all duration-200 font-medium"
                   >
                     <FaUserFriends className="text-xs" />
                     <span className="text-xs">All Members ({team.allMembers.length})</span>
@@ -429,20 +422,20 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
 
           {/* RDP Section */}
           {showRdp && (
-            <div className="p-8 border-t-2 border-gray-200">
+            <div className="p-8 border-t border-[var(--border-subtle)] bg-[var(--bg-surface)]">
               <RdpInfo team={team} onRdpOpen={handleRdpOpen} onRdpClose={handleRdpClose} />
             </div>
           )}
 
           {/* All Members Section */}
           {showAllMembers && team.allMembers && team.allMembers.length > 0 && (
-            <div className="p-8 border-t-2 border-orange-200 bg-gradient-to-br from-orange-50 to-amber-50">
+            <div className="p-8 border-t border-[var(--border-subtle)]" style={{ background: 'rgba(245, 158, 11, 0.05)' }}>
               <div className="flex items-center justify-between mb-6">
-                <h4 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                  <FaUserFriends className="text-orange-500" />
+                <h4 className="text-lg font-bold text-white flex items-center gap-2">
+                  <FaUserFriends className="text-[var(--warning)]" />
                   All Members
                 </h4>
-                <div className="px-3 py-1 rounded-full text-sm font-medium bg-orange-100 text-orange-700">
+                <div className="px-3 py-1 rounded-full text-sm font-medium bg-[var(--warning-bg)] text-[var(--warning-light)]">
                   {team.allMembers.length} {team.allMembers.length === 1 ? 'member' : 'members'}
                 </div>
               </div>
@@ -452,22 +445,23 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
                 {team.allMembers.map((member, index) => (
                   <div
                     key={`all-member-${team._id}-${index}`}
-                    className="flex items-center justify-between bg-white rounded-xl p-4 shadow-sm border border-orange-100 hover:shadow-md transition-all duration-200"
+                    className="flex items-center justify-between rounded-xl p-4 shadow-sm border border-[var(--border-subtle)] hover:border-[var(--warning)]/50 transition-all duration-200"
+                    style={{ background: 'var(--bg-card)' }}
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-gradient-to-br from-orange-400 to-amber-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                      <div className="w-10 h-10 bg-gradient-to-br from-[var(--warning)] to-[var(--warning-light)] rounded-full flex items-center justify-center text-white font-bold text-sm shadow-md">
                         {member.charAt(0).toUpperCase()}
                       </div>
                       <div>
-                        <p className="text-gray-900 font-medium">{member}</p>
-                        <p className="text-gray-500 text-xs">Team Member</p>
+                        <p className="text-white font-medium">{member}</p>
+                        <p className="text-[var(--text-tertiary)] text-xs">Team Member</p>
                       </div>
                     </div>
                     <button
                       onClick={() => handleCopyAllMemberEmail(member, index)}
                       className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${copiedAllMemberEmail === index
-                        ? 'bg-green-500 text-white'
-                        : 'bg-orange-100 hover:bg-orange-200 text-orange-700'
+                        ? 'bg-[var(--success)] text-white'
+                        : 'bg-[var(--bg-surface)] hover:bg-[var(--bg-hover)] text-[var(--text-secondary)]'
                         }`}
                       title="Copy email"
                     >
@@ -491,21 +485,21 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
 
           {/* Members Section */}
           {isExpanded && (
-            <div className="p-8 border-t-2 border-gray-200">
+            <div className="p-8 border-t border-[var(--border-subtle)] bg-[var(--bg-surface)]/50">
               <div className="flex items-center justify-between mb-6">
-                <h4 className="text-xl font-bold text-gray-900">Team Members</h4>
+                <h4 className="text-xl font-bold text-white">Team Members</h4>
                 <div className="flex items-center gap-3">
                   <div className={`px-3 py-1 rounded-full text-sm font-medium ${team.isActive
-                    ? 'bg-blue-100 text-blue-700'
-                    : 'bg-red-100 text-red-700'
+                    ? 'bg-[var(--info-bg)] text-[var(--accent-blue-light)]'
+                    : 'bg-[var(--error-bg)] text-[var(--error-light)]'
                     }`}>
                     {team.members.length} {team.members.length === 1 ? 'member' : 'members'}
                   </div>
                   <button
                     onClick={handleAddMemberClick}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 ${team.isActive
-                      ? 'bg-green-500 hover:bg-green-600 text-white shadow-lg shadow-green-500/25'
-                      : 'bg-red-500 hover:bg-red-600 text-white shadow-lg shadow-red-500/25'
+                    className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 hover:shadow-lg ${team.isActive
+                      ? 'bg-[var(--success)] hover:bg-[var(--success-light)] text-white'
+                      : 'bg-[var(--error)] hover:bg-[var(--error-light)] text-white'
                       }`}
                   >
                     <FaPlus className="text-xs" />
@@ -522,13 +516,13 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
                     return (
                       <div
                         key={`${team._id}-${index}-${member}`}
-                        className={`transform transition-all duration-500 ${isNewlyAdded ? 'animate-pulse ring-2 ring-green-400 ring-offset-2 rounded-xl scale-105' : ''}`}
+                        className={`transform transition-all duration-500 ${isNewlyAdded ? 'animate-pulse ring-2 ring-[var(--success)] ring-offset-2 ring-offset-[var(--bg-deepest)] rounded-xl scale-105' : ''}`}
                         style={{ animationDelay: `${index * 50}ms` }}
                       >
                         {/* Newly added indicator */}
                         {isNewlyAdded && (
                           <div className="mb-2 flex items-center gap-2">
-                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-green-500 text-white animate-bounce">
+                            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-[var(--success)] text-white animate-bounce">
                               ✓ New! Just Added
                             </span>
                           </div>
@@ -546,15 +540,15 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
                 </div>
               ) : (
                 <div className="text-center py-12">
-                  <div className="bg-gray-100 rounded-3xl p-8 max-w-sm mx-auto">
-                    <FaUserFriends className="w-16 h-16 mx-auto mb-4 text-gray-400" />
-                    <h4 className="text-lg font-semibold text-gray-900 mb-2">No Team Members</h4>
-                    <p className="text-gray-600 mb-6">Get started by adding your first team member</p>
+                  <div className="bg-[var(--bg-surface)] rounded-3xl p-8 max-w-sm mx-auto border border-[var(--border-subtle)] border-dashed">
+                    <FaUserFriends className="w-16 h-16 mx-auto mb-4 text-[var(--text-muted)]" />
+                    <h4 className="text-lg font-semibold text-white mb-2">No Team Members</h4>
+                    <p className="text-[var(--text-tertiary)] mb-6">Get started by adding your first team member</p>
                     <button
                       onClick={handleAddMemberClick}
                       className={`flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold transition-all duration-200 hover:scale-105 mx-auto ${team.isActive
-                        ? 'bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-lg shadow-green-500/25'
-                        : 'bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white shadow-lg shadow-red-500/25'
+                        ? 'bg-gradient-to-r from-[var(--success)] to-[var(--success-light)] text-white shadow-lg shadow-green-900/20'
+                        : 'bg-gradient-to-r from-[var(--error)] to-[var(--error-light)] text-white shadow-lg shadow-red-900/20'
                         }`}
                     >
                       <FaUserPlus className="text-sm" />
@@ -569,13 +563,12 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
 
         {/* Hover Glow Effect */}
         <div className={`absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10 blur-xl ${team.isActive
-          ? 'bg-gradient-to-br from-blue-400/20 to-purple-400/20'
-          : 'bg-gradient-to-br from-red-400/20 to-red-600/20'
+          ? 'bg-[var(--accent-purple)]/20'
+          : 'bg-[var(--error)]/20'
           }`}></div>
       </div >
 
       {/* Add Members Modal */}
-      {/* Invite Member Modal */}
       <InviteMemberModal
         isOpen={showInviteModal}
         onClose={() => setShowInviteModal(false)}
@@ -593,10 +586,12 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
 
       {
         showAddModal && (
-          <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-hidden">
+          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
+            <div className="rounded-3xl shadow-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-hidden animate-scale-in"
+              style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)' }}>
               {/* Modal Header */}
-              <div className="bg-gradient-to-r from-green-600 to-blue-600 p-8 text-white relative overflow-hidden">
+              <div className="p-8 text-white relative overflow-hidden"
+                style={{ background: 'linear-gradient(135deg, var(--accent-purple) 0%, var(--accent-blue) 100%)' }}>
                 <div className="absolute inset-0 opacity-10">
                   <div className="absolute top-0 right-0 w-32 h-32 bg-white rounded-full -translate-y-16 translate-x-16"></div>
                   <div className="absolute bottom-0 left-0 w-24 h-24 bg-white rounded-full translate-y-12 -translate-x-12"></div>
@@ -622,10 +617,10 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
               </div>
 
               {/* Modal Body */}
-              <div className="p-8 max-h-[60vh] overflow-y-auto">
+              <div className="p-8 max-h-[60vh] overflow-y-auto custom-scrollbar">
                 {/* Reference Selection */}
                 <div className="mb-6">
-                  <label className="block text-sm font-bold text-gray-900 mb-3">
+                  <label className="block text-sm font-bold text-[var(--text-secondary)] mb-3">
                     Select Reference (Optional)
                   </label>
                   <select
@@ -633,7 +628,12 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
                     id="reference"
                     value={selectedReference}
                     onChange={(e) => setSelectedReference(e.target.value)}
-                    className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50 font-medium transition-all duration-200"
+                    className="w-full px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--accent-purple)] transition-all duration-200"
+                    style={{
+                      background: 'var(--bg-surface)',
+                      border: '1px solid var(--border-subtle)',
+                      color: 'var(--text-primary)'
+                    }}
                   >
                     <option value="">Select Reference</option>
                     {references.map((reference) => (
@@ -644,17 +644,22 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
 
                 {/* Email Input */}
                 <div className="mb-6">
-                  <label className="block text-sm font-bold text-gray-900 mb-3">
+                  <label className="block text-sm font-bold text-[var(--text-secondary)] mb-3">
                     Member Email Addresses
                   </label>
                   <textarea
                     value={emailsText}
                     onChange={(e) => setEmailsText(e.target.value)}
                     placeholder="Enter email addresses (one per line or separated by commas):&#10;&#10;john@example.com&#10;jane@example.com&#10;admin@company.com"
-                    className="w-full h-40 px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-gray-50 resize-none font-medium transition-all duration-200"
+                    className="w-full h-40 px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--accent-purple)] resize-none font-medium transition-all duration-200"
+                    style={{
+                      background: 'var(--bg-surface)',
+                      border: '1px solid var(--border-subtle)',
+                      color: 'var(--text-primary)'
+                    }}
                     rows={8}
                   />
-                  <p className="text-sm text-gray-600 mt-3 font-medium">
+                  <p className="text-sm mt-3 font-medium text-[var(--text-tertiary)]">
                     You can enter multiple emails separated by commas, semicolons, spaces, or on separate lines.
                   </p>
                 </div>
@@ -662,15 +667,17 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
                 {/* Email Preview */}
                 {emailsText.trim() && (
                   <div className="mb-6">
-                    <h4 className="text-sm font-bold text-gray-900 mb-3">
+                    <h4 className="text-sm font-bold text-white mb-3">
                       Email Preview ({validateAndParseEmails(emailsText).validEmails.length} valid emails)
                     </h4>
-                    <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-2xl p-4 border border-green-200">
+                    <div className="rounded-2xl p-4 border border-[var(--border-subtle)]"
+                      style={{ background: 'var(--bg-surface)' }}>
                       <div className="flex flex-wrap gap-2">
                         {validateAndParseEmails(emailsText).validEmails.map((email, index) => (
                           <span
                             key={index}
-                            className="inline-flex items-center px-3 py-2 rounded-xl text-sm font-bold bg-gradient-to-r from-green-500 to-green-600 text-white shadow-sm"
+                            className="inline-flex items-center px-3 py-2 rounded-xl text-sm font-bold text-white shadow-sm"
+                            style={{ background: 'linear-gradient(135deg, var(--accent-purple) 0%, var(--accent-blue) 100%)' }}
                           >
                             {email}
                           </span>
@@ -682,14 +689,15 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
 
                 {/* Errors */}
                 {emailErrors.length > 0 && (
-                  <div className="mb-6 p-4 bg-gradient-to-r from-red-50 to-red-100 border-2 border-red-200 rounded-2xl">
-                    <h4 className="text-sm font-bold text-red-800 mb-3">
+                  <div className="mb-6 p-4 border rounded-2xl"
+                    style={{ background: 'var(--error-bg)', borderColor: 'var(--error)' }}>
+                    <h4 className="text-sm font-bold text-[var(--error-light)] mb-3">
                       Please fix the following errors:
                     </h4>
-                    <ul className="text-sm text-red-700 space-y-2">
+                    <ul className="text-sm text-[var(--error-light)] space-y-2">
                       {emailErrors.map((error, index) => (
                         <li key={index} className="flex items-start gap-2 font-medium">
-                          <span className="text-red-500 mt-0.5 font-bold">•</span>
+                          <span className="text-[var(--error)] mt-0.5 font-bold">•</span>
                           {error}
                         </li>
                       ))}
@@ -699,18 +707,30 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
               </div>
 
               {/* Modal Footer */}
-              <div className="flex items-center justify-end gap-4 p-8 border-t border-gray-200 bg-gray-50">
+              <div className="flex items-center justify-end gap-4 p-8 border-t"
+                style={{
+                  borderColor: 'var(--border-subtle)',
+                  background: 'var(--bg-elevated)'
+                }}>
                 <button
                   onClick={handleCloseAddModal}
                   disabled={isAdding}
-                  className="px-6 py-3 text-sm font-bold text-gray-700 bg-white border-2 border-gray-300 rounded-xl hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                  className="px-6 py-3 text-sm font-bold rounded-xl hover:bg-[var(--bg-hover)] focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                  style={{
+                    color: 'var(--text-secondary)',
+                    border: '1px solid var(--border-subtle)',
+                    background: 'var(--bg-card)'
+                  }}
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleAddMembers}
                   disabled={isAdding || !emailsText.trim() || validateAndParseEmails(emailsText).validEmails.length === 0}
-                  className="px-6 py-3 text-sm font-bold text-white bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center gap-2 min-w-[180px] justify-center shadow-lg shadow-green-500/25"
+                  className="px-6 py-3 text-sm font-bold text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--success)]/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center gap-2 min-w-[180px] justify-center shadow-lg hover:shadow-xl"
+                  style={{
+                    background: 'linear-gradient(135deg, var(--success) 0%, var(--success-light) 100%)',
+                  }}
                 >
                   {isAdding ? (
                     <>
@@ -733,4 +753,4 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
   );
 };
 
-export default TeamCard
+export default TeamCard;

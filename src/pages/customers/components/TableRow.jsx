@@ -9,23 +9,23 @@ const TableRow = ({ item, index, formatDate, onViewDetails, onDelete }) => {
         switch (status) {
             case 'paid':
                 return {
-                    bg: 'bg-green-50',
-                    text: 'text-green-700',
-                    border: 'border-green-200',
+                    bg: 'rgba(16, 185, 129, 0.15)',
+                    text: 'var(--success-light)',
+                    border: 'rgba(16, 185, 129, 0.3)',
                     icon: FaCheckCircle
                 };
             case 'pending':
                 return {
-                    bg: 'bg-yellow-50',
-                    text: 'text-yellow-700',
-                    border: 'border-yellow-200',
+                    bg: 'rgba(245, 158, 11, 0.15)',
+                    text: 'var(--warning-light)',
+                    border: 'rgba(245, 158, 11, 0.3)',
                     icon: FaClock
                 };
             default:
                 return {
-                    bg: 'bg-gray-50',
-                    text: 'text-gray-700',
-                    border: 'border-gray-200',
+                    bg: 'var(--bg-surface)',
+                    text: 'var(--text-tertiary)',
+                    border: 'var(--border-subtle)',
                     icon: FaExclamationTriangle
                 };
         }
@@ -41,8 +41,7 @@ const TableRow = ({ item, index, formatDate, onViewDetails, onDelete }) => {
             await navigator.clipboard.writeText(email);
             setCopiedEmail(true);
             toast.success(`Email copied: ${email}`);
-            
-            // Reset the copied state after 2 seconds
+
             setTimeout(() => {
                 setCopiedEmail(false);
             }, 2000);
@@ -55,54 +54,87 @@ const TableRow = ({ item, index, formatDate, onViewDetails, onDelete }) => {
     const statusConfig = getStatusConfig(item.paymentStatus);
     const StatusIcon = statusConfig.icon;
 
+    // Get gradient colors based on index
+    const avatarGradients = [
+        'linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)',
+        'linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)',
+        'linear-gradient(135deg, #06b6d4 0%, #0891b2 100%)',
+        'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+    ];
+
     return (
-        <tr className={`group hover:bg-blue-50/50 transition-all duration-200 ${
-            index % 2 === 0 ? 'bg-white' : 'bg-gray-50/30'
-        }`}>
+        <tr
+            className="group transition-all duration-200 border-b"
+            style={{
+                background: index % 2 === 0 ? 'var(--bg-card)' : 'var(--bg-surface)',
+                borderColor: 'var(--border-subtle)',
+            }}
+            onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'var(--bg-hover)';
+            }}
+            onMouseLeave={(e) => {
+                e.currentTarget.style.background = index % 2 === 0 ? 'var(--bg-card)' : 'var(--bg-surface)';
+            }}
+        >
             <td className="px-6 py-4 whitespace-nowrap">
                 <div className="flex items-center">
                     <div className="flex-shrink-0 h-10 w-10">
-                        <div className="h-10 w-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-sm">
+                        <div
+                            className="h-10 w-10 rounded-xl flex items-center justify-center shadow-lg"
+                            style={{ background: avatarGradients[index % 4] }}
+                        >
                             <span className="text-sm font-semibold text-white">
                                 {item.customerName?.charAt(0)?.toUpperCase() || 'U'}
                             </span>
                         </div>
                     </div>
                     <div className="ml-4">
-                        <div className="text-sm font-semibold text-gray-900 group-hover:text-blue-800 transition-colors">
+                        <div className="text-sm font-semibold text-white group-hover:text-[var(--accent-purple-light)] transition-colors">
                             {item.customerName}
                         </div>
-                        <div className="text-xs text-gray-500 capitalize">
+                        <div className="text-xs text-[var(--text-muted)] capitalize">
                             {item.orderFrom} Customer
                         </div>
                     </div>
                 </div>
             </td>
-            
+
             <td className="px-6 py-4 whitespace-nowrap hidden md:table-cell">
                 <div className="flex items-center gap-2">
                     <div className="flex-1">
-                        <div className="text-sm text-gray-900 font-medium truncate max-w-[200px]">
+                        <div className="text-sm text-white font-medium truncate max-w-[200px]">
                             {item.email}
                         </div>
-                        <div className="text-xs text-gray-500">
+                        <div className="text-xs text-[var(--text-muted)]">
                             {item.waOrFbId ? `ID: ${item.waOrFbId}` : 'No ID provided'}
                         </div>
                     </div>
                     {item.email && (
                         <button
                             onClick={() => handleCopyEmail(item.email)}
-                            className={`group/copy p-2 rounded-lg transition-all duration-200 ${
-                                copiedEmail 
-                                    ? 'bg-green-100 text-green-600' 
-                                    : 'bg-gray-100 hover:bg-blue-100 text-gray-500 hover:text-blue-600'
-                            }`}
+                            className="p-2 rounded-lg transition-all duration-200"
+                            style={{
+                                background: copiedEmail ? 'rgba(16, 185, 129, 0.15)' : 'var(--bg-surface)',
+                                color: copiedEmail ? 'var(--success)' : 'var(--text-muted)',
+                            }}
+                            onMouseEnter={(e) => {
+                                if (!copiedEmail) {
+                                    e.currentTarget.style.background = 'rgba(139, 92, 246, 0.15)';
+                                    e.currentTarget.style.color = 'var(--accent-purple)';
+                                }
+                            }}
+                            onMouseLeave={(e) => {
+                                if (!copiedEmail) {
+                                    e.currentTarget.style.background = 'var(--bg-surface)';
+                                    e.currentTarget.style.color = 'var(--text-muted)';
+                                }
+                            }}
                             title={copiedEmail ? 'Email copied!' : 'Copy email address'}
                         >
                             {copiedEmail ? (
                                 <FaCheck className="w-3 h-3" />
                             ) : (
-                                <FaCopy className="w-3 h-3 group-hover/copy:scale-110 transition-transform duration-200" />
+                                <FaCopy className="w-3 h-3" />
                             )}
                         </button>
                     )}
@@ -111,10 +143,10 @@ const TableRow = ({ item, index, formatDate, onViewDetails, onDelete }) => {
 
             <td className="px-6 py-4 whitespace-nowrap hidden md:table-cell">
                 <div className="flex flex-col">
-                    <span className="text-sm font-semibold text-gray-900">
+                    <span className="text-sm font-semibold text-white">
                         {formatDate(item.subscriptionEnd)}
                     </span>
-                    <span className="text-xs text-gray-500">
+                    <span className="text-xs text-[var(--text-muted)]">
                         Subscription End
                     </span>
                 </div>
@@ -122,8 +154,20 @@ const TableRow = ({ item, index, formatDate, onViewDetails, onDelete }) => {
 
             <td className="px-6 py-4 whitespace-nowrap hidden md:table-cell">
                 <div className="flex items-center">
-                    <div className="w-2 h-2 bg-green-400 rounded-full mr-2"></div>
-                    <span className="text-sm font-mono text-gray-900 bg-gray-100 px-2 py-1 rounded-md text-xs">
+                    <div
+                        className="w-2 h-2 rounded-full mr-2"
+                        style={{
+                            background: 'var(--success)',
+                            boxShadow: '0 0 6px var(--success)',
+                        }}
+                    />
+                    <span
+                        className="text-sm font-mono px-3 py-1.5 rounded-lg text-xs"
+                        style={{
+                            background: 'var(--bg-surface)',
+                            color: 'var(--accent-cyan-light)',
+                        }}
+                    >
                         {item.gptAccount || 'Not assigned'}
                     </span>
                 </div>
@@ -131,22 +175,29 @@ const TableRow = ({ item, index, formatDate, onViewDetails, onDelete }) => {
 
             <td className="px-6 py-4 whitespace-nowrap hidden md:table-cell">
                 <div className="flex flex-col">
-                    <span className="text-sm font-medium text-gray-900">
+                    <span className="text-sm font-medium text-white">
                         {formatDate(item.orderDate)}
                     </span>
-                    <span className="text-xs text-gray-500">
+                    <span className="text-xs text-[var(--text-muted)]">
                         Order Date
                     </span>
                 </div>
             </td>
 
             <td className="px-6 py-4 whitespace-nowrap hidden md:table-cell">
-                <div className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold border ${statusConfig.bg} ${statusConfig.text} ${statusConfig.border}`}>
+                <div
+                    className="inline-flex items-center px-3 py-1.5 rounded-full text-xs font-semibold"
+                    style={{
+                        background: statusConfig.bg,
+                        color: statusConfig.text,
+                        border: `1px solid ${statusConfig.border}`,
+                    }}
+                >
                     <StatusIcon className="w-3 h-3 mr-1.5" />
                     <span className="capitalize">{item.paymentStatus}</span>
                 </div>
                 {item.paidAmount && (
-                    <div className="text-xs text-gray-500 mt-1">
+                    <div className="text-xs text-[var(--text-muted)] mt-1">
                         ${item.paidAmount}
                     </div>
                 )}
@@ -156,18 +207,44 @@ const TableRow = ({ item, index, formatDate, onViewDetails, onDelete }) => {
                 <div className="flex items-center space-x-2">
                     <button
                         onClick={() => onViewDetails(item)}
-                        className="group/btn inline-flex items-center gap-2 px-3 py-2 text-xs font-medium text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 hover:border-blue-300 rounded-lg transition-all duration-200 hover:shadow-md transform hover:-translate-y-0.5"
+                        className="inline-flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-lg transition-all duration-200 transform hover:-translate-y-0.5"
+                        style={{
+                            background: 'rgba(59, 130, 246, 0.15)',
+                            color: 'var(--accent-blue-light)',
+                            border: '1px solid rgba(59, 130, 246, 0.3)',
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.background = 'rgba(59, 130, 246, 0.25)';
+                            e.currentTarget.style.boxShadow = '0 4px 12px rgba(59, 130, 246, 0.3)';
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.background = 'rgba(59, 130, 246, 0.15)';
+                            e.currentTarget.style.boxShadow = 'none';
+                        }}
                         title="View Details"
                     >
-                        <FaEye className="w-3 h-3 group-hover/btn:scale-110 transition-transform" />
+                        <FaEye className="w-3 h-3" />
                         <span className="hidden sm:inline">View</span>
                     </button>
                     <button
                         onClick={() => onDelete(item)}
-                        className="group/btn inline-flex items-center gap-2 px-3 py-2 text-xs font-medium text-red-700 bg-red-50 hover:bg-red-100 border border-red-200 hover:border-red-300 rounded-lg transition-all duration-200 hover:shadow-md transform hover:-translate-y-0.5"
+                        className="inline-flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-lg transition-all duration-200 transform hover:-translate-y-0.5"
+                        style={{
+                            background: 'rgba(239, 68, 68, 0.15)',
+                            color: 'var(--error-light)',
+                            border: '1px solid rgba(239, 68, 68, 0.3)',
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.background = 'rgba(239, 68, 68, 0.25)';
+                            e.currentTarget.style.boxShadow = '0 4px 12px rgba(239, 68, 68, 0.3)';
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.background = 'rgba(239, 68, 68, 0.15)';
+                            e.currentTarget.style.boxShadow = 'none';
+                        }}
                         title="Delete Customer"
                     >
-                        <FaTrash className="w-3 h-3 group-hover/btn:scale-110 transition-transform" />
+                        <FaTrash className="w-3 h-3" />
                         <span className="hidden sm:inline">Delete</span>
                     </button>
                 </div>
@@ -176,4 +253,4 @@ const TableRow = ({ item, index, formatDate, onViewDetails, onDelete }) => {
     );
 };
 
-export default TableRow; 
+export default TableRow;

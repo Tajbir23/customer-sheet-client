@@ -9,33 +9,25 @@ const TeamStats = ({ totalCount }) => {
       title: 'Total Teams',
       value: totalTeams,
       icon: FaUsers,
-      color: 'from-blue-500 to-blue-600',
-      bgColor: 'from-blue-50 to-blue-100',
-      textColor: 'text-blue-700'
+      gradient: 'linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%)',
     },
     {
       title: 'Active Teams',
       value: totalActiveTeams,
       icon: FaCheckCircle,
-      color: 'from-green-500 to-green-600',
-      bgColor: 'from-green-50 to-green-100',
-      textColor: 'text-green-700'
+      gradient: 'linear-gradient(135deg, #10b981 0%, #34d399 100%)',
     },
     {
       title: 'Inactive Teams',
       value: totalInactiveTeams,
       icon: FaTimesCircle,
-      color: 'from-red-500 to-red-600',
-      bgColor: 'from-red-50 to-red-100',
-      textColor: 'text-red-700'
+      gradient: 'linear-gradient(135deg, #ef4444 0%, #f87171 100%)',
     },
     {
       title: 'Total Members',
       value: totalMembers,
       icon: FaEnvelope,
-      color: 'from-purple-500 to-purple-600',
-      bgColor: 'from-purple-50 to-purple-100',
-      textColor: 'text-purple-700'
+      gradient: 'linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%)',
     }
   ]
 
@@ -46,48 +38,72 @@ const TeamStats = ({ totalCount }) => {
       {stats.map((stat, index) => (
         <div
           key={index}
-          className="group relative overflow-hidden"
+          className="group relative overflow-hidden animate-fade-in-up"
+          style={{ animationDelay: `${index * 50}ms` }}
         >
           {/* Card */}
-          <div className={`relative bg-gradient-to-br ${stat.bgColor} rounded-2xl p-6 border border-gray-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105`}>
-            {/* Background Pattern */}
-            <div className="absolute inset-0 opacity-10">
-              <div className="absolute top-0 right-0 w-20 h-20 bg-current rounded-full -translate-y-10 translate-x-10"></div>
-              <div className="absolute bottom-0 left-0 w-16 h-16 bg-current rounded-full translate-y-8 -translate-x-8"></div>
-            </div>
+          <div
+            className="relative rounded-2xl p-6 transition-all duration-300 hover:scale-[1.02]"
+            style={{
+              background: 'linear-gradient(145deg, var(--bg-card) 0%, var(--bg-surface) 100%)',
+              border: '1px solid var(--border-subtle)',
+            }}
+          >
+            {/* Glow Effect on Hover */}
+            <div
+              className="absolute -inset-0.5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 blur-sm"
+              style={{ background: stat.gradient }}
+            />
 
             <div className="relative z-10">
               <div className="flex items-center justify-between mb-4">
-                <div className={`p-3 bg-gradient-to-r ${stat.color} rounded-xl shadow-lg`}>
+                <div
+                  className="p-3 rounded-xl shadow-lg transition-transform duration-300 group-hover:scale-110"
+                  style={{ background: stat.gradient }}
+                >
                   <stat.icon className="text-white text-xl" />
                 </div>
                 <div className="text-right">
-                  <div className={`text-3xl font-bold ${stat.textColor}`}>
+                  <div
+                    className="text-3xl font-bold"
+                    style={{
+                      background: stat.gradient,
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      backgroundClip: 'text',
+                    }}
+                  >
                     {stat.value}
                   </div>
                 </div>
               </div>
 
               <div>
-                <h3 className={`text-sm font-bold ${stat.textColor} mb-1`}>
+                <h3 className="text-sm font-bold text-white mb-2">
                   {stat.title}
                 </h3>
                 <div className="flex items-center gap-2">
-                  <div className={`h-2 flex-1 bg-gradient-to-r ${stat.color} rounded-full opacity-20`}></div>
-                  <span className="text-xs font-medium text-gray-600">
+                  <div
+                    className="h-1.5 flex-1 rounded-full opacity-20"
+                    style={{ background: stat.gradient }}
+                  />
+                  <span className="text-xs font-medium text-[var(--text-tertiary)]">
                     {totalTeams > 0 ? Math.round((stat.value / totalTeams) * 100) : 0}%
                   </span>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Hover Glow Effect */}
-          <div className={`absolute inset-0 rounded-2xl bg-gradient-to-r ${stat.color} opacity-0 group-hover:opacity-20 transition-opacity duration-300 -z-10 blur-xl`}></div>
+            {/* Bottom Gradient Line */}
+            <div
+              className="absolute bottom-0 left-0 right-0 h-1 rounded-b-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+              style={{ background: stat.gradient }}
+            />
+          </div>
         </div>
       ))}
     </div>
   )
 }
 
-export default TeamStats 
+export default TeamStats

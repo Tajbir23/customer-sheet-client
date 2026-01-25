@@ -23,9 +23,20 @@ const SearchSection = ({
   const hasFilters = searchValue || endDate || orderDate;
 
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm mb-8 overflow-hidden">
+    <div
+      className="rounded-2xl mb-8 overflow-hidden animate-fade-in-up"
+      style={{
+        background: 'linear-gradient(145deg, var(--bg-card) 0%, var(--bg-surface) 100%)',
+        border: '1px solid var(--border-subtle)',
+      }}
+    >
       {/* Header */}
-      <div className="bg-gradient-to-r from-orange-500 to-red-500 px-6 py-4">
+      <div
+        className="px-6 py-4"
+        style={{
+          background: 'linear-gradient(135deg, #f59e0b 0%, #ef4444 100%)',
+        }}
+      >
         <div className="flex items-center justify-between">
           <h3 className="font-bold text-white flex items-center gap-2">
             <FaSearch className="w-4 h-4" />
@@ -43,9 +54,9 @@ const SearchSection = ({
       <div className="p-6">
         <div className="space-y-4">
           {/* Main Search Input */}
-          <div className="relative">
+          <div className="relative group">
             <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-              <FaSearch className="h-5 w-5 text-gray-400" />
+              <FaSearch className="h-5 w-5 text-[var(--text-muted)] group-focus-within:text-[var(--accent-purple)] transition-colors" />
             </div>
             <input
               type="text"
@@ -53,12 +64,24 @@ const SearchSection = ({
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-              className="w-full pl-12 pr-12 py-4 text-lg border-2 border-gray-200 rounded-xl focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 transition-all duration-200 placeholder-gray-400"
+              className="w-full pl-12 pr-12 py-4 text-lg rounded-xl text-white placeholder-[var(--text-muted)] transition-all duration-300"
+              style={{
+                background: 'var(--bg-surface)',
+                border: '1px solid var(--border-subtle)',
+              }}
+              onFocus={(e) => {
+                e.target.style.borderColor = 'var(--accent-purple)';
+                e.target.style.boxShadow = '0 0 0 3px rgba(139, 92, 246, 0.15)';
+              }}
+              onBlur={(e) => {
+                e.target.style.borderColor = 'var(--border-subtle)';
+                e.target.style.boxShadow = 'none';
+              }}
             />
             {searchValue && (
               <button
                 onClick={() => setSearchValue("")}
-                className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
+                className="absolute inset-y-0 right-0 pr-4 flex items-center text-[var(--text-muted)] hover:text-white transition-colors"
               >
                 <FaTimes className="h-5 w-5" />
               </button>
@@ -69,29 +92,55 @@ const SearchSection = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* End Date Filter */}
             <div className="relative">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                <FaCalendarAlt className="inline w-4 h-4 mr-2 text-red-500" />
+              <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">
+                <FaCalendarAlt className="inline w-4 h-4 mr-2 text-[var(--error)]" />
                 Subscription End Date (before)
               </label>
               <input
                 type="date"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 transition-all duration-200"
+                className="w-full px-4 py-3 rounded-xl text-white transition-all duration-300"
+                style={{
+                  background: 'var(--bg-surface)',
+                  border: '1px solid var(--border-subtle)',
+                  colorScheme: 'dark',
+                }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = 'var(--accent-purple)';
+                  e.target.style.boxShadow = '0 0 0 3px rgba(139, 92, 246, 0.15)';
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = 'var(--border-subtle)';
+                  e.target.style.boxShadow = 'none';
+                }}
               />
             </div>
 
             {/* Order Date Filter */}
             <div className="relative">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                <FaCalendarAlt className="inline w-4 h-4 mr-2 text-purple-500" />
+              <label className="block text-sm font-medium text-[var(--text-secondary)] mb-2">
+                <FaCalendarAlt className="inline w-4 h-4 mr-2 text-[var(--accent-purple)]" />
                 Order Date (before)
               </label>
               <input
                 type="date"
                 value={orderDate}
                 onChange={(e) => setOrderDate(e.target.value)}
-                className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10 transition-all duration-200"
+                className="w-full px-4 py-3 rounded-xl text-white transition-all duration-300"
+                style={{
+                  background: 'var(--bg-surface)',
+                  border: '1px solid var(--border-subtle)',
+                  colorScheme: 'dark',
+                }}
+                onFocus={(e) => {
+                  e.target.style.borderColor = 'var(--accent-purple)';
+                  e.target.style.boxShadow = '0 0 0 3px rgba(139, 92, 246, 0.15)';
+                }}
+                onBlur={(e) => {
+                  e.target.style.borderColor = 'var(--border-subtle)';
+                  e.target.style.boxShadow = 'none';
+                }}
               />
             </div>
           </div>
@@ -101,10 +150,25 @@ const SearchSection = ({
             <button
               onClick={handleSearch}
               disabled={isSearching}
-              className={`inline-flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all duration-200 ${isSearching
-                  ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                  : "bg-gradient-to-r from-orange-500 to-red-500 text-white hover:from-orange-600 hover:to-red-600 hover:shadow-lg transform hover:-translate-y-0.5"
-                }`}
+              className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all duration-300 text-white"
+              style={{
+                background: isSearching
+                  ? 'var(--bg-surface)'
+                  : 'linear-gradient(135deg, #f59e0b 0%, #ef4444 100%)',
+                color: isSearching ? 'var(--text-muted)' : 'white',
+                boxShadow: isSearching ? 'none' : '0 8px 20px -8px rgba(239, 68, 68, 0.5)',
+                cursor: isSearching ? 'not-allowed' : 'pointer',
+              }}
+              onMouseEnter={(e) => {
+                if (!isSearching) {
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.boxShadow = '0 12px 25px -8px rgba(239, 68, 68, 0.6)';
+                }
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = isSearching ? 'none' : '0 8px 20px -8px rgba(239, 68, 68, 0.5)';
+              }}
             >
               <FaSearch className="w-4 h-4" />
               {isSearching ? "Searching..." : "Search"}
@@ -113,7 +177,20 @@ const SearchSection = ({
             {hasFilters && (
               <button
                 onClick={handleClear}
-                className="inline-flex items-center gap-2 px-6 py-3 bg-gray-100 text-gray-700 rounded-xl font-medium hover:bg-gray-200 transition-all duration-200"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-medium transition-all duration-300"
+                style={{
+                  background: 'var(--bg-surface)',
+                  border: '1px solid var(--border-subtle)',
+                  color: 'var(--text-secondary)',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.background = 'var(--bg-hover)';
+                  e.currentTarget.style.color = 'white';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.background = 'var(--bg-surface)';
+                  e.currentTarget.style.color = 'var(--text-secondary)';
+                }}
               >
                 <FaTimes className="w-4 h-4" />
                 Clear All
@@ -125,25 +202,46 @@ const SearchSection = ({
           {hasFilters && (
             <div className="flex flex-wrap gap-2 pt-2">
               {searchValue && (
-                <span className="inline-flex items-center gap-1 px-3 py-1 bg-orange-100 text-orange-700 rounded-full text-sm font-medium">
+                <span
+                  className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium"
+                  style={{
+                    background: 'rgba(245, 158, 11, 0.15)',
+                    color: '#fbbf24',
+                    border: '1px solid rgba(245, 158, 11, 0.3)',
+                  }}
+                >
                   Search: "{searchValue}"
-                  <button onClick={() => setSearchValue("")} className="ml-1 hover:text-orange-900">
+                  <button onClick={() => setSearchValue("")} className="ml-1 hover:text-white transition-colors">
                     <FaTimes className="w-3 h-3" />
                   </button>
                 </span>
               )}
               {endDate && (
-                <span className="inline-flex items-center gap-1 px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium">
+                <span
+                  className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium"
+                  style={{
+                    background: 'rgba(239, 68, 68, 0.15)',
+                    color: '#f87171',
+                    border: '1px solid rgba(239, 68, 68, 0.3)',
+                  }}
+                >
                   End Date: ≤ {endDate}
-                  <button onClick={() => setEndDate("")} className="ml-1 hover:text-red-900">
+                  <button onClick={() => setEndDate("")} className="ml-1 hover:text-white transition-colors">
                     <FaTimes className="w-3 h-3" />
                   </button>
                 </span>
               )}
               {orderDate && (
-                <span className="inline-flex items-center gap-1 px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm font-medium">
+                <span
+                  className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium"
+                  style={{
+                    background: 'rgba(139, 92, 246, 0.15)',
+                    color: '#a78bfa',
+                    border: '1px solid rgba(139, 92, 246, 0.3)',
+                  }}
+                >
                   Order Date: ≤ {orderDate}
-                  <button onClick={() => setOrderDate("")} className="ml-1 hover:text-purple-900">
+                  <button onClick={() => setOrderDate("")} className="ml-1 hover:text-white transition-colors">
                     <FaTimes className="w-3 h-3" />
                   </button>
                 </span>

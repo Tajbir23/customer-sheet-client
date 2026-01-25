@@ -14,47 +14,38 @@ const TableHeader = ({ sortConfig, onSort }) => {
 
     const getSortIcon = (key) => {
         if (!sortConfig || sortConfig.key !== key) {
-            return <FaSort className="ml-2 w-3 h-3 text-gray-400 group-hover:text-gray-600 transition-colors" />;
+            return <FaSort className="ml-2 w-3 h-3 text-[var(--text-muted)] group-hover:text-[var(--accent-purple)] transition-colors" />;
         }
-        return sortConfig.direction === 'asc' ? 
-            <FaSortUp className="ml-2 w-3 h-3 text-blue-600" /> : 
-            <FaSortDown className="ml-2 w-3 h-3 text-blue-600" />;
+        return sortConfig.direction === 'asc' ?
+            <FaSortUp className="ml-2 w-3 h-3 text-[var(--accent-purple)]" /> :
+            <FaSortDown className="ml-2 w-3 h-3 text-[var(--accent-purple)]" />;
     };
 
     return (
-        <thead className="bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
+        <thead className="bg-[var(--bg-surface)] border-b border-[var(--border-subtle)]">
             <tr>
                 {headers.map((header) => (
                     <th
                         key={header.key}
                         scope="col"
-                        className={`group px-6 py-4 text-left text-xs font-bold text-gray-700 uppercase tracking-wider whitespace-nowrap ${
-                            !header.showOnMobile ? 'hidden md:table-cell' : ''
-                        } ${
-                            header.sortable 
-                                ? 'cursor-pointer hover:bg-gray-100 hover:text-gray-900 transition-all duration-200 select-none' 
-                                : ''
-                        }`}
+                        className={`
+                            group px-6 py-4 text-left text-xs font-bold uppercase tracking-wider whitespace-nowrap text-[var(--text-tertiary)]
+                            ${!header.showOnMobile ? 'hidden md:table-cell' : ''} 
+                            ${header.sortable ? 'cursor-pointer hover:bg-[var(--bg-hover)] transition-all duration-200 select-none' : ''}
+                        `}
                         onClick={() => header.sortable && onSort(header.key)}
                     >
-                        <div className="flex items-center justify-between">
-                            <div className="flex items-center">
-                                <span className="font-semibold">{header.label}</span>
-                                {header.sortable && getSortIcon(header.key)}
-                            </div>
-                            {header.sortable && (
-                                <div className="opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                                    <div className="w-1 h-4 bg-blue-500 rounded-full transform scale-y-0 group-hover:scale-y-100 transition-transform duration-200"></div>
-                                </div>
+                        <div className="flex items-center">
+                            <span className={`font-semibold transition-colors duration-200 ${sortConfig?.key === header.key ? 'text-[var(--accent-purple-light)]' : ''}`}>
+                                {header.label}
+                            </span>
+                            {header.sortable && getSortIcon(header.key)}
+
+                            {/* Active Sort Indicator */}
+                            {header.sortable && sortConfig?.key === header.key && (
+                                <span className="ml-2 w-1.5 h-1.5 rounded-full animate-pulse bg-[var(--accent-purple)]" />
                             )}
                         </div>
-                        
-                        {/* Sort indicator badge */}
-                        {header.sortable && sortConfig?.key === header.key && (
-                            <div className="absolute -top-1 -right-1">
-                                <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-                            </div>
-                        )}
                     </th>
                 ))}
             </tr>
@@ -62,4 +53,4 @@ const TableHeader = ({ sortConfig, onSort }) => {
     );
 };
 
-export default TableHeader; 
+export default TableHeader;

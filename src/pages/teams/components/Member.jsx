@@ -1,12 +1,9 @@
 import React, { useState } from 'react'
 import { FaTrash, FaTimes, FaUser, FaEnvelope } from 'react-icons/fa'
 
-
 const Member = ({ index, team, member, onRemoveMember, isNewlyAdded = false }) => {
     const [showModal, setShowModal] = useState(false)
     const [isRemoving, setIsRemoving] = useState(false)
-
-
 
     const handleRemoveClick = () => {
         setShowModal(true)
@@ -42,7 +39,7 @@ const Member = ({ index, team, member, onRemoveMember, isNewlyAdded = false }) =
         }
         const colors = [
             'bg-blue-500', 'bg-green-500', 'bg-purple-500', 'bg-pink-500',
-            'bg-indigo-500', 'bg-yellow-500', 'bg-red-500', 'bg-teal-500'
+            'bg-indigo-500', 'bg-amber-500', 'bg-red-500', 'bg-teal-500'
         ]
         return colors[Math.abs(hash) % colors.length]
     }
@@ -50,18 +47,16 @@ const Member = ({ index, team, member, onRemoveMember, isNewlyAdded = false }) =
     return (
         <>
             <div className={`
-                relative p-4 rounded-lg border transition-all duration-300 group hover:shadow-md
+                relative p-4 rounded-xl border transition-all duration-300 group hover:scale-[1.01] hover:shadow-lg
                 ${isNewlyAdded
-                    ? 'bg-green-50 border-green-400 shadow-lg shadow-green-100'
-                    : team?.isActive
-                        ? 'bg-white border-gray-200 hover:bg-blue-50 hover:border-blue-200'
-                        : 'bg-white/95 border-white/50 hover:bg-white shadow-sm backdrop-blur-sm'
+                    ? 'bg-[var(--success-bg)] border-[var(--success)] shadow-[0_0_15px_rgba(16,185,129,0.1)]'
+                    : 'bg-[var(--bg-card)] border-[var(--border-subtle)] hover:border-[var(--accent-blue)] hover:bg-[var(--bg-elevated)]'
                 }
             `}>
                 <div className="flex items-center gap-3">
                     {/* Avatar */}
                     <div className={`
-                        relative w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-semibold
+                        relative w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold shadow-md
                         ${getAvatarColor(member)}
                         ${team?.isActive ? '' : 'opacity-75'}
                     `}>
@@ -69,19 +64,19 @@ const Member = ({ index, team, member, onRemoveMember, isNewlyAdded = false }) =
 
                         {/* Status Indicator */}
                         <div className={`
-                            absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-white dark:border-gray-700
-                            ${team?.isActive ? 'bg-green-500' : 'bg-red-500'}
+                            absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-[var(--bg-card)]
+                            ${team?.isActive ? 'bg-[var(--success)]' : 'bg-[var(--error)]'}
                         `} />
                     </div>
 
                     {/* Member Info */}
                     <div className="flex-grow min-w-0">
                         <div className="flex items-center gap-2 mb-1">
-                            <FaEnvelope className={`w-4 h-4 flex-shrink-0 ${team?.isActive
-                                    ? 'text-gray-400'
-                                    : 'text-gray-600'
+                            <FaEnvelope className={`w-3.5 h-3.5 flex-shrink-0 ${team?.isActive
+                                ? 'text-[var(--text-secondary)]'
+                                : 'text-[var(--text-tertiary)]'
                                 }`} />
-                            <span className="text-sm truncate font-semibold text-gray-900">
+                            <span className="text-sm truncate font-semibold text-white">
                                 {member}
                             </span>
                         </div>
@@ -89,13 +84,13 @@ const Member = ({ index, team, member, onRemoveMember, isNewlyAdded = false }) =
                         {/* Status Badge */}
                         <div className="flex items-center gap-2">
                             <span className={`
-                                inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold
+                                inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider
                                 ${team?.isActive
-                                    ? 'bg-green-100 text-green-800'
-                                    : 'bg-white text-red-700 shadow-sm'
+                                    ? 'bg-[var(--success-bg)] text-[var(--success-light)]'
+                                    : 'bg-[var(--error-bg)] text-[var(--error-light)]'
                                 }
                             `}>
-                                <div className={`w-2 h-2 rounded-full ${team?.isActive ? 'bg-green-500' : 'bg-red-500'
+                                <div className={`w-1.5 h-1.5 rounded-full ${team?.isActive ? 'bg-[var(--success)]' : 'bg-[var(--error)]'
                                     }`} />
                                 {team?.isActive ? 'Active' : 'Inactive'}
                             </span>
@@ -109,12 +104,9 @@ const Member = ({ index, team, member, onRemoveMember, isNewlyAdded = false }) =
                             onClick={handleRemoveClick}
                             className={`
                                 opacity-0 group-hover:opacity-100 transition-all duration-200 
-                                p-2 rounded-lg hover:scale-105 active:scale-95
-                                ${team?.isActive
-                                    ? 'hover:bg-red-100 dark:hover:bg-red-900/30 text-red-500 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300'
-                                    : 'hover:bg-red-200 dark:hover:bg-red-800/30 text-red-600 hover:text-red-800 dark:text-red-300 dark:hover:text-red-200'
-                                }
-                                focus:outline-none focus:opacity-100 focus:ring-2 focus:ring-red-500/20
+                                p-2 rounded-lg hover:scale-110 active:scale-95
+                                hover:bg-[var(--error-bg)] text-[var(--text-tertiary)] hover:text-[var(--error)]
+                                focus:outline-none focus:opacity-100
                             `}
                             title="Remove member"
                         >
@@ -126,21 +118,26 @@ const Member = ({ index, team, member, onRemoveMember, isNewlyAdded = false }) =
 
             {/* Confirmation Modal */}
             {showModal && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-                    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-md w-full mx-4 overflow-hidden">
+                <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-fade-in">
+                    <div className="rounded-2xl shadow-2xl max-w-md w-full mx-4 overflow-hidden animate-scale-in"
+                        style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)' }}>
                         {/* Modal Header */}
-                        <div className="flex items-center justify-between p-6 border-b border-gray-200 dark:border-gray-700 bg-gradient-to-r from-red-50 to-red-100 dark:from-red-900/20 dark:to-red-800/20">
+                        <div className="flex items-center justify-between p-6 border-b"
+                            style={{
+                                borderColor: 'var(--border-subtle)',
+                                background: 'linear-gradient(135deg, var(--error) 0%, var(--error-dark) 100%)'
+                            }}>
                             <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-red-100 dark:bg-red-900/30 rounded-lg flex items-center justify-center">
-                                    <FaTrash className="w-5 h-5 text-red-600 dark:text-red-400" />
+                                <div className="w-10 h-10 bg-white/20 rounded-xl backdrop-blur-sm flex items-center justify-center">
+                                    <FaTrash className="w-5 h-5 text-white" />
                                 </div>
-                                <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                                <h3 className="text-lg font-bold text-white">
                                     Remove Member
                                 </h3>
                             </div>
                             <button
                                 onClick={handleCancelRemove}
-                                className="text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors p-1 rounded-lg hover:bg-white/50 dark:hover:bg-gray-700/50"
+                                className="text-white/70 hover:text-white transition-colors p-2 rounded-lg hover:bg-white/10"
                             >
                                 <FaTimes className="w-5 h-5" />
                             </button>
@@ -148,51 +145,68 @@ const Member = ({ index, team, member, onRemoveMember, isNewlyAdded = false }) =
 
                         {/* Modal Body */}
                         <div className="p-6">
-                            <p className="text-gray-900 dark:text-white font-medium mb-4">
+                            <p className="text-[var(--text-primary)] font-medium mb-6">
                                 Are you sure you want to remove this member?
                             </p>
 
                             {/* Member Preview Card */}
-                            <div className="bg-gray-50 dark:bg-gray-700/50 rounded-lg p-4 mb-4 border border-gray-200 dark:border-gray-600">
+                            <div className="rounded-xl p-4 mb-6 border"
+                                style={{ background: 'var(--bg-surface)', borderColor: 'var(--border-subtle)' }}>
                                 <div className="flex items-center gap-3">
                                     <div className={`
-                                        w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-semibold
+                                        w-10 h-10 rounded-full flex items-center justify-center text-white text-sm font-bold
                                         ${getAvatarColor(member)}
                                     `}>
                                         {getInitials(member)}
                                     </div>
-                                    <div className="flex-grow">
-                                        <p className="font-medium text-gray-900 dark:text-white">
+                                    <div className="flex-grow min-w-0">
+                                        <p className="font-bold text-white truncate">
                                             {member}
                                         </p>
-                                        <p className="text-sm text-gray-500 dark:text-gray-400">
+                                        <p className="text-xs text-[var(--text-tertiary)] truncate">
                                             From team: {team.gptAccount}
                                         </p>
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800/30 rounded-lg p-3">
-                                <p className="text-sm text-yellow-800 dark:text-yellow-200 flex items-start gap-2">
-                                    <span className="text-yellow-600 dark:text-yellow-400 mt-0.5">⚠️</span>
+                            <div className="rounded-xl p-4 border flex items-start gap-3"
+                                style={{
+                                    background: 'var(--warning-bg)',
+                                    borderColor: 'var(--warning)/30'
+                                }}>
+                                <span className="text-[var(--warning)] text-lg">⚠️</span>
+                                <p className="text-sm text-[var(--warning-light)] font-medium">
                                     This action cannot be undone. The member will be permanently removed from this team.
                                 </p>
                             </div>
                         </div>
 
                         {/* Modal Footer */}
-                        <div className="flex items-center justify-end gap-3 p-6 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50">
+                        <div className="flex items-center justify-end gap-3 p-6 border-t"
+                            style={{
+                                borderColor: 'var(--border-subtle)',
+                                background: 'var(--bg-elevated)'
+                            }}>
                             <button
                                 onClick={handleCancelRemove}
                                 disabled={isRemoving}
-                                className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200"
+                                className="px-5 py-2.5 text-sm font-bold rounded-xl hover:bg-[var(--bg-hover)] transition-all duration-200"
+                                style={{
+                                    color: 'var(--text-secondary)',
+                                    border: '1px solid var(--border-subtle)',
+                                    background: 'var(--bg-card)'
+                                }}
                             >
                                 Cancel
                             </button>
                             <button
                                 onClick={handleConfirmRemove}
                                 disabled={isRemoving}
-                                className="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 flex items-center gap-2 min-w-[120px] justify-center"
+                                className="px-5 py-2.5 text-sm font-bold text-white rounded-xl transition-all duration-200 flex items-center gap-2 min-w-[140px] justify-center shadow-lg hover:shadow-xl hover:scale-105"
+                                style={{
+                                    background: 'linear-gradient(135deg, var(--error) 0%, var(--error-light) 100%)',
+                                }}
                             >
                                 {isRemoving ? (
                                     <>
@@ -201,7 +215,7 @@ const Member = ({ index, team, member, onRemoveMember, isNewlyAdded = false }) =
                                     </>
                                 ) : (
                                     <>
-                                        <FaTrash className="w-3 h-3" />
+                                        <FaTrash className="w-3.5 h-3.5" />
                                         Remove Member
                                     </>
                                 )}

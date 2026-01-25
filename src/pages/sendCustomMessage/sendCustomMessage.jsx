@@ -117,7 +117,7 @@ const SendCustomMessage = () => {
     const activeNumbers = getActiveNumbers()
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
+        <div className="min-h-screen bg-[var(--bg-deepest)]">
             <Helmet>
                 <title>Send Custom Message</title>
             </Helmet>
@@ -130,19 +130,19 @@ const SendCustomMessage = () => {
                 />
 
                 {/* Tab Navigation */}
-                <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-2 mb-6">
+                <div className="bg-[var(--bg-card)] rounded-2xl border border-[var(--border-subtle)] p-2 mb-6">
                     <div className="flex gap-2">
                         <button
                             onClick={() => setActiveTab('customers')}
                             className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-medium transition-all duration-200 ${activeTab === 'customers'
-                                    ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white shadow-lg'
-                                    : 'text-gray-600 hover:bg-gray-100'
+                                ? 'bg-[var(--accent-blue)] text-white'
+                                : 'text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-white'
                                 }`}
                         >
                             <FaUsers />
                             <span>Select from Customers</span>
                             {selectedUsers.length > 0 && (
-                                <span className={`px-2 py-0.5 rounded-full text-xs ${activeTab === 'customers' ? 'bg-white/20' : 'bg-blue-100 text-blue-700'
+                                <span className={`px-2 py-0.5 rounded-full text-xs ${activeTab === 'customers' ? 'bg-white/20' : 'bg-[var(--accent-blue)]/20 text-[var(--accent-blue)]'
                                     }`}>
                                     {selectedUsers.length}
                                 </span>
@@ -151,14 +151,14 @@ const SendCustomMessage = () => {
                         <button
                             onClick={() => setActiveTab('custom')}
                             className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-medium transition-all duration-200 ${activeTab === 'custom'
-                                    ? 'bg-gradient-to-r from-green-600 to-green-700 text-white shadow-lg'
-                                    : 'text-gray-600 hover:bg-gray-100'
+                                ? 'bg-[var(--success)] text-white'
+                                : 'text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-white'
                                 }`}
                         >
                             <FaKeyboard />
                             <span>Enter Custom Numbers</span>
                             {customNumbers.length > 0 && (
-                                <span className={`px-2 py-0.5 rounded-full text-xs ${activeTab === 'custom' ? 'bg-white/20' : 'bg-green-100 text-green-700'
+                                <span className={`px-2 py-0.5 rounded-full text-xs ${activeTab === 'custom' ? 'bg-white/20' : 'bg-[var(--success)]/20 text-[var(--success)]'
                                     }`}>
                                     {customNumbers.length}
                                 </span>

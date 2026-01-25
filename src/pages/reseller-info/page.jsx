@@ -14,13 +14,13 @@ import ResellerTableSkeleton from './components/ResellerTableSkeleton'
 
 const ResellerPage = () => {
   const navigate = useNavigate()
-  
+
   // State management
   const [resellers, setResellers] = useState([])
   const [isLoading, setIsLoading] = useState(true)
   const [search, setSearch] = useState('')
   const [debouncedSearch, setDebouncedSearch] = useState('')
-  
+
   // Modal states
   const [isAddModalOpen, setIsAddModalOpen] = useState(false)
   const [editReseller, setEditReseller] = useState(null)
@@ -43,7 +43,7 @@ const ResellerPage = () => {
       try {
         setIsLoading(true)
         const response = await handleApi('/reseller/get-reseller', 'GET', {}, navigate)
-        
+
         if (response?.success && isMounted) {
           setResellers(response.resellers)
         }
@@ -86,8 +86,8 @@ const ResellerPage = () => {
 
   // Handle update reseller
   const handleUpdateReseller = (updatedReseller) => {
-    setResellers(prev => 
-      prev.map(reseller => 
+    setResellers(prev =>
+      prev.map(reseller =>
         reseller._id === updatedReseller._id ? updatedReseller : reseller
       )
     )
@@ -99,7 +99,7 @@ const ResellerPage = () => {
   const handleDeleteReseller = async (id) => {
     try {
       const response = await handleApi(`/reseller/remove-reseller/${id}`, 'DELETE', {}, navigate)
-      
+
       if (response?.success) {
         setResellers(prev => prev.filter(reseller => reseller._id !== id))
         toast.success('Reseller removed successfully!')
@@ -115,7 +115,7 @@ const ResellerPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-purple-50">
+    <div className="min-h-screen bg-[var(--bg-deepest)]">
       <Helmet>
         <title>Reseller Management</title>
       </Helmet>
@@ -152,26 +152,24 @@ const ResellerPage = () => {
         <div className="mb-8">
           <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
             {/* Title and Description */}
-            <div className="space-y-2">
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center shadow-lg">
-                  <FaUsers className="text-white text-xl" />
-                </div>
-                <div>
-                  <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 tracking-tight">
-                    Reseller Management
-                  </h1>
-                  <p className="text-gray-600 text-lg">
-                    Manage your reseller accounts and their access
-                  </p>
-                </div>
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-[var(--bg-elevated)] rounded-xl border border-[var(--border-subtle)]">
+                <FaUsers className="h-6 w-6 text-[var(--accent-purple)]" />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold text-[var(--text-primary)] mb-1">
+                  Reseller Management
+                </h1>
+                <p className="text-[var(--text-secondary)] text-sm">
+                  Manage your reseller accounts and their access
+                </p>
               </div>
             </div>
 
             {/* Add Reseller Button */}
             <button
               onClick={() => setIsAddModalOpen(true)}
-              className="group flex items-center gap-3 bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white px-6 py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-0.5 font-medium"
+              className="group flex items-center gap-3 bg-[var(--accent-purple)] hover:bg-[var(--accent-purple)]/90 text-white px-6 py-3 rounded-xl transition-all duration-200 font-bold"
             >
               <FaUserPlus className="text-lg group-hover:scale-110 transition-transform duration-200" />
               <span>Add New Reseller</span>
@@ -180,29 +178,29 @@ const ResellerPage = () => {
         </div>
 
         {/* Search Section */}
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 mb-8">
+        <div className="bg-[var(--bg-card)] rounded-2xl border border-[var(--border-subtle)] p-6 mb-8">
           <div className="relative group">
             <input
               type="text"
               placeholder="Search resellers by name, email, phone or GPT account..."
-              className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:border-purple-500 focus:ring-4 focus:ring-purple-50 transition-all duration-200 text-gray-700 placeholder-gray-400 group-hover:border-gray-300"
+              className="w-full pl-12 pr-4 py-4 bg-[var(--bg-surface)] border border-[var(--border-subtle)] rounded-xl focus:outline-none focus:border-[var(--accent-purple)] focus:ring-1 focus:ring-[var(--accent-purple)] transition-all duration-200 text-white placeholder-[var(--text-muted)]"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
-            <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 group-hover:text-gray-600 transition-colors duration-200" />
+            <FaSearch className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-tertiary)]" />
           </div>
         </div>
 
         {/* Results Summary */}
         {debouncedSearch && (
-          <div className="mb-6 p-4 bg-purple-50 border border-purple-200 rounded-xl">
+          <div className="mb-6 p-4 bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl">
             <div className="flex items-center justify-between">
-              <p className="text-purple-800 font-medium">
-                Searching for: "{debouncedSearch}" • Found {filteredResellers.length} reseller(s)
+              <p className="text-[var(--text-secondary)] font-medium">
+                Searching for: "<span className="text-white">{debouncedSearch}</span>" • Found <span className="text-[var(--accent-purple)]">{filteredResellers.length}</span> reseller(s)
               </p>
               <button
                 onClick={() => setSearch('')}
-                className="text-purple-600 hover:text-purple-800 font-medium text-sm underline"
+                className="text-[var(--accent-purple)] hover:text-[var(--accent-purple-light)] font-medium text-sm hover:underline"
               >
                 Clear search
               </button>
@@ -212,40 +210,40 @@ const ResellerPage = () => {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-          <div className="bg-white rounded-xl p-4 shadow-lg border border-gray-100">
+          <div className="bg-[var(--bg-card)] rounded-xl p-4 border border-[var(--border-subtle)]">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center">
-                <FaUsers className="text-purple-600 text-xl" />
+              <div className="w-12 h-12 bg-[var(--accent-purple)]/10 rounded-xl flex items-center justify-center">
+                <FaUsers className="text-[var(--accent-purple)] text-xl" />
               </div>
               <div>
-                <p className="text-sm text-gray-500">Total Resellers</p>
-                <p className="text-2xl font-bold text-gray-900">{resellers.length}</p>
+                <p className="text-sm text-[var(--text-tertiary)]">Total Resellers</p>
+                <p className="text-2xl font-bold text-white">{resellers.length}</p>
               </div>
             </div>
           </div>
-          
-          <div className="bg-white rounded-xl p-4 shadow-lg border border-gray-100">
+
+          <div className="bg-[var(--bg-card)] rounded-xl p-4 border border-[var(--border-subtle)]">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center">
-                <FaUsers className="text-green-600 text-xl" />
+              <div className="w-12 h-12 bg-[var(--success)]/10 rounded-xl flex items-center justify-center">
+                <FaUsers className="text-[var(--success)] text-xl" />
               </div>
               <div>
-                <p className="text-sm text-gray-500">With GPT Account</p>
-                <p className="text-2xl font-bold text-gray-900">
+                <p className="text-sm text-[var(--text-tertiary)]">With GPT Account</p>
+                <p className="text-2xl font-bold text-white">
                   {resellers.filter(r => r.gptAccount).length}
                 </p>
               </div>
             </div>
           </div>
-          
-          <div className="bg-white rounded-xl p-4 shadow-lg border border-gray-100">
+
+          <div className="bg-[var(--bg-card)] rounded-xl p-4 border border-[var(--border-subtle)]">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-orange-100 rounded-xl flex items-center justify-center">
-                <FaUsers className="text-orange-600 text-xl" />
+              <div className="w-12 h-12 bg-[var(--warning)]/10 rounded-xl flex items-center justify-center">
+                <FaUsers className="text-[var(--warning)] text-xl" />
               </div>
               <div>
-                <p className="text-sm text-gray-500">Without GPT Account</p>
-                <p className="text-2xl font-bold text-gray-900">
+                <p className="text-sm text-[var(--text-tertiary)]">Without GPT Account</p>
+                <p className="text-2xl font-bold text-white">
                   {resellers.filter(r => !r.gptAccount).length}
                 </p>
               </div>
@@ -254,18 +252,18 @@ const ResellerPage = () => {
         </div>
 
         {/* Resellers Grid */}
-        <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+        <div className="bg-[var(--bg-card)] rounded-2xl border border-[var(--border-subtle)] overflow-hidden">
           {isLoading ? (
             <ResellerTableSkeleton />
           ) : filteredResellers.length === 0 ? (
             <div className="text-center py-16">
-              <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
-                <FaUsers className="w-8 h-8 text-gray-400" />
+              <div className="w-16 h-16 mx-auto mb-4 bg-[var(--bg-surface)] rounded-full flex items-center justify-center">
+                <FaUsers className="w-8 h-8 text-[var(--text-muted)]" />
               </div>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">
+              <h3 className="text-lg font-medium text-white mb-2">
                 {debouncedSearch ? 'No resellers found' : 'No resellers yet'}
               </h3>
-              <p className="text-gray-500 mb-6">
+              <p className="text-[var(--text-tertiary)] mb-6">
                 {debouncedSearch
                   ? 'Try adjusting your search criteria'
                   : 'Get started by adding your first reseller'}
@@ -273,7 +271,7 @@ const ResellerPage = () => {
               {!debouncedSearch && (
                 <button
                   onClick={() => setIsAddModalOpen(true)}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors"
+                  className="inline-flex items-center gap-2 px-4 py-2 bg-[var(--accent-purple)] text-white rounded-lg hover:bg-[var(--accent-purple)]/90 transition-colors"
                 >
                   <FaUserPlus />
                   Add First Reseller

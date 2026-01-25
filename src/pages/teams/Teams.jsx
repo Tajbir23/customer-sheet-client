@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import handleApi from "../../libs/handleAPi";
 import { FaExclamationCircle, FaSearch } from "react-icons/fa";
 import { toast } from "react-toastify";
@@ -17,6 +17,7 @@ import InactiveTeamsSection from "./components/InactiveTeamsSection";
 import AllTeamsHeader from "./components/AllTeamsHeader";
 import AdminFilter from "./components/AdminFilter";
 import ResultsInfo from "./components/ResultsInfo";
+import DraggableScreenshotPreview from "../../components/DraggableScreenshotPreview";
 import { Helmet } from "react-helmet";
 
 const Teams = () => {
@@ -44,12 +45,21 @@ const Teams = () => {
   // Track recently changed teams for visual feedback (optimistic UI)
   const [recentlyToggledTeam, setRecentlyToggledTeam] = useState(null);
   const [recentlyAddedMembers, setRecentlyAddedMembers] = useState({ teamId: null, members: [] });
+  // Track team IDs that should stay visible even after member removal
+  const [visibleTeamIds, setVisibleTeamIds] = useState(new Set());
+
+  // Refs for managing waiting timeouts
+  const inviteWaitingTimeoutRef = useRef(null);
+  const removeWaitingTimeoutRef = useRef(null);
   // Get userId from JWT token
   const [userId, setUserId] = useState(null);
   // Screenshot preview from socket
   const [screenshotPreview, setScreenshotPreview] = useState(null);
   // Remove member screenshot preview from socket
   const [removeScreenshotPreview, setRemoveScreenshotPreview] = useState(null);
+  // Waiting states for screenshot previews
+  const [inviteWaiting, setInviteWaiting] = useState(false);
+  const [removeWaiting, setRemoveWaiting] = useState(false);
 
   // Extract userId from JWT token on mount
   useEffect(() => {
@@ -80,8 +90,23 @@ const Teams = () => {
     const unsubscribe = subscribe('invite-monitoring-response', (data) => {
       console.log('invite-monitoring-response received:', data);
 
+      // Handle browser closed status - clear screenshot and show message
+      if (data.status === 'invite_completed_browser_closed') {
+        setScreenshotPreview(null);
+        setInviteWaiting(false);
+        toast.info('✅ Invite completed - Browser closed');
+        return;
+      }
+
       // Handle screenshot preview
       if (data.status === 'screenshot' && data.screenshot) {
+        // Clear any existing timeout
+        if (inviteWaitingTimeoutRef.current) {
+          clearTimeout(inviteWaitingTimeoutRef.current);
+        }
+
+        // Reset waiting (new screenshot arrived), then set waiting again for next
+        setInviteWaiting(false);
         setScreenshotPreview({
           id: Date.now() + Math.random(), // Unique ID to force re-render
           image: data.screenshot,
@@ -89,7 +114,11 @@ const Teams = () => {
           memberEmail: data.memberEmail,
           timestamp: data.timestamp
         });
-        // Preview stays until next screenshot or manual close
+
+        // After showing screenshot, set waiting for next screenshot
+        inviteWaitingTimeoutRef.current = setTimeout(() => {
+          setInviteWaiting(true);
+        }, 100);
       }
 
       if (data.success && data.message) {
@@ -114,8 +143,38 @@ const Teams = () => {
     const unsubscribe = subscribe('remove-monitoring-response', (data) => {
       console.log('remove-monitoring-response received:', data);
 
+      // Handle different status types
+      if (data.status === 'removed') {
+        toast.success('✅ Remove member successful');
+        return;
+      }
+
+      if (data.status === 'remove_failed') {
+        toast.error('❌ Remove failed');
+        return;
+      }
+
+      if (data.status === 'error') {
+        toast.error('⚠️ Something went wrong');
+        return;
+      }
+
+      if (data.status === 'removed_browser_closed') {
+        setRemoveScreenshotPreview(null);
+        setRemoveWaiting(false);
+        toast.info('🔒 Browser closing');
+        return;
+      }
+
       // Handle screenshot preview
       if (data.status === 'screenshot' && data.screenshot) {
+        // Clear any existing timeout
+        if (removeWaitingTimeoutRef.current) {
+          clearTimeout(removeWaitingTimeoutRef.current);
+        }
+
+        // Reset waiting (new screenshot arrived), then set waiting again for next
+        setRemoveWaiting(false);
         setRemoveScreenshotPreview({
           id: Date.now() + Math.random(), // Unique ID to force re-render
           image: data.screenshot,
@@ -123,7 +182,11 @@ const Teams = () => {
           email: data.email,
           timestamp: data.timestamp
         });
-        // Preview stays until next screenshot or manual close
+
+        // After showing screenshot, set waiting for next screenshot
+        removeWaitingTimeoutRef.current = setTimeout(() => {
+          setRemoveWaiting(true);
+        }, 100);
       }
 
       if (data.success && data.message) {
@@ -158,6 +221,8 @@ const Teams = () => {
       const searchLower = debouncedSearch.toLowerCase().trim();
       filtered = filtered.filter(
         (team) =>
+          // Keep teams that match search OR were previously visible (to handle member removal)
+          visibleTeamIds.has(team._id) ||
           team.gptAccount?.toLowerCase().includes(searchLower) ||
           team.server?.toLowerCase().includes(searchLower) ||
           team.members?.some((member) =>
@@ -167,7 +232,7 @@ const Teams = () => {
     }
 
     return filtered;
-  }, [sortedTeams, debouncedSearch]);
+  }, [sortedTeams, debouncedSearch, visibleTeamIds]);
 
   // Filter inactive teams based on search (client-side only)
   const filteredInactiveData = useMemo(() => {
@@ -330,6 +395,9 @@ const Teams = () => {
       );
 
       if (response.success) {
+        // Add teamId to visibleTeamIds so it stays visible after member removal
+        setVisibleTeamIds(prev => new Set([...prev, teamId]));
+
         setData((prevData) => {
           if (!Array.isArray(prevData)) return [];
           const updatedData = prevData.map((team) => {
@@ -409,6 +477,9 @@ const Teams = () => {
       setDebouncedSearch(search);
       setCurrentPage(1);
       setPage(1);
+      // Clear visible teams when search query changes so we don't carry over
+      // temporarily visible teams to a completely new search context
+      setVisibleTeamIds(new Set());
     }, 1000);
 
     return () => clearTimeout(timer);
@@ -592,139 +663,21 @@ const Teams = () => {
         )}
       </div>
 
-      {/* Screenshot Preview - Fixed Bottom Right */}
-      {screenshotPreview && (
-        <div className="fixed bottom-4 right-4 z-50 animate-slide-in-right">
-          <div
-            className="rounded-2xl shadow-2xl overflow-hidden max-w-sm"
-            style={{
-              background: 'var(--bg-card)',
-              border: '1px solid var(--border-subtle)'
-            }}
-          >
-            {/* Header */}
-            <div
-              className="px-4 py-3 flex items-center justify-between"
-              style={{ background: 'linear-gradient(135deg, var(--accent-purple) 0%, var(--accent-blue) 100%)' }}
-            >
-              <div className="text-white">
-                <p className="text-sm font-bold">Screenshot Preview</p>
-                <p className="text-xs text-white/80 truncate max-w-[200px]">
-                  {screenshotPreview.gptAccount}
-                </p>
-              </div>
-              <button
-                onClick={() => setScreenshotPreview(null)}
-                className="p-1.5 bg-white/20 hover:bg-white/30 rounded-lg transition-all"
-              >
-                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-            {/* Screenshot Image */}
-            <div className="p-2">
-              <img
-                src={`data:image/png;base64,${screenshotPreview.image}`}
-                alt="Screenshot Preview"
-                className="w-full h-auto rounded-lg border cursor-pointer hover:opacity-90 transition-opacity"
-                style={{ borderColor: 'var(--border-subtle)' }}
-                onClick={() => {
-                  // Open full size in new tab
-                  const newWindow = window.open();
-                  newWindow.document.write(`
-                    <html>
-                      <head><title>Screenshot - ${screenshotPreview.gptAccount}</title></head>
-                      <body style="margin:0;background:#1f2937;display:flex;justify-content:center;align-items:center;min-height:100vh;">
-                        <img src="data:image/png;base64,${screenshotPreview.image}" style="max-width:100%;height:auto;"/>
-                      </body>
-                    </html>
-                  `);
-                }}
-              />
-            </div>
-            {/* Info */}
-            <div
-              className="px-4 py-2 border-t"
-              style={{ backgroundColor: 'var(--bg-surface)', borderColor: 'var(--border-subtle)' }}
-            >
-              <p className="text-xs text-[var(--text-secondary)] truncate">
-                <span className="font-medium">Member:</span> {screenshotPreview.memberEmail}
-              </p>
-              <p className="text-xs text-[var(--text-tertiary)]">
-                {new Date(screenshotPreview.timestamp).toLocaleTimeString()}
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Screenshot Preview - Draggable, Resizable */}
+      <DraggableScreenshotPreview
+        preview={screenshotPreview}
+        onClose={() => { setScreenshotPreview(null); setInviteWaiting(false); }}
+        isWaiting={inviteWaiting}
+        type="invite"
+      />
 
-      {/* Remove Member Screenshot Preview - Fixed Bottom Left */}
-      {removeScreenshotPreview && (
-        <div className="fixed bottom-4 left-4 z-50 animate-slide-in-left">
-          <div
-            className="rounded-2xl shadow-2xl overflow-hidden max-w-sm"
-            style={{
-              background: 'var(--bg-card)',
-              border: '1px solid var(--border-subtle)'
-            }}
-          >
-            {/* Header */}
-            <div
-              className="px-4 py-3 flex items-center justify-between"
-              style={{ background: 'linear-gradient(135deg, var(--error) 0%, var(--error-light) 100%)' }}
-            >
-              <div className="text-white">
-                <p className="text-sm font-bold">Remove Member Preview</p>
-                <p className="text-xs text-white/80 truncate max-w-[200px]">
-                  {removeScreenshotPreview.gptAccount}
-                </p>
-              </div>
-              <button
-                onClick={() => setRemoveScreenshotPreview(null)}
-                className="p-1.5 bg-white/20 hover:bg-white/30 rounded-lg transition-all"
-              >
-                <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-            {/* Screenshot Image */}
-            <div className="p-2">
-              <img
-                src={`data:image/png;base64,${removeScreenshotPreview.image}`}
-                alt="Remove Member Screenshot Preview"
-                className="w-full h-auto rounded-lg border cursor-pointer hover:opacity-90 transition-opacity"
-                style={{ borderColor: 'var(--border-subtle)' }}
-                onClick={() => {
-                  // Open full size in new tab
-                  const newWindow = window.open();
-                  newWindow.document.write(`
-                    <html>
-                      <head><title>Remove Screenshot - ${removeScreenshotPreview.gptAccount}</title></head>
-                      <body style="margin:0;background:#1f2937;display:flex;justify-content:center;align-items:center;min-height:100vh;">
-                        <img src="data:image/png;base64,${removeScreenshotPreview.image}" style="max-width:100%;height:auto;"/>
-                      </body>
-                    </html>
-                  `);
-                }}
-              />
-            </div>
-            {/* Info */}
-            <div
-              className="px-4 py-2 border-t"
-              style={{ backgroundColor: 'var(--bg-surface)', borderColor: 'var(--border-subtle)' }}
-            >
-              <p className="text-xs text-[var(--text-secondary)] truncate">
-                <span className="font-medium">Removing:</span> {removeScreenshotPreview.email}
-              </p>
-              <p className="text-xs text-[var(--text-tertiary)]">
-                {new Date(removeScreenshotPreview.timestamp).toLocaleTimeString()}
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Remove Member Screenshot Preview - Draggable, Resizable */}
+      <DraggableScreenshotPreview
+        preview={removeScreenshotPreview}
+        onClose={() => { setRemoveScreenshotPreview(null); setRemoveWaiting(false); }}
+        isWaiting={removeWaiting}
+        type="remove"
+      />
     </div>
   );
 };

@@ -21,8 +21,8 @@ const MemberItem = ({ member, gptAccount, data, setData }) => {
   return (
     <>
       <div className={`relative rounded-xl border transition-all duration-200 group/item ${isChecked
-          ? 'bg-[var(--success)]/5 border-[var(--success)]/20 hover:border-[var(--success)]/40'
-          : 'bg-[var(--bg-elevated)] border-[var(--border-subtle)] hover:border-[var(--accent-blue)]/30'
+        ? 'bg-[var(--success)]/5 border-[var(--success)]/20 hover:border-[var(--success)]/40'
+        : 'bg-[var(--bg-elevated)] border-[var(--border-subtle)] hover:border-[var(--accent-blue)]/30'
         }`}>
         <div className="p-3">
           <div className="flex items-center justify-between gap-3">
@@ -30,8 +30,8 @@ const MemberItem = ({ member, gptAccount, data, setData }) => {
             <button
               onClick={() => setIsOpen(isChecked ? 'update' : 'add')}
               className={`flex-shrink-0 w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200 ${isChecked
-                  ? 'bg-[var(--success)] text-white shadow-lg shadow-green-500/20 hover:bg-[var(--success)]/90'
-                  : 'bg-[var(--bg-card)] border border-[var(--border-subtle)] text-[var(--text-tertiary)] hover:border-[var(--error)] hover:text-[var(--error)] hover:bg-[var(--error)]/10'
+                ? 'bg-[var(--success)] text-white shadow-lg shadow-green-500/20 hover:bg-[var(--success)]/90'
+                : 'bg-[var(--bg-card)] border border-[var(--border-subtle)] text-[var(--text-tertiary)] hover:border-[var(--error)] hover:text-[var(--error)] hover:bg-[var(--error)]/10'
                 }`}
             >
               {isChecked ? <FaCheck size={10} /> : <FaTimes size={10} />}
@@ -64,7 +64,7 @@ const MemberItem = ({ member, gptAccount, data, setData }) => {
             {/* Badges */}
             <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
               {reference?._id && (
-                <div className="flex items-center gap-1 bg-[var(--accent-blue)]/10 text-[var(--accent-blue)] px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider border border-[var(--accent-blue)]/20">
+                <div className="flex items-center gap-1 bg-[var(--accent-blue)] text-white px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider shadow-sm shadow-blue-500/20">
                   <FaUser className="text-[9px]" />
                   <span>{reference.username}</span>
                 </div>

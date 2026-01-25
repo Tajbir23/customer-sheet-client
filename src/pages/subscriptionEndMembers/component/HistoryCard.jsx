@@ -1,18 +1,30 @@
 import React, { useState } from "react";
 import {
   FaUser,
-  FaUsers,
   FaCalendarAlt,
-  FaChevronDown,
-  FaChevronUp,
   FaCopy,
+  FaCheck,
+  FaEnvelope,
+  FaWhatsapp,
+  FaClock,
+  FaUserCircle,
 } from "react-icons/fa";
+import { MdComputer } from "react-icons/md";
 
 const HistoryCard = ({ item }) => {
-  const [showAllMembers, setShowAllMembers] = useState(false);
-  const [copiedEmail, setCopiedEmail] = useState("");
+  const [copiedField, setCopiedField] = useState(null);
 
   const formatDate = (dateString) => {
+    if (!dateString) return "N/A";
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    });
+  };
+
+  const formatDateTime = (dateString) => {
+    if (!dateString) return "N/A";
     return new Date(dateString).toLocaleDateString("en-US", {
       year: "numeric",
       month: "short",
@@ -22,134 +34,158 @@ const HistoryCard = ({ item }) => {
     });
   };
 
-  const copyToClipboard = (email) => {
-    navigator.clipboard.writeText(email);
-    setCopiedEmail(email);
-    setTimeout(() => setCopiedEmail(""), 2000);
+  const copyToClipboard = (text, field) => {
+    navigator.clipboard.writeText(text);
+    setCopiedField(field);
+    setTimeout(() => setCopiedField(null), 2000);
   };
 
-  const displayMembers = showAllMembers
-    ? item.members
-    : item.members.slice(0, 3);
-  const hasMoreMembers = item.members.length > 3;
+  // Calculate days until/since end
+  const getDaysStatus = () => {
+    if (!item.endAt) return null;
+    const endDate = new Date(item.endAt);
+    const today = new Date();
+    const diffTime = endDate - today;
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays < 0) {
+      return { text: `${Math.abs(diffDays)} days ago`, isExpired: true };
+    } else if (diffDays === 0) {
+      return { text: "Today", isExpired: true };
+    } else {
+      return { text: `${diffDays} days left`, isExpired: false };
+    }
+  };
+
+  const daysStatus = getDaysStatus();
 
   return (
     <div className="group bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:border-gray-200 transition-all duration-300 overflow-hidden">
       {/* Card Header */}
-      <div className="relative bg-gradient-to-r from-orange-50 to-red-50 px-6 py-5 border-b border-gray-100">
-        <div className="flex items-start justify-between">
-          <div className="flex items-center space-x-4">
-            <div className="relative">
-              <div className="w-14 h-14 bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl flex items-center justify-center shadow-lg">
-                <FaUser className="w-7 h-7 text-white" />
-              </div>
-              <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-red-600 text-white rounded-full flex items-center justify-center text-xs font-bold">
-                {item.members.length}
-              </div>
+      <div className="relative bg-gradient-to-r from-orange-500 to-red-500 px-6 py-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+              <FaEnvelope className="w-6 h-6 text-white" />
             </div>
-            <div className="flex-1">
-              <div className="flex items-center space-x-2 mb-1">
-                <h3 className="text-lg font-bold text-gray-900 group-hover:text-orange-600 transition-colors">
-                  {item.gptAccount}
+            <div>
+              <div className="flex items-center gap-2">
+                <h3 className="text-lg font-bold text-white truncate max-w-[300px]">
+                  {item.email}
                 </h3>
                 <button
-                  onClick={() => copyToClipboard(item.gptAccount)}
-                  className="p-1.5 text-gray-400 hover:text-orange-600 hover:bg-white rounded-lg transition-all duration-200"
+                  onClick={() => copyToClipboard(item.email, "email")}
+                  className="p-1.5 bg-white/20 hover:bg-white/30 rounded-lg transition-all duration-200"
                   title="Copy email"
                 >
-                  <FaCopy className="w-3 h-3" />
+                  {copiedField === "email" ? (
+                    <FaCheck className="w-3 h-3 text-green-300" />
+                  ) : (
+                    <FaCopy className="w-3 h-3 text-white" />
+                  )}
                 </button>
-                {copiedEmail === item.gptAccount && (
-                  <span className="text-xs text-green-600 font-medium">
-                    Copied!
-                  </span>
-                )}
               </div>
-              <p className="text-sm text-gray-600 font-medium">GPT Account</p>
+              <p className="text-white/80 text-sm">Member Email</p>
             </div>
           </div>
 
-          <div className="flex items-center space-x-3">
-            <div className="text-right">
-              <div className="flex items-center gap-2 text-red-600 font-semibold">
-                <FaUsers className="w-4 h-4" />
-                <span>{item.members.length} expired</span>
-              </div>
-              <div className="text-xs text-gray-500 mt-1">
-                <FaCalendarAlt className="inline w-3 h-3 mr-1" />
-                {formatDate(item.createdAt)}
-              </div>
+          {daysStatus && (
+            <div className={`px-4 py-2 rounded-xl text-sm font-bold ${daysStatus.isExpired
+                ? 'bg-red-600 text-white'
+                : 'bg-yellow-400 text-gray-900'
+              }`}>
+              {daysStatus.text}
             </div>
-          </div>
+          )}
         </div>
       </div>
 
       {/* Card Body */}
       <div className="p-6">
-        <div className="space-y-4">
-          {/* Members Section Header */}
-          <div className="flex items-center justify-between">
-            <h4 className="text-sm font-bold text-gray-900 uppercase tracking-wide">
-              Expired Members ({item.members.length})
-            </h4>
-            {hasMoreMembers && (
-              <button
-                onClick={() => setShowAllMembers(!showAllMembers)}
-                className="flex items-center gap-1 text-sm text-orange-600 hover:text-orange-700 font-medium transition-colors"
-              >
-                {showAllMembers ? (
-                  <>
-                    Show Less <FaChevronUp className="w-3 h-3" />
-                  </>
-                ) : (
-                  <>
-                    Show All ({item.members.length - 3} more){" "}
-                    <FaChevronDown className="w-3 h-3" />
-                  </>
-                )}
-              </button>
-            )}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {/* GPT Account */}
+          <div className="flex items-center gap-3 p-4 bg-blue-50 rounded-xl">
+            <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+              <MdComputer className="w-5 h-5 text-white" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs text-blue-600 font-medium uppercase">GPT Account</p>
+              <div className="flex items-center gap-2">
+                <p className="text-gray-900 font-medium truncate">{item.gptAccount}</p>
+                <button
+                  onClick={() => copyToClipboard(item.gptAccount, "gptAccount")}
+                  className="p-1 text-gray-400 hover:text-blue-600 rounded transition-colors"
+                  title="Copy GPT account"
+                >
+                  {copiedField === "gptAccount" ? (
+                    <FaCheck className="w-3 h-3 text-green-500" />
+                  ) : (
+                    <FaCopy className="w-3 h-3" />
+                  )}
+                </button>
+              </div>
+            </div>
           </div>
 
-          {/* Members List */}
-          <div className="grid gap-3">
-            {displayMembers.map((member, index) => (
-              <div
-                key={index}
-                className="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-gray-200 to-gray-300 rounded-full flex items-center justify-center">
-                    <FaUser className="w-4 h-4 text-gray-600" />
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium text-gray-900">
-                        {member.email}
-                      </span>
-                      <button
-                        onClick={() => copyToClipboard(member.email)}
-                        className="p-1 text-gray-400 hover:text-orange-600 rounded transition-colors"
-                        title="Copy email"
-                      >
-                        <FaCopy className="w-3 h-3" />
-                      </button>
-                      {copiedEmail === member.email && (
-                        <span className="text-xs text-green-600 font-medium">
-                          Copied!
-                        </span>
-                      )}
-                    </div>
-                    <span className="text-xs text-gray-500">
-                      Removed: {formatDate(member.removedAt)}
-                    </span>
-                  </div>
-                </div>
-                <span className="px-3 py-1 bg-red-100 text-red-700 text-xs font-medium rounded-full">
-                  Subscription Ended
-                </span>
+          {/* WhatsApp/FB ID */}
+          <div className="flex items-center gap-3 p-4 bg-green-50 rounded-xl">
+            <div className="w-10 h-10 bg-green-500 rounded-lg flex items-center justify-center">
+              <FaWhatsapp className="w-5 h-5 text-white" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-xs text-green-600 font-medium uppercase">WhatsApp/FB ID</p>
+              <div className="flex items-center gap-2">
+                <p className="text-gray-900 font-medium truncate">{item.waOrFbId || "N/A"}</p>
+                {item.waOrFbId && (
+                  <button
+                    onClick={() => copyToClipboard(item.waOrFbId, "waOrFbId")}
+                    className="p-1 text-gray-400 hover:text-green-600 rounded transition-colors"
+                    title="Copy WhatsApp/FB ID"
+                  >
+                    {copiedField === "waOrFbId" ? (
+                      <FaCheck className="w-3 h-3 text-green-500" />
+                    ) : (
+                      <FaCopy className="w-3 h-3" />
+                    )}
+                  </button>
+                )}
               </div>
-            ))}
+            </div>
+          </div>
+
+          {/* Order Date */}
+          <div className="flex items-center gap-3 p-4 bg-purple-50 rounded-xl">
+            <div className="w-10 h-10 bg-purple-500 rounded-lg flex items-center justify-center">
+              <FaCalendarAlt className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <p className="text-xs text-purple-600 font-medium uppercase">Order Date</p>
+              <p className="text-gray-900 font-medium">{formatDate(item.orderDate)}</p>
+            </div>
+          </div>
+
+          {/* End Date */}
+          <div className="flex items-center gap-3 p-4 bg-red-50 rounded-xl">
+            <div className="w-10 h-10 bg-red-500 rounded-lg flex items-center justify-center">
+              <FaClock className="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <p className="text-xs text-red-600 font-medium uppercase">Subscription End</p>
+              <p className="text-gray-900 font-medium">{formatDate(item.endAt)}</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Footer - User Info */}
+        <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
+          <div className="flex items-center gap-2 text-sm text-gray-500">
+            <FaUserCircle className="w-4 h-4" />
+            <span>
+              Added by: {item.user?.name || item.user?.email || "Unknown"}
+            </span>
+          </div>
+          <div className="text-xs text-gray-400">
+            Recorded: {formatDateTime(item.createdAt)}
           </div>
         </div>
       </div>

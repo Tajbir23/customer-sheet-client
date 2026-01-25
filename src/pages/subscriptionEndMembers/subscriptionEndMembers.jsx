@@ -20,17 +20,33 @@ const SubscriptionEndMembers = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [search, setSearch] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [orderDate, setOrderDate] = useState("");
   const [isSearching, setIsSearching] = useState(false);
   const limit = 10;
 
   const fetchData = useCallback(
-    async (page = 1, searchQuery = "") => {
+    async (page = 1, searchQuery = "", endDateFilter = "", orderDateFilter = "") => {
       try {
         setLoading(true);
+
+        // Build query params
+        const params = new URLSearchParams();
+        params.append("page", page);
+        params.append("limit", limit);
+
+        if (searchQuery) {
+          params.append("search", searchQuery.trim());
+        }
+        if (endDateFilter) {
+          params.append("endDate", endDateFilter);
+        }
+        if (orderDateFilter) {
+          params.append("orderDate", orderDateFilter);
+        }
+
         const response = await handleApi(
-          `/gptTeam/subscription-end-history?page=${page}&limit=${limit}&search=${encodeURIComponent(
-            searchQuery
-          )}`,
+          `/gptTeam/subscription-end-history?${params.toString()}`,
           "GET",
           null,
           navigate
@@ -53,29 +69,27 @@ const SubscriptionEndMembers = () => {
   );
 
   useEffect(() => {
-    fetchData(currentPage, search);
+    fetchData(currentPage, search, endDate, orderDate);
   }, [currentPage, fetchData]);
 
-  const handleSearch = useCallback(
-    (searchQuery) => {
-      setIsSearching(true);
-      setCurrentPage(1);
-      setSearch(searchQuery);
-      fetchData(1, searchQuery);
-    },
-    [fetchData]
-  );
+  const handleSearch = useCallback(() => {
+    setIsSearching(true);
+    setCurrentPage(1);
+    fetchData(1, search, endDate, orderDate);
+  }, [fetchData, search, endDate, orderDate]);
 
   const clearSearch = () => {
     setSearch("");
+    setEndDate("");
+    setOrderDate("");
     setCurrentPage(1);
-    fetchData(1, "");
+    fetchData(1, "", "", "");
   };
 
   const handlePageChange = (page) => {
     if (page !== currentPage && page >= 1 && page <= totalPages) {
       setCurrentPage(page);
-      fetchData(page, search);
+      fetchData(page, search, endDate, orderDate);
     }
   };
 
@@ -95,6 +109,10 @@ const SubscriptionEndMembers = () => {
         isSearching={isSearching}
         currentPage={currentPage}
         totalPages={totalPages}
+        endDate={endDate}
+        setEndDate={setEndDate}
+        orderDate={orderDate}
+        setOrderDate={setOrderDate}
       />
 
       <StatsSummary

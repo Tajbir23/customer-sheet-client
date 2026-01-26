@@ -15,9 +15,9 @@ const Asocks = () => {
 
       {/* Upload Form Modal */}
       {isUploadFormOpen && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-fade-in">
+        <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4">
           <div
-            className="rounded-2xl shadow-2xl max-w-md w-full animate-scale-in"
+            className="rounded-2xl shadow-2xl max-w-md w-full"
             style={{
               background: 'linear-gradient(145deg, var(--bg-card) 0%, var(--bg-surface) 100%)',
               border: '1px solid var(--border-subtle)',
@@ -52,7 +52,7 @@ const Asocks = () => {
       )}
 
       {/* Header */}
-      <div className="mb-8 animate-fade-in">
+      <div className="mb-8">
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
           <div className="flex items-center gap-4">
             <div
@@ -86,7 +86,7 @@ const Asocks = () => {
 
       {/* Proxies Section */}
       <div
-        className="rounded-2xl overflow-hidden animate-fade-in-up"
+        className="rounded-2xl overflow-hidden"
         style={{
           background: 'linear-gradient(145deg, var(--bg-card) 0%, var(--bg-surface) 100%)',
           border: '1px solid var(--border-subtle)',

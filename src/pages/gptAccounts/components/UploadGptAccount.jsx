@@ -184,8 +184,8 @@ const UploadGptAccount = ({ setIsOpen }) => {
 
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            <div className="fixed inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsOpen(false)}></div>
-            <div className="relative bg-[var(--bg-card)] rounded-2xl w-full max-w-xl max-h-[90vh] flex flex-col shadow-2xl border border-[var(--border-subtle)] animate-scale-in">
+            <div className="fixed inset-0 bg-black/90" onClick={() => setIsOpen(false)}></div>
+            <div className="relative bg-[var(--bg-card)] rounded-2xl w-full max-w-xl max-h-[90vh] flex flex-col shadow-2xl border border-[var(--border-subtle)]">
                 {/* Modal Header - Fixed */}
                 <div className="flex justify-between items-center px-6 py-4 border-b border-[var(--border-subtle)] bg-[var(--bg-card)] rounded-t-2xl">
                     <h2 className="text-xl font-bold text-[var(--text-primary)]">Upload GPT Account</h2>
@@ -198,7 +198,7 @@ const UploadGptAccount = ({ setIsOpen }) => {
                 </div>
 
                 {/* Modal Body - Scrollable */}
-                <div className="p-6 overflow-y-auto flex-grow custom-scrollbar">
+                <div className="p-6 overflow-y-auto flex-grow">
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div>
                             <label className={labelClass}>

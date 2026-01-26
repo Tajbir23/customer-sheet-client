@@ -175,7 +175,7 @@ const DraggableScreenshotPreview = ({
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                             </svg>
                         </button>
-                        <div className="absolute bottom-4 left-4 right-4 bg-black/50 backdrop-blur-sm rounded-lg p-3 text-white">
+                        <div className="absolute bottom-4 left-4 right-4 bg-black/80 rounded-lg p-3 text-white">
                             <p className="text-sm font-medium">{preview.gptAccount}</p>
                             <p className="text-xs text-white/70">{memberLabel}: {memberEmail}</p>
                         </div>
@@ -187,7 +187,7 @@ const DraggableScreenshotPreview = ({
             {!isFullscreen && (
                 <div
                     ref={containerRef}
-                    className="fixed z-50 animate-slide-in-right select-none"
+                    className="fixed z-50 select-none"
                     style={{
                         left: initialized ? position.x : (isInvite ? 'auto' : 16),
                         right: initialized ? 'auto' : (isInvite ? 16 : 'auto'),

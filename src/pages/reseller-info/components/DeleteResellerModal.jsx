@@ -11,8 +11,8 @@ const DeleteResellerModal = ({ reseller, onClose, onDelete }) => {
   }
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-[var(--bg-card)] rounded-2xl w-full max-w-md border border-[var(--border-subtle)] animate-scale-in">
+    <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4">
+      <div className="bg-[var(--bg-card)] rounded-2xl w-full max-w-md border border-[var(--border-subtle)]">
         {/* Warning Icon */}
         <div className="pt-8 pb-4 flex justify-center">
           <div className="w-20 h-20 bg-[var(--error)]/10 rounded-full flex items-center justify-center">

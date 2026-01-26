@@ -56,7 +56,7 @@ const AddMember = ({ member, gptAccount, setIsOpen, className, reference, member
   }
 
   return (
-    <div className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto ${className}`}>
+    <div className={`fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4 overflow-y-auto ${className}`}>
       <div className="bg-[var(--bg-card)] rounded-2xl w-full max-w-5xl max-h-[95vh] overflow-y-auto shadow-2xl border border-[var(--border-subtle)] my-8">
         {/* Header */}
         <div className="bg-gradient-to-r from-[var(--accent-blue)] to-[var(--accent-purple)] p-6 rounded-t-2xl">

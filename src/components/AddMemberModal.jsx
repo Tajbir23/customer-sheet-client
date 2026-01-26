@@ -58,7 +58,7 @@ const AddMemberModal = ({
     const previewEmails = validateAndParseEmails(emailsText).validEmails;
 
     return (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-3xl shadow-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-hidden">
                 {/* Modal Header */}
                 <div className="bg-gradient-to-r from-green-600 to-blue-600 p-8 text-white relative overflow-hidden">
@@ -69,7 +69,7 @@ const AddMemberModal = ({
 
                     <div className="relative z-10 flex items-center justify-between">
                         <div className="flex items-center gap-4">
-                            <div className="bg-white/20 p-4 rounded-2xl backdrop-blur-sm">
+                            <div className="bg-white/20 p-4 rounded-2xl">
                                 <span className="text-2xl text-white font-bold block text-center">+</span>
                             </div>
                             <div>
@@ -79,7 +79,7 @@ const AddMemberModal = ({
                         </div>
                         <button
                             onClick={handleClose}
-                            className="p-3 bg-white/20 hover:bg-white/30 rounded-2xl transition-all duration-200 backdrop-blur-sm"
+                            className="p-3 bg-white/20 hover:bg-white/30 rounded-2xl transition-all duration-200"
                         >
                             <span className="text-xl text-white font-bold">X</span>
                         </button>

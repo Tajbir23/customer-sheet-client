@@ -125,26 +125,7 @@
   }
 }
 
-/* ==========================================
-   Custom Scrollbar - Simplified
-   ========================================== */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--bg-deepest);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--bg-elevated);
-  border-radius: 4px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--border-default);
-}
+/* Custom Scrollbar styles removed */
 
 /* Selection Styles */
 ::selection {
@@ -191,8 +172,6 @@
 /* Glassmorphism - Fallback to Solid */
 .glass {
   background: var(--bg-surface);
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
   box-shadow: none;
@@ -200,8 +179,6 @@
 
 .glass-light {
   background: var(--bg-surface);
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
   box-shadow: none;
@@ -209,8 +186,6 @@
 
 .glass-card {
   background: var(--bg-surface);
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
   box-shadow: none;
@@ -332,8 +307,6 @@
 
 .card-glass {
   background: var(--bg-surface);
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-lg);
   padding: var(--space-lg);
@@ -575,9 +548,7 @@
 .modal-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.9);
   z-index: 50;
   display: flex;
   align-items: center;
@@ -618,11 +589,7 @@
   top: 0;
   left: 0;
   right: 0;
-  bottom: 0;
-  background:
-    radial-gradient(ellipse at 0% 0%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
-    radial-gradient(ellipse at 100% 0%, rgba(59, 130, 246, 0.08) 0%, transparent 50%),
-    radial-gradient(ellipse at 100% 100%, rgba(6, 182, 212, 0.05) 0%, transparent 50%);
+  background: var(--bg-deepest);
   pointer-events: none;
   z-index: 0;
 }

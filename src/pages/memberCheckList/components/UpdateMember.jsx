@@ -62,13 +62,13 @@ const UpdateMember = ({ member, gptAccount, setIsOpen, memberData, setData }) =>
     };
 
     return (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
+        <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4 overflow-y-auto">
             <div className="bg-[var(--bg-card)] rounded-2xl w-full max-w-4xl max-h-[95vh] overflow-y-auto shadow-2xl border border-[var(--border-subtle)] my-8">
                 {/* Header */}
                 <div className="bg-gradient-to-r from-[var(--accent-blue)] to-[var(--accent-purple)] p-6 rounded-t-2xl">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-4">
-                            <div className="h-12 w-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30 shadow-inner">
+                            <div className="h-12 w-12 rounded-xl bg-white/20 flex items-center justify-center border border-white/30 shadow-inner">
                                 <span className="text-xl font-bold text-white">
                                     {member.customerName?.charAt(0)?.toUpperCase() || 'U'}
                                 </span>

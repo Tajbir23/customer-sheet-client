@@ -65,7 +65,7 @@ const UploadPaypalAccount = ({ setIsOpen }) => {
             if (imageItem) {
                 const file = imageItem.getAsFile()
                 setSelectedFile(file)
-                
+
                 try {
                     const result = await QrScanner.scanImage(file)
                     parseOtpAuthUrl(result)
@@ -98,7 +98,7 @@ const UploadPaypalAccount = ({ setIsOpen }) => {
             }
 
             const parsedUrl = new URL(url)
-            
+
             const issuer = parsedUrl.searchParams.get('issuer')
             if (issuer !== 'PayPal') {
                 throw new Error('This QR code is not from Paypal.')
@@ -156,19 +156,19 @@ const UploadPaypalAccount = ({ setIsOpen }) => {
         const pastedText = e.clipboardData.getData('text')
         if (pastedText.startsWith('otpauth://')) {
             e.preventDefault()
-            parseOtpAuthUrl(pastedText) 
+            parseOtpAuthUrl(pastedText)
         }
     }
 
-    const handleSubmit = async(e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault()
         // TODO: Handle form submission
         try {
             const response = await handleApi('/paypal-account/add', 'POST', formData)
-            if(response.success){
+            if (response.success) {
                 toast.success('Account added successfully')
                 setIsOpen(false)
-            }else{
+            } else {
                 toast.error('Failed to add account')
             }
         } catch (error) {
@@ -178,12 +178,12 @@ const UploadPaypalAccount = ({ setIsOpen }) => {
     }
 
     return (
-        <div className="fixed inset-0 backdrop-blur-sm bg-white/30 flex items-center justify-center p-4 z-50">
+        <div className="fixed inset-0 bg-black/90 flex items-center justify-center p-4 z-50">
             <div className="bg-white rounded-lg shadow-xl w-full max-w-xl max-h-[90vh] flex flex-col">
                 {/* Modal Header - Fixed */}
                 <div className="flex justify-between items-center p-6 border-b shrink-0">
                     <h2 className="text-xl font-semibold text-gray-800">Upload Paypal Account</h2>
-                    <button 
+                    <button
                         onClick={() => setIsOpen(false)}
                         className="text-gray-500 hover:text-gray-700"
                     >
@@ -200,12 +200,12 @@ const UploadPaypalAccount = ({ setIsOpen }) => {
                             <label className="block text-sm font-medium text-gray-700 mb-1">
                                 Email Address
                             </label>
-                            <input 
-                                type="text" 
-                                name='paypal_account_email' 
-                                required 
-                                placeholder='Enter your email' 
-                                value={formData.paypalAccount} 
+                            <input
+                                type="text"
+                                name='paypal_account_email'
+                                required
+                                placeholder='Enter your email'
+                                value={formData.paypalAccount}
                                 onChange={handleChange}
                                 onPaste={handleTextPaste}
                                 autoComplete="off"
@@ -217,12 +217,12 @@ const UploadPaypalAccount = ({ setIsOpen }) => {
                             <label className="block text-sm font-medium text-gray-700 mb-1">
                                 Password
                             </label>
-                            <input 
-                                type="password" 
-                                name='paypal_account_pass' 
-                                required 
-                                placeholder='Enter your password' 
-                                value={formData.password} 
+                            <input
+                                type="password"
+                                name='paypal_account_pass'
+                                required
+                                placeholder='Enter your password'
+                                value={formData.password}
                                 onChange={handleChange}
                                 autoComplete="new-password"
                                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -233,12 +233,12 @@ const UploadPaypalAccount = ({ setIsOpen }) => {
                             <label className="block text-sm font-medium text-gray-700 mb-1">
                                 2FA Secret
                             </label>
-                            <input 
-                                type="text" 
-                                name='secret' 
-                                required 
-                                placeholder='Enter Paypal secret' 
-                                value={formData.secret} 
+                            <input
+                                type="text"
+                                name='secret'
+                                required
+                                placeholder='Enter Paypal secret'
+                                value={formData.secret}
                                 onChange={handleChange}
                                 onPaste={handleTextPaste}
                                 className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -275,10 +275,10 @@ const UploadPaypalAccount = ({ setIsOpen }) => {
                                     <div className="flex text-sm text-gray-600">
                                         <label htmlFor="qr-upload" className="relative cursor-pointer bg-white rounded-md font-medium text-blue-600 hover:text-blue-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
                                             <span>Upload a file</span>
-                                            <input 
+                                            <input
                                                 id="qr-upload"
-                                                type="file" 
-                                                name='qr-code' 
+                                                type="file"
+                                                name='qr-code'
                                                 onChange={handleQrChange}
                                                 className="sr-only"
                                             />

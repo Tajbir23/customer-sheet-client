@@ -131,7 +131,7 @@ const GptAccountCard = ({ accountData, data, setData }) => {
         </div>
 
         {/* Members List */}
-        <div className="max-h-[320px] overflow-y-auto custom-scrollbar p-5 space-y-3">
+        <div className="max-h-[320px] overflow-y-auto p-5 space-y-3">
           {members.length === 0 ? (
             <div className="text-center py-8">
               <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-[var(--bg-surface)] flex items-center justify-center">

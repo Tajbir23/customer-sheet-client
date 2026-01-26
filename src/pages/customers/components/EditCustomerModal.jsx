@@ -60,8 +60,8 @@ const EditCustomerModal = ({ customer, onClose, onUpdate }) => {
     };
 
     return (
-        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto animate-fade-in">
-            <div className="rounded-2xl w-full max-w-4xl max-h-[95vh] overflow-y-auto shadow-2xl border my-8 animate-scale-in"
+        <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4 overflow-y-auto">
+            <div className="rounded-2xl w-full max-w-4xl max-h-[95vh] overflow-y-auto shadow-2xl border my-8"
                 style={{ background: 'var(--bg-card)', borderColor: 'var(--border-subtle)' }}
             >
                 {/* Header */}
@@ -70,7 +70,7 @@ const EditCustomerModal = ({ customer, onClose, onUpdate }) => {
                 >
                     <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-4">
-                            <div className="h-12 w-12 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/10">
+                            <div className="h-12 w-12 rounded-full bg-white/20 flex items-center justify-center border border-white/10">
                                 <span className="text-lg font-bold text-white">
                                     {customer.customerName?.charAt(0)?.toUpperCase() || 'U'}
                                 </span>
@@ -353,7 +353,7 @@ const EditCustomerModal = ({ customer, onClose, onUpdate }) => {
                             disabled={isSubmitting}
                             className={`flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold transition-all duration-200 shadow-lg ${isSubmitting
                                 ? 'bg-[var(--bg-surface)] text-[var(--text-muted)] cursor-not-allowed border border-[var(--border-subtle)]'
-                                : 'text-white hover:scale-[1.02] hover:shadow-xl'
+                                : 'text-white hover:shadow-xl'
                                 }`}
                             style={!isSubmitting ? { background: 'linear-gradient(135deg, var(--accent-blue) 0%, var(--accent-blue-dark) 100%)' } : {}}
                         >

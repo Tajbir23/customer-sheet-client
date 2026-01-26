@@ -73,7 +73,7 @@ const HistoryCard = ({ item, index = 0 }) => {
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+            <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center">
               <FaEnvelope className="text-white text-2xl" />
             </div>
             <div>

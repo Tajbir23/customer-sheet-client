@@ -83,11 +83,11 @@ const AddCustomerForm = ({ setIsOpen, className }) => {
   return (
     <div className={`fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto ${className}`}>
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setIsOpen(false)}></div>
+      <div className="absolute inset-0 bg-black/90" onClick={() => setIsOpen(false)}></div>
 
-      <div className="relative bg-[var(--bg-card)] rounded-2xl w-full max-w-5xl max-h-[90vh] overflow-y-auto shadow-2xl border border-[var(--border-subtle)] animate-scale-in my-8">
+      <div className="relative bg-[var(--bg-card)] rounded-2xl w-full max-w-5xl max-h-[90vh] overflow-y-auto shadow-2xl border border-[var(--border-subtle)] my-8">
         {/* Header */}
-        <div className="sticky top-0 z-10 px-6 py-4 border-b border-[var(--border-subtle)] bg-[var(--bg-card)]/95 backdrop-blur-md flex items-center justify-between">
+        <div className="sticky top-0 z-10 px-6 py-4 border-b border-[var(--border-subtle)] bg-[var(--bg-card)] flex items-center justify-between">
           <div>
             <h2 className="text-xl font-bold text-[var(--text-primary)]">Add New Customer</h2>
             <p className="text-[var(--text-secondary)] text-sm">Enter the details for the new customer</p>

@@ -3,8 +3,8 @@ import React from 'react';
 
 const DeleteCustomerModal = ({ customer, onClose, onDelete }) => {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 animate-fade-in">
-      <div className="rounded-2xl shadow-2xl p-6 max-w-sm w-full border animate-scale-in"
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4">
+      <div className="rounded-2xl shadow-2xl p-6 max-w-sm w-full border"
         style={{ background: 'var(--bg-card)', borderColor: 'var(--border-subtle)' }}>
 
         {/* Header */}
@@ -55,7 +55,7 @@ const DeleteCustomerModal = ({ customer, onClose, onDelete }) => {
             Cancel
           </button>
           <button
-            className="px-5 py-2.5 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 flex items-center gap-2"
+            className="px-5 py-2.5 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2"
             style={{ background: 'linear-gradient(135deg, var(--error) 0%, var(--error-dark) 100%)' }}
             onClick={() => onDelete(customer._id)}
           >

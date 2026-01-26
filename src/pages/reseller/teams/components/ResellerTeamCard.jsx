@@ -151,11 +151,7 @@ const ResellerTeamCard = ({ team, onRemoveMember, onMemberAdded }) => {
 
                     {/* Header Section */}
                     <div className="relative p-6 overflow-hidden bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600">
-                        {/* Background Pattern */}
-                        <div className="absolute inset-0 opacity-10">
-                            <div className="absolute top-0 right-0 w-32 h-32 bg-white rounded-full -translate-y-16 translate-x-16"></div>
-                            <div className="absolute bottom-0 left-0 w-24 h-24 bg-white rounded-full translate-y-12 -translate-x-12"></div>
-                        </div>
+                        {/* Background Pattern Removed */}
 
                         <div className="relative z-10">
                             {/* Account Info */}
@@ -169,7 +165,7 @@ const ResellerTeamCard = ({ team, onRemoveMember, onMemberAdded }) => {
                                             </h3>
                                             <button
                                                 onClick={handleCopyEmail}
-                                                className="flex-shrink-0 p-2 bg-white/20 hover:bg-white/30 rounded-lg transition-all duration-200 backdrop-blur-sm"
+                                                className="flex-shrink-0 p-2 bg-white/20 hover:bg-white/30 rounded-lg transition-all duration-200"
                                                 title="Copy email"
                                             >
                                                 {copied ? (
@@ -188,7 +184,7 @@ const ResellerTeamCard = ({ team, onRemoveMember, onMemberAdded }) => {
                             <div className="flex items-center justify-between flex-wrap gap-3">
                                 {/* Total Members Stats */}
                                 <div className="flex items-center gap-3">
-                                    <div className="bg-white/20 backdrop-blur-sm rounded-2xl px-4 py-3">
+                                    <div className="bg-white/20 rounded-2xl px-4 py-3">
                                         <div className="flex items-center gap-2">
                                             <div>
                                                 <div className="text-2xl font-bold text-white">{usedSlots}</div>
@@ -212,7 +208,7 @@ const ResellerTeamCard = ({ team, onRemoveMember, onMemberAdded }) => {
                                     <button
                                         onClick={handleOpenAddModal}
                                         disabled={availableSlots <= 0}
-                                        className={`flex items-center gap-1.5 backdrop-blur-sm rounded-xl px-4 py-2 transition-all duration-200 font-medium ${availableSlots > 0
+                                        className={`flex items-center gap-1.5 rounded-xl px-4 py-2 transition-all duration-200 font-medium ${availableSlots > 0
                                             ? 'bg-green-500/80 hover:bg-green-500 text-white shadow-lg shadow-green-500/25'
                                             : 'bg-gray-400/50 text-gray-200 cursor-not-allowed'
                                             }`}
@@ -224,7 +220,7 @@ const ResellerTeamCard = ({ team, onRemoveMember, onMemberAdded }) => {
                                     {hasMembers && (
                                         <button
                                             onClick={() => setIsExpanded(!isExpanded)}
-                                            className="flex items-center gap-1.5 bg-white/20 hover:bg-white/30 backdrop-blur-sm rounded-xl px-4 py-2 transition-all duration-200 text-white font-medium"
+                                            className="flex items-center gap-1.5 bg-white/20 hover:bg-white/30 rounded-xl px-4 py-2 transition-all duration-200 text-white font-medium"
                                         >
                                             <span className="text-sm">My Members ({team.members.length}) {isExpanded ? '▲' : '▼'}</span>
                                         </button>
@@ -305,23 +301,21 @@ const ResellerTeamCard = ({ team, onRemoveMember, onMemberAdded }) => {
                 </div>
 
                 {/* Hover Glow Effect */}
-                <div className="absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10 blur-xl bg-gradient-to-br from-indigo-400/20 via-purple-400/20 to-pink-400/20"></div>
+                {/* Hover Glow Effect Removed */}
             </div>
 
-            {/* Add Member Modal */}
             {showAddModal && (
-                <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4">
                     <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full mx-4 overflow-hidden">
                         {/* Modal Header */}
                         <div className="bg-gradient-to-r from-green-600 to-teal-600 p-6 text-white relative overflow-hidden">
                             <div className="absolute inset-0 opacity-10">
-                                <div className="absolute top-0 right-0 w-32 h-32 bg-white rounded-full -translate-y-16 translate-x-16"></div>
-                                <div className="absolute bottom-0 left-0 w-24 h-24 bg-white rounded-full translate-y-12 -translate-x-12"></div>
+                                {/* Background Pattern Removed */}
                             </div>
 
                             <div className="relative z-10 flex items-center justify-between">
                                 <div className="flex items-center gap-4">
-                                    <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-sm">
+                                    <div className="bg-white/20 p-3 rounded-2xl">
                                         <span className="text-xl text-white">+</span>
                                     </div>
                                     <div>
@@ -333,7 +327,7 @@ const ResellerTeamCard = ({ team, onRemoveMember, onMemberAdded }) => {
                                 </div>
                                 <button
                                     onClick={handleCloseAddModal}
-                                    className="p-2 bg-white/20 hover:bg-white/30 rounded-xl transition-all duration-200 backdrop-blur-sm"
+                                    className="p-2 bg-white/20 hover:bg-white/30 rounded-xl transition-all duration-200"
                                 >
                                     <span className="text-lg text-white">X</span>
                                 </button>

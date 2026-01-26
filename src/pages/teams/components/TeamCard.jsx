@@ -239,7 +239,7 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
       <div className="group relative">
         {/* Main Card */}
         <div className={`
-            relative overflow-hidden rounded-3xl transition-all duration-300 hover:scale-[1.02] hover:shadow-2xl
+            relative overflow-hidden rounded-3xl transition-all duration-300
             ${team.isActive
             ? 'glass-card border-[var(--border-subtle)]'
             : 'bg-[var(--bg-elevated)] opacity-90 border-[var(--error)]/30'
@@ -254,11 +254,7 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
               : 'bg-gradient-to-br from-[var(--error-bg)] to-transparent'
             }
             `}>
-            {/* Background Pattern */}
-            <div className="absolute inset-0 opacity-5">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-white rounded-full -translate-y-16 translate-x-16"></div>
-              <div className="absolute bottom-0 left-0 w-24 h-24 bg-white rounded-full translate-y-12 -translate-x-12"></div>
-            </div>
+            {/* Background Pattern Removed */}
 
             <div className="relative z-10">
               {/* Status Row */}
@@ -499,7 +495,7 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
                   </div>
                   <button
                     onClick={handleAddMemberClick}
-                    className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 hover:scale-105 hover:shadow-lg ${team.isActive
+                    className={`flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${team.isActive
                       ? 'bg-[var(--success)] hover:bg-[var(--success-light)] text-white'
                       : 'bg-[var(--error)] hover:bg-[var(--error-light)] text-white'
                       }`}
@@ -544,9 +540,9 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
                     <h4 className="text-lg font-semibold text-white mb-2">No Team Members</h4>
                     <button
                       onClick={handleAddMemberClick}
-                      className={`flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold transition-all duration-200 hover:scale-105 mx-auto ${team.isActive
-                        ? 'bg-gradient-to-r from-[var(--success)] to-[var(--success-light)] text-white shadow-lg shadow-green-900/20'
-                        : 'bg-gradient-to-r from-[var(--error)] to-[var(--error-light)] text-white shadow-lg shadow-red-900/20'
+                      className={`flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold transition-all duration-200 mx-auto ${team.isActive
+                        ? 'bg-gradient-to-r from-[var(--success)] to-[var(--success-light)] text-white shadow-lg'
+                        : 'bg-gradient-to-r from-[var(--error)] to-[var(--error-light)] text-white shadow-lg'
                         }`}
                     >
                       Add First Member
@@ -580,20 +576,19 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
 
       {
         showAddModal && (
-          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4">
             <div className="rounded-3xl shadow-2xl max-w-2xl w-full mx-4 max-h-[90vh] overflow-hidden"
               style={{ background: 'var(--bg-card)', border: '1px solid var(--border-subtle)' }}>
               {/* Modal Header */}
               <div className="p-8 text-white relative overflow-hidden"
                 style={{ background: 'linear-gradient(135deg, var(--accent-purple) 0%, var(--accent-blue) 100%)' }}>
                 <div className="absolute inset-0 opacity-10">
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-white rounded-full -translate-y-16 translate-x-16"></div>
-                  <div className="absolute bottom-0 left-0 w-24 h-24 bg-white rounded-full translate-y-12 -translate-x-12"></div>
+                  {/* Background Pattern Removed */}
                 </div>
 
                 <div className="relative z-10 flex items-center justify-between">
                   <div className="flex items-center gap-4">
-                    <div className="bg-white/20 p-4 rounded-2xl backdrop-blur-sm">
+                    <div className="bg-white/20 p-4 rounded-2xl">
                       <span className="text-2xl text-white">+</span>
                     </div>
                     <div>
@@ -603,7 +598,7 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
                   </div>
                   <button
                     onClick={handleCloseAddModal}
-                    className="p-3 bg-white/20 hover:bg-white/30 rounded-2xl transition-all duration-200 backdrop-blur-sm"
+                    className="p-3 bg-white/20 hover:bg-white/30 rounded-2xl transition-all duration-200"
                   >
                     <span className="text-xl text-white">X</span>
                   </button>
@@ -611,7 +606,7 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
               </div>
 
               {/* Modal Body */}
-              <div className="p-8 max-h-[60vh] overflow-y-auto custom-scrollbar">
+              <div className="p-8 max-h-[60vh] overflow-y-auto">
                 {/* Reference Selection */}
                 <div className="mb-6">
                   <label className="block text-sm font-bold text-[var(--text-secondary)] mb-3">

@@ -79,8 +79,8 @@ const RemoveMemberModal = ({
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-            <div className="bg-[var(--bg-card)] rounded-2xl border border-[var(--border-subtle)] max-w-md w-full mx-4 overflow-hidden animate-scale-in">
+        <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4">
+            <div className="bg-[var(--bg-card)] rounded-2xl border border-[var(--border-subtle)] max-w-md w-full mx-4 overflow-hidden">
                 {/* Modal Header */}
                 <div className="p-6 border-b border-[var(--border-subtle)]">
                     <div className="flex items-center justify-between">

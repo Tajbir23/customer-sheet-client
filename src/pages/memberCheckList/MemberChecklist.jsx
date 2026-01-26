@@ -13,12 +13,16 @@ const MemberChecklist = () => {
     const [totalGptAccounts, setTotalGptAccounts] = useState(0)
     const [totalMembers, setTotalMembers] = useState(0)
     const [isSearching, setIsSearching] = useState(false)
+
+    const [reference, setReference] = useState('')
+    const [references, setReferences] = useState([]) // Store fetched references
+
     console.log(data)
 
     const fetchData = useCallback(async (searchEmail = '', page = 1) => {
         try {
             setLoading(true)
-            const response = await handleApi(`/gpt-account/member-checklist?page=${page}&email=${searchEmail}`)
+            const response = await handleApi(`/gpt-account/member-checklist?page=${page}&email=${searchEmail}&reference=${reference}`)
             console.log(response)
             if (response.memberChecklist) {
                 setData(response.memberChecklist)
@@ -37,7 +41,8 @@ const MemberChecklist = () => {
             setLoading(false)
             setIsSearching(false)
         }
-    }, [])
+    }, [reference]) // Added reference dependency
+
 
     useEffect(() => {
         let isMounted = true
@@ -53,6 +58,22 @@ const MemberChecklist = () => {
             isMounted = false
         }
     }, [fetchData])
+
+    // Fetch references on component mount
+    useEffect(() => {
+        const fetchReferences = async () => {
+            try {
+                const response = await handleApi('/references')
+                if (response.success && response.data) {
+                    setReferences(response.data)
+                }
+            } catch (error) {
+                console.error('Error fetching references:', error)
+            }
+        }
+        fetchReferences()
+    }, [])
+
 
     const handleSearch = useCallback((searchValue) => {
         setIsSearching(true)
@@ -303,6 +324,41 @@ const MemberChecklist = () => {
                                             </>
                                         )}
                                     </button>
+
+                                    <div className="relative">
+                                        <select
+                                            value={reference}
+                                            onChange={(e) => {
+                                                setReference(e.target.value)
+                                                // Trigger search/filter update logic if needed immediately or rely on fetchData dependency (if implemented)
+                                                // Ideally, we might want to manually trigger a refetch here or let a useEffect handle it if reference is in dependency
+                                                // But fetchData is useCallback dependent on nothing currently in original code, 
+                                                // and we updated fetchData to include reference in URL but we need to ensure it re-runs.
+                                                // However, since fetchData is passed to useEffect, we should adding reference to its dependency or rely on a separate effect.
+                                                // Given the existing pattern, let's just update the state.
+                                                // Wait... the original fetchData didn't depend on reference.
+                                                // We need to update fetchData dependency array or call it explicitly.
+                                                // Let's call fetchData explicitly here for immediate reaction, similar to handleSearch.
+                                                // Actually, better to just update state and let a useEffect or similar handle it, 
+                                                // BUT existing code structure relies on manual calls mostly + one initial useEffect.
+                                                // So I will fix fetchData dependency below as well. 
+                                            }}
+                                            className="appearance-none pl-4 pr-10 py-2 rounded-xl font-medium text-sm bg-[var(--bg-card)] border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:border-[var(--text-secondary)] hover:text-white transition-colors focus:outline-none focus:border-[var(--accent-blue)]"
+                                        >
+                                            <option value="">All References</option>
+                                            {references.map((ref) => (
+                                                <option key={ref._id} value={ref._id}>
+                                                    {ref.username || ref.email}
+                                                </option>
+                                            ))}
+                                        </select>
+                                        <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-[var(--text-secondary)]">
+                                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                                            </svg>
+                                        </div>
+                                    </div>
+
 
                                     {search && (
                                         <button

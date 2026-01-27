@@ -17,11 +17,12 @@ import {
   FaCommentDots,
   FaTimes,
   FaBars,
-  FaCheckCircle
+  FaCheckCircle,
+  FaCog
 } from 'react-icons/fa';
 
 
-const Navbar = ({ isOpen, setIsOpen }) => {
+const Navbar = ({ isOpen, setIsOpen, onOpenSettings }) => {
   const location = useLocation();
 
   const token = localStorage.getItem('token');
@@ -162,17 +163,29 @@ const Navbar = ({ isOpen, setIsOpen }) => {
 
             {/* Footer */}
             <div className="p-4 border-t border-[var(--border-subtle)]">
-              <div className="flex items-center gap-3 px-3 py-3 rounded-xl bg-[var(--bg-surface)]">
-                <div className="w-9 h-9 rounded-full bg-[var(--accent-blue)] flex items-center justify-center">
-                  <span className="text-white text-sm font-semibold">
-                    {decoded.username?.charAt(0)?.toUpperCase() || 'A'}
-                  </span>
+              <div className="flex items-center gap-2">
+                <div className="flex-1 flex items-center gap-3 px-3 py-3 rounded-xl bg-[var(--bg-surface)] min-w-0">
+                  <div className="w-9 h-9 rounded-full bg-[var(--accent-blue)] flex items-center justify-center shrink-0">
+                    <span className="text-white text-sm font-semibold">
+                      {decoded.username?.charAt(0)?.toUpperCase() || 'A'}
+                    </span>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-white truncate">{decoded.username || 'Admin'}</p>
+                    <p className="text-xs text-[var(--text-tertiary)] capitalize">{decoded.role || 'User'}</p>
+                  </div>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-white truncate">{decoded.username || 'Admin'}</p>
-                  <p className="text-xs text-[var(--text-tertiary)] capitalize">{decoded.role || 'User'}</p>
-                </div>
-                <div className="w-2 h-2 rounded-full bg-[var(--success)]" />
+
+                <button
+                  onClick={() => {
+                    setIsOpen(false);
+                    onOpenSettings();
+                  }}
+                  className="p-3 rounded-xl bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:text-white hover:bg-[var(--bg-hover)] border border-transparent hover:border-[var(--border-subtle)] transition-all"
+                  aria-label="Settings"
+                >
+                  <FaCog />
+                </button>
               </div>
             </div>
           </div>

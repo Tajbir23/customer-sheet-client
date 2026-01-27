@@ -163,7 +163,18 @@ const SettingsModal = ({ isOpen, onClose }) => {
                                                     type="range"
                                                     min={style.min} max={style.max} step={style.step || 1}
                                                     value={parseFloat(styles[style.id])}
-                                                    onChange={(e) => updateStyle(style.id, `${e.target.value}${style.type === 'number' ? '' : style.type}`)}
+                                                    onChange={(e) => {
+                                                        const newVal = `${e.target.value}${style.type === 'number' ? '' : style.type}`;
+                                                        updateStyle(style.id, newVal);
+
+                                                        // Auto-enable performance settings if disabled
+                                                        if (style.id === '--glass-blur' && !performance.enableGlassmorphism) {
+                                                            updatePerformance('enableGlassmorphism', true);
+                                                        }
+                                                        if (style.id === '--shadow-opacity' && !performance.enableShadows) {
+                                                            updatePerformance('enableShadows', true);
+                                                        }
+                                                    }}
                                                     className="w-full accent-[var(--accent-purple)]"
                                                 />
                                                 <div className="flex justify-between items-center mt-1">

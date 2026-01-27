@@ -185,9 +185,9 @@ const UploadGptAccount = ({ setIsOpen }) => {
     return (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
             <div className="fixed inset-0 bg-black/90" onClick={() => setIsOpen(false)}></div>
-            <div className="relative bg-[var(--bg-card)] rounded-2xl w-full max-w-xl max-h-[90vh] flex flex-col shadow-2xl border border-[var(--border-subtle)]">
+            <div className="relative glass rounded-2xl w-full max-w-xl max-h-[90vh] flex flex-col shadow-2xl border border-[var(--border-subtle)]">
                 {/* Modal Header - Fixed */}
-                <div className="flex justify-between items-center px-6 py-4 border-b border-[var(--border-subtle)] bg-[var(--bg-card)] rounded-t-2xl">
+                <div className="flex justify-between items-center px-6 py-4 border-b border-[var(--border-subtle)] bg-transparent rounded-t-2xl">
                     <h2 className="text-xl font-bold text-[var(--text-primary)]">Upload GPT Account</h2>
                     <button
                         onClick={() => setIsOpen(false)}
@@ -317,7 +317,7 @@ const UploadGptAccount = ({ setIsOpen }) => {
                 </div>
 
                 {/* Modal Footer - Fixed */}
-                <div className="flex justify-end gap-3 p-6 border-t border-[var(--border-subtle)] bg-[var(--bg-card)] rounded-b-2xl">
+                <div className="flex justify-end gap-3 p-6 border-t border-[var(--border-subtle)] bg-transparent rounded-b-2xl">
                     <button
                         type="button"
                         onClick={() => setIsOpen(false)}

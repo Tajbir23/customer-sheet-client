@@ -104,17 +104,17 @@ const Navbar = ({ isOpen, setIsOpen, onOpenSettings }) => {
       {/* Sidebar - No Animation, Conditional Render */}
       {isOpen && (
         <div className="fixed inset-y-0 left-0 z-50 pointer-events-auto flex">
-          <div className="flex flex-col h-full w-72 bg-[var(--bg-card)] border-r border-[var(--border-subtle)] shadow-xl overflow-hidden">
+          <div className="flex flex-col h-full w-72 glass border-r border-[var(--border-subtle)] shadow-xl overflow-hidden">
 
             {/* Header */}
-            <div className="h-20 px-6 flex items-center justify-between border-b border-[var(--border-subtle)] bg-[var(--bg-card)]">
+            <div className="h-20 px-6 flex items-center justify-between border-b border-[var(--border-subtle)] bg-transparent">
               {/* Logo/Brand */}
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-xl bg-[var(--accent-purple)] flex items-center justify-center">
                   <span className="text-white font-bold text-lg">CS</span>
                 </div>
                 <div>
-                  <h1 className="text-lg font-bold text-white">Customer Sheet</h1>
+                  <h1 className="text-lg font-bold text-[var(--text-primary)]">Customer Sheet</h1>
                   <p className="text-xs text-[var(--text-tertiary)]">Management System</p>
                 </div>
               </div>
@@ -122,7 +122,7 @@ const Navbar = ({ isOpen, setIsOpen, onOpenSettings }) => {
               {/* Close Button */}
               <button
                 type="button"
-                className="p-2 rounded-lg text-[var(--text-tertiary)] hover:text-white hover:bg-[var(--bg-hover)]"
+                className="p-2 rounded-lg text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)]"
                 onClick={() => setIsOpen(false)}
               >
                 <FaTimes />
@@ -142,7 +142,7 @@ const Navbar = ({ isOpen, setIsOpen, onOpenSettings }) => {
                     className={`flex items-center px-4 py-3 text-sm font-medium rounded-xl 
                     ${isActive
                         ? "bg-[var(--accent-blue)] text-white"
-                        : "text-[var(--text-secondary)] hover:text-white hover:bg-[var(--bg-hover)]"
+                        : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)]"
                       }`}
                   >
                     {/* Icon Container */}
@@ -171,7 +171,7 @@ const Navbar = ({ isOpen, setIsOpen, onOpenSettings }) => {
                     </span>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-white truncate">{decoded.username || 'Admin'}</p>
+                    <p className="text-sm font-medium text-[var(--text-primary)] truncate">{decoded.username || 'Admin'}</p>
                     <p className="text-xs text-[var(--text-tertiary)] capitalize">{decoded.role || 'User'}</p>
                   </div>
                 </div>
@@ -181,7 +181,7 @@ const Navbar = ({ isOpen, setIsOpen, onOpenSettings }) => {
                     setIsOpen(false);
                     onOpenSettings();
                   }}
-                  className="p-3 rounded-xl bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:text-white hover:bg-[var(--bg-hover)] border border-transparent hover:border-[var(--border-subtle)] transition-all"
+                  className="p-3 rounded-xl bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)] border border-transparent hover:border-[var(--border-subtle)] transition-all"
                   aria-label="Settings"
                 >
                   <FaCog />

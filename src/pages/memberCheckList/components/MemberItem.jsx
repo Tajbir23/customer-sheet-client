@@ -45,7 +45,7 @@ const MemberItem = ({ member, gptAccount, data, setData }) => {
                 </p>
                 <button
                   onClick={handleCopyEmail}
-                  className="p-1.5 rounded-md hover:bg-[var(--bg-hover)] text-[var(--text-tertiary)] hover:text-white transition-colors opacity-0 group-hover/item:opacity-100"
+                  className="p-1.5 rounded-md hover:bg-[var(--bg-hover)] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors opacity-0 group-hover/item:opacity-100"
                   title="Copy email"
                 >
                   {copied ? (

@@ -21,7 +21,7 @@ const EmptyState = ({ searchEmail, clearSearch }) => {
                 </div>
 
                 <div className="max-w-md mx-auto">
-                    <h3 className="text-2xl font-bold text-white mb-3">
+                    <h3 className="text-2xl font-bold text-[var(--text-primary)] mb-3">
                         {searchEmail ? 'No Results Found' : 'No Removed Members'}
                     </h3>
                     <p className="text-[var(--text-secondary)] mb-6 leading-relaxed">

@@ -8,7 +8,7 @@ const PageHeader = ({ totalAccounts, totalMembers, totalUniqueMembers, loading }
             <nav className="flex items-center space-x-2 text-sm text-[var(--text-tertiary)] mb-4">
                 <span className="w-4 h-4 font-bold">Home</span>
                 <span className="w-3 h-3 font-bold">&gt;</span>
-                <span className="text-white font-medium">Removed Members</span>
+                <span className="text-[var(--text-primary)] font-medium">Removed Members</span>
             </nav>
 
             {/* Header Content */}
@@ -32,7 +32,7 @@ const PageHeader = ({ totalAccounts, totalMembers, totalUniqueMembers, loading }
                                 <span className="text-[var(--accent-blue)] font-bold">AC</span>
                             </div>
                             <div>
-                                <div className="text-2xl font-bold text-white">
+                                <div className="text-2xl font-bold text-[var(--text-primary)]">
                                     {loading ? '--' : totalAccounts}
                                 </div>
                                 <div className="text-xs text-[var(--text-tertiary)] uppercase tracking-wide">
@@ -43,7 +43,7 @@ const PageHeader = ({ totalAccounts, totalMembers, totalUniqueMembers, loading }
                     </div>
 
                     {/* Total Removed Members */}
-                    <div className="bg-[var(--bg-card)] rounded-xl p-4 border border-[var(--border-subtle)]">
+                    <div className="glass rounded-xl p-4 border border-[var(--border-subtle)]">
                         <div className="flex items-center gap-3">
                             <div className="w-10 h-10 bg-[var(--error)]/10 rounded-lg flex items-center justify-center">
                                 <span className="text-[var(--error)] font-bold">RM</span>
@@ -60,7 +60,7 @@ const PageHeader = ({ totalAccounts, totalMembers, totalUniqueMembers, loading }
                     </div>
 
                     {/* Total Unique Members */}
-                    <div className="bg-[var(--bg-card)] rounded-xl p-4 border border-[var(--border-subtle)]">
+                    <div className="glass rounded-xl p-4 border border-[var(--border-subtle)]">
                         <div className="flex items-center gap-3">
                             <div className="w-10 h-10 bg-[var(--warning)]/10 rounded-lg flex items-center justify-center">
                                 <span className="text-[var(--warning)] font-bold">UM</span>

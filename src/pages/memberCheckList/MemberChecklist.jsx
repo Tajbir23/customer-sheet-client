@@ -237,25 +237,25 @@ const MemberChecklist = () => {
 
                         {/* Stats Cards */}
                         <div className="flex flex-wrap gap-4">
-                            <div className="rounded-xl px-5 py-3 border border-[var(--border-subtle)] bg-[var(--bg-card)] shadow-sm hover:border-[var(--accent-blue)] transition-colors">
+                            <div className="rounded-xl px-5 py-3 glass shadow-sm hover:border-[var(--accent-blue)] transition-colors">
                                 <div className="flex items-center gap-3">
                                     <div className="p-2 rounded-lg bg-[var(--accent-blue)]/10">
                                         <span className="h-4 w-4 text-[var(--accent-blue)] font-bold text-xs">A</span>
                                     </div>
                                     <div>
                                         <p className="text-xs font-semibold text-[var(--text-tertiary)] uppercase tracking-wide">Total Accounts</p>
-                                        <p className="text-lg font-bold text-white">{totalGptAccounts}</p>
+                                        <p className="text-lg font-bold text-[var(--text-primary)]">{totalGptAccounts}</p>
                                     </div>
                                 </div>
                             </div>
-                            <div className="rounded-xl px-5 py-3 border border-[var(--border-subtle)] bg-[var(--bg-card)] shadow-sm hover:border-[var(--accent-green)] transition-colors">
+                            <div className="rounded-xl px-5 py-3 glass shadow-sm hover:border-[var(--accent-green)] transition-colors">
                                 <div className="flex items-center gap-3">
                                     <div className="p-2 rounded-lg bg-[var(--accent-green)]/10">
                                         <span className="h-4 w-4 text-[var(--accent-green)] font-bold text-xs">M</span>
                                     </div>
                                     <div>
                                         <p className="text-xs font-semibold text-[var(--text-tertiary)] uppercase tracking-wide">Total Members</p>
-                                        <p className="text-lg font-bold text-white">{totalMembers}</p>
+                                        <p className="text-lg font-bold text-[var(--text-primary)]">{totalMembers}</p>
                                     </div>
                                 </div>
                             </div>
@@ -266,7 +266,7 @@ const MemberChecklist = () => {
                                     </div>
                                     <div>
                                         <p className="text-xs font-semibold text-[var(--text-tertiary)] uppercase tracking-wide">Active Accounts</p>
-                                        <p className="text-lg font-bold text-white">{activeAccounts}</p>
+                                        <p className="text-lg font-bold text-[var(--text-primary)]">{activeAccounts}</p>
                                     </div>
                                 </div>
                             </div>
@@ -291,7 +291,7 @@ const MemberChecklist = () => {
                                         value={search}
                                         onChange={(e) => setSearch(e.target.value)}
                                         placeholder="Search by email address..."
-                                        className="block w-full pl-12 pr-12 py-3 border border-[var(--border-subtle)] rounded-xl bg-[var(--bg-card)] text-white focus:border-[var(--accent-blue)] focus:ring-1 focus:ring-[var(--accent-blue)] transition-all duration-200 placeholder-[var(--text-muted)]"
+                                        className="block w-full pl-12 pr-12 py-3 border border-[var(--border-subtle)] rounded-xl bg-[var(--bg-card)] text-[var(--text-primary)] focus:border-[var(--accent-blue)] focus:ring-1 focus:ring-[var(--accent-blue)] transition-all duration-200 placeholder-[var(--text-muted)]"
                                     />
                                     {search && (
                                         <button
@@ -392,7 +392,7 @@ const MemberChecklist = () => {
 
                         {/* Quick Search Suggestions */}
                         <div className="lg:w-80">
-                            <div className="bg-[var(--bg-card)] rounded-xl p-4 border border-[var(--border-subtle)]">
+                            <div className="glass rounded-xl p-4">
                                 <h3 className="text-xs font-bold text-[var(--text-tertiary)] uppercase tracking-wider mb-3">Quick Search</h3>
                                 <div className="flex flex-wrap gap-2">
                                     {['@gmail.com', '@yahoo.com', '@outlook.com', '@hotmail.com'].map((suggestion) => (
@@ -422,7 +422,7 @@ const MemberChecklist = () => {
                                         <span className="text-[var(--accent-blue)] font-bold text-xs">M</span>
                                     </div>
                                     <div>
-                                        <p className="text-sm font-bold text-white">
+                                        <p className="text-sm font-bold text-[var(--text-primary)]">
                                             {search ? `Search results for "${search}"` : 'All Member Accounts'}
                                         </p>
                                         <p className="text-xs text-[var(--text-secondary)]">
@@ -434,7 +434,7 @@ const MemberChecklist = () => {
                                 {totalPages > 1 && (
                                     <div className="text-right">
                                         <p className="text-sm font-medium text-[var(--text-secondary)]">
-                                            Page <span className="text-white font-bold">{currentPage}</span> of {totalPages}
+                                            Page <span className="text-[var(--text-primary)] font-bold">{currentPage}</span> of {totalPages}
                                         </p>
                                         <p className="text-xs text-[var(--text-tertiary)]">
                                             Showing {Math.min(((currentPage - 1) * 10) + 1, totalItems)}-{Math.min(currentPage * 10, totalItems)} of {totalItems}
@@ -452,7 +452,7 @@ const MemberChecklist = () => {
                 {loading ? (
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         {[...Array(6)].map((_, index) => (
-                            <div key={index} className="rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-card)] p-6">
+                            <div key={index} className="rounded-xl glass p-6">
                                 <div className="card-body">
                                     <div>
                                         <div className="h-6 bg-[var(--bg-surface)] rounded mb-4 w-1/3"></div>
@@ -466,12 +466,12 @@ const MemberChecklist = () => {
                     </div>
                 ) : data.length === 0 ? (
                     <div className="text-center py-20">
-                        <div className="max-w-lg mx-auto p-8 rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-card)]">
+                        <div className="max-w-lg mx-auto p-8 rounded-2xl glass">
                             <div className="text-center">
                                 <div className="w-20 h-20 mx-auto mb-6 bg-[var(--bg-surface)] rounded-full flex items-center justify-center">
                                     <span className="text-[var(--text-muted)] font-bold text-2xl">?</span>
                                 </div>
-                                <h3 className="text-xl font-bold text-white mb-2">
+                                <h3 className="text-xl font-bold text-[var(--text-primary)] mb-2">
                                     {search ? 'No Results Found' : 'No Accounts Available'}
                                 </h3>
                                 <p className="text-[var(--text-secondary)] mb-6">

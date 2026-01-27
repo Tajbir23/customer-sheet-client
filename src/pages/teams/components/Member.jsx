@@ -72,7 +72,7 @@ const Member = ({ index, team, member, onRemoveMember, isNewlyAdded = false }) =
                     {/* Member Info */}
                     <div className="flex-grow min-w-0">
                         <div className="flex items-center gap-2 mb-1">
-                            <span className="text-sm truncate font-semibold text-white">
+                            <span className="text-sm truncate font-semibold text-[var(--text-primary)]">
                                 {member}
                             </span>
                         </div>
@@ -154,7 +154,7 @@ const Member = ({ index, team, member, onRemoveMember, isNewlyAdded = false }) =
                                         {getInitials(member)}
                                     </div>
                                     <div className="flex-grow min-w-0">
-                                        <p className="font-bold text-white truncate">
+                                        <p className="font-bold text-[var(--text-primary)] truncate">
                                             {member}
                                         </p>
                                         <p className="text-xs text-[var(--text-tertiary)] truncate">

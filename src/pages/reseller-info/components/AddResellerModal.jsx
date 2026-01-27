@@ -45,7 +45,7 @@ const AddResellerModal = ({ onClose, onSuccess }) => {
 
   return (
     <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4 overflow-y-auto">
-      <div className="bg-[var(--bg-card)] rounded-2xl w-full max-w-lg border border-[var(--border-subtle)]">
+      <div className="glass rounded-2xl w-full max-w-lg border border-[var(--border-subtle)]">
         {/* Header */}
         <div className="p-6 border-b border-[var(--border-subtle)]">
           <div className="flex items-center justify-between">

@@ -41,7 +41,7 @@ const EmptyState = ({ message, type = 'default', actionButton }) => {
           </span>
         </div>
 
-        <h3 className="text-xl font-bold text-white mb-2">
+        <h3 className="text-xl font-bold text-[var(--text-primary)] mb-2">
           {message}
         </h3>
 

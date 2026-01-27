@@ -25,9 +25,9 @@ const MemberCard = ({ member }) => {
     const hasMoreMembers = member.members.length > 3;
 
     return (
-        <div className="group bg-[var(--bg-card)] rounded-2xl border border-[var(--border-subtle)] hover:border-[var(--border-default)] transition-all duration-300 overflow-hidden">
+        <div className="group glass rounded-2xl overflow-hidden hover:border-[var(--border-default)] transition-all duration-300">
             {/* Card Header */}
-            <div className="relative bg-[var(--bg-surface)] px-6 py-5 border-b border-[var(--border-subtle)]">
+            <div className="relative bg-white/5 px-6 py-5 border-b border-[var(--border-subtle)]">
                 <div className="flex items-start justify-between">
                     <div className="flex items-center space-x-4">
                         <div className="relative">
@@ -40,7 +40,7 @@ const MemberCard = ({ member }) => {
                         </div>
                         <div className="flex-1">
                             <div className="flex items-center space-x-2 mb-1">
-                                <h3 className="text-lg font-bold text-white group-hover:text-[var(--accent-blue)] transition-colors">
+                                <h3 className="text-lg font-bold text-[var(--text-primary)] group-hover:text-[var(--accent-blue)] transition-colors">
                                     {member.gptAccount}
                                 </h3>
                                 <button
@@ -102,7 +102,7 @@ const MemberCard = ({ member }) => {
                                             {email.charAt(0).toUpperCase()}
                                         </span>
                                     </div>
-                                    <span className="text-sm font-medium text-[var(--text-secondary)] group-hover/member:text-white">
+                                    <span className="text-sm font-medium text-[var(--text-secondary)] group-hover/member:text-[var(--text-primary)]">
                                         {email}
                                     </span>
                                     {copiedEmail === email && (

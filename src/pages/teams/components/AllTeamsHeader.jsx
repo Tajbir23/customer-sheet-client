@@ -4,7 +4,7 @@ import React from "react";
 const AllTeamsHeader = ({ totalCount }) => {
     return (
         <div className="mb-6 animate-fade-in">
-            <div className="bg-[var(--bg-card)] border border-[var(--border-subtle)] rounded-xl px-6 py-5 shadow-sm">
+            <div className="glass border border-[var(--border-subtle)] rounded-xl px-6 py-5 shadow-sm">
                 <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                     {/* Left Side - Title & Description */}
                     <div className="flex items-center gap-4">

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { FaTimes, FaPalette, FaFont, FaCheck, FaLink, FaExternalLinkAlt, FaUndo, FaEye } from 'react-icons/fa';
+import { FaTimes, FaPalette, FaFont, FaCheck, FaLink, FaExternalLinkAlt, FaUndo, FaEye, FaTachometerAlt, FaFilm, FaSave, FaTrash, FaInfoCircle, FaSlidersH, FaMagic, FaPlus } from 'react-icons/fa';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useFont } from '../../context/FontContext';
 import { useTheme } from '../../context/ThemeContext';
@@ -27,7 +27,16 @@ const PREVIEW_PAGES = [
 
 const SettingsModal = ({ isOpen, onClose }) => {
     const { currentFont, changeFont, resetFont } = useFont();
-    const { theme, updateThemeEntry, applyPreset, resetTheme, presets } = useTheme();
+    const {
+        theme, updateThemeEntry, applyPreset, resetTheme, resetAll, presets,
+        performance, updatePerformance, enableLiteMode,
+        animations, updateAnimation,
+        styles, updateStyle, STYLE_REGISTRY,
+        customAnimations, addCustomAnimation, deleteCustomAnimation,
+        elementAnimations, updateElementMapping,
+        savedProfiles, saveProfile, loadProfile, deleteProfile
+    } = useTheme();
+
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -37,6 +46,9 @@ const SettingsModal = ({ isOpen, onClose }) => {
     // Font Custom State
     const [customFontUrl, setCustomFontUrl] = useState('');
     const [customFontName, setCustomFontName] = useState('');
+
+    // Profile Save State
+    const [newProfileName, setNewProfileName] = useState('');
 
     if (!isOpen) return null;
 
@@ -84,104 +96,260 @@ const SettingsModal = ({ isOpen, onClose }) => {
         // The panel itself has pointer-events-auto
         <div className="fixed inset-0 z-50 pointer-events-none flex justify-end">
 
-            {/* Sidebar Panel */}
-            <div className="pointer-events-auto w-full max-w-sm h-full bg-[var(--bg-card)] border-l border-[var(--border-subtle)] shadow-2xl flex flex-col animate-slide-in-right transform transition-transform">
+            <div className="pointer-events-auto w-full max-w-md h-full glass border-l border-[var(--border-subtle)] shadow-2xl flex flex-col animate-slide-in-right transform transition-transform">
 
-                {/* Header containing Actions and Preview Selector */}
-                <div className="px-6 py-4 border-b border-[var(--border-subtle)] shrink-0 bg-[var(--bg-card)]">
+                {/* Header */}
+                <div className="px-6 py-4 border-b border-[var(--border-subtle)] shrink-0 bg-transparent">
                     <div className="flex items-center justify-between mb-4">
-                        <h2 className="text-lg font-bold text-[var(--text-primary)]">Settings</h2>
-                        <button
-                            onClick={onClose}
-                            className="p-2 text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)] rounded-lg"
-                            aria-label="Close"
-                        >
-                            <FaTimes />
-                        </button>
+                        <h2 className="text-lg font-bold text-[var(--text-primary)]">Appearance</h2>
+                        <button onClick={onClose} className="p-2 text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)] rounded-lg"><FaTimes /></button>
                     </div>
 
-                    {/* Preview Page Selector */}
-                    <div className="bg-[var(--bg-surface)] p-3 rounded-xl border border-[var(--border-subtle)]">
-                        <label className="text-xs font-medium text-[var(--text-secondary)] mb-2 flex items-center gap-2">
-                            <FaEye className="text-[var(--accent-blue)]" />
-                            Preview Page
-                        </label>
+                    {/* Preview Selector */}
+                    <div className="bg-[var(--bg-surface)] p-3 rounded-xl border border-[var(--border-subtle)] flex items-center gap-3">
+                        <FaEye className="text-[var(--text-secondary)]" />
                         <select
-                            className="input w-full py-2 px-3 text-sm"
+                            className="bg-transparent text-sm w-full outline-none text-[var(--text-primary)] cursor-pointer"
                             value={location.pathname}
                             onChange={(e) => navigate(e.target.value)}
                         >
-                            {PREVIEW_PAGES.map(page => (
-                                <option key={page.path} value={page.path}>
-                                    {page.name}
-                                </option>
-                            ))}
+                            {PREVIEW_PAGES.map(page => <option key={page.path} value={page.path}>{page.name}</option>)}
                         </select>
                     </div>
                 </div>
 
-                {/* Main Tabs */}
-                <div className="flex border-b border-[var(--border-subtle)] shrink-0 bg-[var(--bg-card)]">
-                    <button
-                        onClick={() => setActiveTab('theme')}
-                        className={`flex-1 py-3 flex items-center justify-center gap-2 text-sm font-medium transition-colors border-b-2 ${activeTab === 'theme'
-                                ? 'border-[var(--accent-purple)] text-[var(--text-primary)] bg-[var(--bg-surface)]'
-                                : 'border-transparent text-[var(--text-secondary)] hover:bg-[var(--bg-hover)]'
-                            }`}
-                    >
-                        <FaPalette /> Theme
-                    </button>
-                    <button
-                        onClick={() => setActiveTab('fonts')}
-                        className={`flex-1 py-3 flex items-center justify-center gap-2 text-sm font-medium transition-colors border-b-2 ${activeTab === 'fonts'
-                                ? 'border-[var(--accent-purple)] text-[var(--text-primary)] bg-[var(--bg-surface)]'
-                                : 'border-transparent text-[var(--text-secondary)] hover:bg-[var(--bg-hover)]'
-                            }`}
-                    >
-                        <FaFont /> Typography
-                    </button>
+                {/* Tab Navigation */}
+                <div className="flex border-b border-[var(--border-subtle)] bg-transparent overflow-x-auto no-scrollbar">
+                    {[
+                        { id: 'styles', icon: <FaSlidersH />, label: 'Editor' },
+                        { id: 'anim', icon: <FaMagic />, label: 'Studio' },
+                        { id: 'perf', icon: <FaTachometerAlt />, label: 'Speed' },
+                        { id: 'theme', icon: <FaPalette />, label: 'Theme' },
+                        { id: 'fonts', icon: <FaFont />, label: 'Fonts' },
+                        { id: 'profiles', icon: <FaSave />, label: 'Profiles' }
+                    ].map(tab => (
+                        <button
+                            key={tab.id}
+                            onClick={() => setActiveTab(tab.id)}
+                            className={`flex-1 min-w-[70px] py-3 px-2 flex flex-col items-center justify-center gap-1 text-[10px] font-medium transition-colors border-b-2 whitespace-nowrap ${activeTab === tab.id
+                                ? 'border-[var(--accent-purple)] text-[var(--accent-purple)] bg-[var(--bg-surface)]/50'
+                                : 'border-transparent text-[var(--text-secondary)] hover:bg-[var(--bg-hover)]/50'
+                                }`}
+                        >
+                            <span className="text-base">{tab.icon}</span>
+                            {tab.label}
+                        </button>
+                    ))}
                 </div>
 
-                {/* Scrollable Content Area */}
-                <div className="flex-1 overflow-y-auto custom-scrollbar bg-[var(--bg-card)]">
-                    {activeTab === 'theme' ? (
+                {/* Content */}
+                <div className="flex-1 overflow-y-auto custom-scrollbar bg-transparent">
+
+                    {/* --- STYLE EDITOR TAB (Deep Customization) --- */}
+                    {activeTab === 'styles' && (
+                        <div className="p-6 space-y-8">
+                            {Object.entries(STYLE_REGISTRY).map(([category, items]) => (
+                                <section key={category}>
+                                    <h3 className="text-xs font-bold text-[var(--text-secondary)] uppercase mb-3 border-b border-[var(--border-subtle)] pb-2">{category}</h3>
+                                    <div className="space-y-5">
+                                        {items.map(style => (
+                                            <div key={style.id}>
+                                                <div className="flex justify-between items-center mb-2">
+                                                    <label className="text-sm font-medium text-[var(--text-primary)]">{style.label}</label>
+                                                    {style.cost === 'HIGH' && <span className="text-[10px] bg-[var(--error)]/10 text-[var(--error)] px-2 py-0.5 rounded-full font-bold">High GPU</span>}
+                                                    {style.cost === 'MEDIUM' && <span className="text-[10px] bg-[var(--warning)]/10 text-[var(--warning)] px-2 py-0.5 rounded-full font-bold">Med GPU</span>}
+                                                </div>
+                                                <input
+                                                    type="range"
+                                                    min={style.min} max={style.max} step={style.step || 1}
+                                                    value={parseFloat(styles[style.id])}
+                                                    onChange={(e) => updateStyle(style.id, `${e.target.value}${style.type === 'number' ? '' : style.type}`)}
+                                                    className="w-full accent-[var(--accent-purple)]"
+                                                />
+                                                <div className="flex justify-between items-center mt-1">
+                                                    <span className="text-xs text-[var(--text-tertiary)]">{style.desc}</span>
+                                                    <span className="text-xs font-mono text-[var(--text-primary)]">{styles[style.id]}</span>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </section>
+                            ))}
+
+                            <div className="p-4 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)]">
+                                <div className="flex items-center gap-2 mb-2">
+                                    <FaTachometerAlt className="text-[var(--text-secondary)]" />
+                                    <span className="text-sm font-bold text-[var(--text-primary)]">Quick Actions</span>
+                                </div>
+                                <button
+                                    onClick={() => {
+                                        updateStyle('--glass-blur', '0px');
+                                        updateStyle('--shadow-opacity', '0');
+                                        updatePerformance('enableGlassmorphism', false);
+                                        updatePerformance('enableShadows', false);
+                                    }}
+                                    className="btn btn-sm w-full border border-[var(--border-subtle)] hover:border-[var(--accent-purple)]"
+                                >
+                                    Optimize for Speed
+                                </button>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* --- ANIMATION STUDIO TAB (Builder) --- */}
+                    {activeTab === 'anim' && (
+                        <div className="p-6 space-y-8">
+
+                            {/* Global Timing */}
+                            <section>
+                                <h3 className="text-xs font-bold text-[var(--text-secondary)] uppercase mb-3">Global Timing</h3>
+                                <div className="grid grid-cols-2 gap-3">
+                                    <div className="p-3 bg-[var(--bg-surface)] rounded-xl border border-[var(--border-subtle)]">
+                                        <label className="text-xs font-medium text-[var(--text-primary)] mb-1 block">Duration</label>
+                                        <select
+                                            value={animations.duration}
+                                            onChange={(e) => updateAnimation('duration', e.target.value)}
+                                            className="input text-sm w-full bg-[var(--bg-card)]"
+                                        >
+                                            <option value="0.1s">Very Fast (0.1s)</option>
+                                            <option value="0.2s">Fast (0.2s)</option>
+                                            <option value="0.3s">Normal (0.3s)</option>
+                                            <option value="0.5s">Slow (0.5s)</option>
+                                            <option value="1s">Very Slow (1s)</option>
+                                        </select>
+                                    </div>
+                                    <div className="p-3 bg-[var(--bg-surface)] rounded-xl border border-[var(--border-subtle)]">
+                                        <label className="text-xs font-medium text-[var(--text-primary)] mb-1 block">Easing</label>
+                                        <select
+                                            value={animations.easing}
+                                            onChange={(e) => updateAnimation('easing', e.target.value)}
+                                            className="input text-sm w-full bg-[var(--bg-card)]"
+                                        >
+                                            <option value="linear">Linear</option>
+                                            <option value="ease">Ease</option>
+                                            <option value="ease-in">Ease In</option>
+                                            <option value="ease-out">Ease Out</option>
+                                            <option value="ease-in-out">Ease In/Out</option>
+                                            <option value="cubic-bezier(0.4, 0, 0.2, 1)">Smooth</option>
+                                            <option value="cubic-bezier(0.175, 0.885, 0.32, 1.275)">Bouncy</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <div className="h-px bg-[var(--border-subtle)]"></div>
+
+                            {/* Assigner */}
+                            <section>
+                                <h3 className="text-xs font-bold text-[var(--text-secondary)] uppercase mb-3">Animation Mapping</h3>
+                                <div className="space-y-3">
+                                    <div className="p-3 bg-[var(--bg-surface)] rounded-xl border border-[var(--border-subtle)]">
+                                        <label className="text-xs font-medium text-[var(--text-primary)] mb-1 block">Buttons</label>
+                                        <select
+                                            value={elementAnimations.button}
+                                            onChange={(e) => updateElementMapping('button', e.target.value)}
+                                            className="input text-sm w-full bg-[var(--bg-card)]"
+                                        >
+                                            <optgroup label="Presets">
+                                                <option value="scale">Scale Up</option>
+                                                <option value="lift">Lift Up</option>
+                                                <option value="glow">Glow</option>
+                                                <option value="none">None</option>
+                                            </optgroup>
+                                            <optgroup label="Custom">
+                                                {customAnimations.map(a => <option key={a.id} value={`custom-${a.name}`}>{a.name}</option>)}
+                                            </optgroup>
+                                        </select>
+                                    </div>
+                                    <div className="p-3 bg-[var(--bg-surface)] rounded-xl border border-[var(--border-subtle)]">
+                                        <label className="text-xs font-medium text-[var(--text-primary)] mb-1 block">Modals / Cards</label>
+                                        <select
+                                            value={elementAnimations.modal || 'zoom'}
+                                            onChange={(e) => updateElementMapping('modal', e.target.value)}
+                                            className="input text-sm w-full bg-[var(--bg-card)]"
+                                        >
+                                            <option value="zoom">Zoom In</option>
+                                            <option value="slide">Slide Up</option>
+                                            {customAnimations.map(a => <option key={a.id} value={`custom-${a.name}`}>{a.name}</option>)}
+                                        </select>
+                                    </div>
+                                </div>
+                            </section>
+
+                            <div className="h-px bg-[var(--border-subtle)]"></div>
+
+                            {/* Builder */}
+                            <section>
+                                <h3 className="text-xs font-bold text-[var(--text-secondary)] uppercase mb-3 flex items-center justify-between">
+                                    Create Animation
+                                    <span className="text-[10px] bg-[var(--accent-purple)] text-white px-2 rounded-full">BETA</span>
+                                </h3>
+
+                                <div className="p-4 bg-[var(--bg-surface)] rounded-xl border border-[var(--border-subtle)] space-y-4">
+                                    <div>
+                                        <label className="text-xs text-[var(--text-secondary)]">Name</label>
+                                        <input type="text" placeholder="e.g. MyBounce" className="input w-full text-sm" id="anim-name-input" />
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <label className="text-xs text-[var(--text-secondary)] block">Frames Logic (CSS)</label>
+                                        <textarea
+                                            className="input w-full text-xs font-mono h-24"
+                                            placeholder={`0% { transform: scale(1); }\n50% { transform: scale(1.2); }\n100% { transform: scale(1); }`}
+                                            id="anim-frames-input"
+                                        ></textarea>
+                                        <p className="text-[10px] text-[var(--text-tertiary)]">Enter standard CSS Keyframes logic.</p>
+                                    </div>
+
+                                    <button
+                                        onClick={() => {
+                                            const name = document.getElementById('anim-name-input').value;
+                                            const frames = document.getElementById('anim-frames-input').value;
+                                            if (name && frames) {
+                                                addCustomAnimation(name, frames);
+                                                // Clear inputs
+                                                document.getElementById('anim-name-input').value = '';
+                                                document.getElementById('anim-frames-input').value = '';
+                                            }
+                                        }}
+                                        className="btn btn-primary w-full text-xs"
+                                    >
+                                        <FaPlus className="mr-2" /> Add Animation
+                                    </button>
+                                </div>
+
+                                <div className="mt-4 space-y-2">
+                                    {customAnimations.map(anim => (
+                                        <div key={anim.id} className="flex justify-between items-center p-2 rounded border border-[var(--border-subtle)]">
+                                            <span className="text-xs font-mono">{anim.name}</span>
+                                            <button onClick={() => deleteCustomAnimation(anim.id)} className="text-[var(--error)] hover:opacity-75"><FaTrash /></button>
+                                        </div>
+                                    ))}
+                                </div>
+                            </section>
+                        </div>
+                    )}
+
+                    {/* --- THEME TAB --- */}
+                    {activeTab === 'theme' && (
+                        // ... (Existing Theme Logic with subtabs replaced/kept)
                         <div className="flex flex-col min-h-full">
-                            {/* Sub Tabs */}
+                            {/* Sub Tabs for Theme */}
                             <div className="flex px-6 pt-4 gap-2 shrink-0">
-                                <button
-                                    onClick={() => setActiveThemeSubTab('presets')}
-                                    className={`px-4 py-2 rounded-lg text-xs font-medium transition-colors ${activeThemeSubTab === 'presets'
-                                            ? 'bg-[var(--accent-purple)] text-white'
-                                            : 'bg-[var(--bg-elevated)] text-[var(--text-secondary)] hover:text-white'
-                                        }`}
-                                >
-                                    Presets
-                                </button>
-                                <button
-                                    onClick={() => setActiveThemeSubTab('custom')}
-                                    className={`px-4 py-2 rounded-lg text-xs font-medium transition-colors ${activeThemeSubTab === 'custom'
-                                            ? 'bg-[var(--accent-purple)] text-white'
-                                            : 'bg-[var(--bg-elevated)] text-[var(--text-secondary)] hover:text-white'
-                                        }`}
-                                >
-                                    Custom Colors
-                                </button>
+                                <button onClick={() => setActiveThemeSubTab('presets')} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${activeThemeSubTab === 'presets' ? 'bg-[var(--accent-purple)] text-white' : 'bg-[var(--bg-elevated)] text-[var(--text-secondary)]'}`}>Presets</button>
+                                <button onClick={() => setActiveThemeSubTab('custom')} className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${activeThemeSubTab === 'custom' ? 'bg-[var(--accent-purple)] text-white' : 'bg-[var(--bg-elevated)] text-[var(--text-secondary)]'}`}>Custom</button>
                             </div>
 
                             <div className="p-6">
                                 {activeThemeSubTab === 'presets' ? (
                                     <div className="grid grid-cols-2 gap-3">
                                         {presets.map(preset => (
-                                            <button
-                                                key={preset}
-                                                onClick={() => applyPreset(preset)}
-                                                className="p-3 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:border-[var(--accent-purple)] transition-all text-left group"
-                                            >
-                                                <div className="font-medium text-[var(--text-primary)] text-sm mb-2 truncate">{preset}</div>
-                                                <div className="flex gap-2">
-                                                    <div className="h-5 w-5 rounded-full border border-[var(--border-subtle)]" style={{ background: 'var(--bg-deepest)' }}></div>
-                                                    <div className="h-5 w-5 rounded-full" style={{ background: 'var(--accent-purple)' }}></div>
-                                                    <div className="h-5 w-5 rounded-full" style={{ background: 'var(--accent-blue)' }}></div>
+                                            <button key={preset} onClick={() => applyPreset(preset)} className="p-3 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)] hover:border-[var(--accent-purple)] text-left">
+                                                <div className="text-xs font-medium text-[var(--text-primary)] mb-2">{preset}</div>
+                                                <div className="flex gap-1">
+                                                    <div className="h-3 w-3 rounded-full" style={{ background: 'var(--bg-deepest)' }}></div>
+                                                    <div className="h-3 w-3 rounded-full" style={{ background: 'var(--accent-purple)' }}></div>
+                                                    <div className="h-3 w-3 rounded-full" style={{ background: 'var(--accent-blue)' }}></div>
                                                 </div>
                                             </button>
                                         ))}
@@ -189,74 +357,41 @@ const SettingsModal = ({ isOpen, onClose }) => {
                                 ) : (
                                     <div className="space-y-6">
                                         <section>
-                                            <h3 className="text-xs font-bold text-[var(--text-secondary)] uppercase mb-3">Backgrounds</h3>
-                                            <div className="space-y-3">
-                                                <ColorInput label="Main Background" variable="--bg-deepest" />
-                                                <ColorInput label="Secondary Background" variable="--bg-deep" />
-                                                <ColorInput label="Card Background" variable="--bg-card" />
-                                                <ColorInput label="Surface Background" variable="--bg-surface" />
-                                                <ColorInput label="Hover State" variable="--bg-hover" />
+                                            <h3 className="text-xs font-bold text-[var(--text-secondary)] uppercase mb-3">Colors</h3>
+                                            <div className="space-y-2">
+                                                <ColorInput label="Background" variable="--bg-deepest" />
+                                                <ColorInput label="Surface" variable="--bg-surface" />
+                                                <ColorInput label="Primary Accent" variable="--accent-purple" />
+                                                <ColorInput label="Secondary Accent" variable="--accent-blue" />
+                                                <ColorInput label="Text" variable="--text-primary" />
                                             </div>
                                         </section>
 
-                                        <div className="h-px bg-[var(--border-subtle)]"></div>
-
-                                        <section>
-                                            <h3 className="text-xs font-bold text-[var(--text-secondary)] uppercase mb-3">Accents & Text</h3>
-                                            <div className="space-y-3">
-                                                <ColorInput label="Primary Accent (Purple)" variable="--accent-purple" />
-                                                <ColorInput label="Secondary Accent (Blue)" variable="--accent-blue" />
-                                                <ColorInput label="Primary Text" variable="--text-primary" />
-                                                <ColorInput label="Secondary Text" variable="--text-secondary" />
-                                            </div>
-                                        </section>
-
-                                        <div className="h-px bg-[var(--border-subtle)]"></div>
-
-                                        <section>
-                                            <h3 className="text-xs font-bold text-[var(--text-secondary)] uppercase mb-3">Borders</h3>
-                                            <div className="space-y-3">
-                                                <ColorInput label="Subtle Border" variable="--border-subtle" />
-                                                <ColorInput label="Default Border" variable="--border-default" />
-                                            </div>
-                                        </section>
+                                        <button
+                                            onClick={resetTheme}
+                                            className="w-full py-2.5 rounded-xl border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] text-xs font-bold transition-all flex items-center justify-center gap-2"
+                                        >
+                                            <FaUndo className="text-[10px]" /> Reset Colors
+                                        </button>
                                     </div>
                                 )}
                             </div>
-
-                            {/* Footer Action */}
-                            <div className="p-4 mt-auto border-t border-[var(--border-subtle)] bg-[var(--bg-card)] flex justify-end shrink-0 sticky bottom-0">
-                                <button onClick={resetTheme} className="btn btn-ghost text-xs">
-                                    <FaUndo className="mr-2" /> Reset Theme
-                                </button>
-                            </div>
                         </div>
-                    ) : (
-                        <div className="flex flex-col min-h-full p-6">
-                            {/* Predefined Fonts */}
-                            <div className="space-y-4 mb-8">
-                                <h3 className="text-sm font-medium text-[var(--text-secondary)]">Popular Fonts</h3>
-                                <div className="grid grid-cols-2 gap-3">
-                                    {PREDEFINED_FONTS.map((font) => (
-                                        <button
-                                            key={font.name}
-                                            onClick={() => changeFont(font)}
-                                            className={`p-3 rounded-xl border text-left transition-all ${currentFont.name === font.name
-                                                    ? 'bg-[var(--bg-surface)] border-[var(--accent-purple)] shadow-[0_0_0_1px_var(--accent-purple)]'
-                                                    : 'bg-[var(--bg-surface)] border-[var(--border-subtle)] hover:border-[var(--border-default)]'
-                                                }`}
-                                        >
-                                            <div className="flex items-center justify-between mb-1">
-                                                <span className="font-medium text-[var(--text-primary)] text-sm">{font.name}</span>
-                                                {currentFont.name === font.name && <FaCheck className="text-[var(--accent-purple)] text-xs" />}
-                                            </div>
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
+                    )}
 
-                            {/* Custom Font */}
-                            <div className="p-4 bg-[var(--bg-surface)] rounded-xl border border-[var(--border-subtle)]">
+                    {/* --- FONTS TAB --- */}
+                    {activeTab === 'fonts' && (
+                        <div className="p-6">
+                            <div className="space-y-3 mb-6">
+                                {PREDEFINED_FONTS.map(font => (
+                                    <button key={font.name} onClick={() => changeFont(font)} className={`w-full p-3 rounded-lg border text-left flex justify-between items-center ${currentFont.name === font.name ? 'border-[var(--accent-purple)] bg-[var(--bg-surface)]' : 'border-[var(--border-subtle)]'}`}>
+                                        <span className="text-sm font-medium text-[var(--text-primary)]" style={{ fontFamily: font.family }}>{font.name}</span>
+                                        {currentFont.name === font.name && <FaCheck className="text-[var(--accent-purple)] text-xs" />}
+                                    </button>
+                                ))}
+                            </div>
+                            {/* Custom Font Logic */}
+                            <div className="p-4 bg-[var(--bg-surface)] rounded-xl">
                                 <h3 className="text-sm font-medium text-[var(--text-primary)] mb-2 flex items-center gap-2">
                                     <FaLink className="text-[var(--accent-blue)]" />
                                     Custom Google Font
@@ -277,24 +412,211 @@ const SettingsModal = ({ isOpen, onClose }) => {
                                             onChange={(e) => setCustomFontName(e.target.value)}
                                             className="input w-full"
                                         />
-                                        <button
-                                            onClick={handleCustomFontApply}
-                                            disabled={!customFontUrl}
-                                            className="btn btn-primary whitespace-nowrap w-full"
-                                        >
-                                            Apply
-                                        </button>
+                                        <div className="flex gap-2">
+                                            <button
+                                                onClick={handleCustomFontApply}
+                                                disabled={!customFontUrl}
+                                                className="btn btn-primary whitespace-nowrap flex-1"
+                                            >
+                                                Apply
+                                            </button>
+                                            <button
+                                                onClick={resetFont}
+                                                className="btn btn-secondary whitespace-nowrap px-4"
+                                                title="Reset to default font"
+                                            >
+                                                <FaUndo />
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    )}
 
-                            <div className="mt-auto pt-4 flex justify-end">
-                                <button onClick={resetFont} className="btn btn-ghost text-xs">
-                                    <FaUndo className="mr-2" /> Reset Font
-                                </button>
+                    {/* --- PROFILES TAB --- */}
+                    {activeTab === 'profiles' && (
+                        <div className="p-6 space-y-6">
+                            <div className="p-4 bg-[var(--bg-surface)] rounded-xl border border-[var(--border-subtle)]">
+                                <label className="text-xs font-medium text-[var(--text-primary)] mb-2 block">Save Current Setup</label>
+                                <div className="flex gap-2">
+                                    <input
+                                        type="text"
+                                        value={newProfileName}
+                                        onChange={(e) => setNewProfileName(e.target.value)}
+                                        placeholder="Profile Name..."
+                                        className="input text-sm w-full"
+                                    />
+                                    <button
+                                        onClick={() => {
+                                            if (newProfileName) {
+                                                saveProfile(newProfileName);
+                                                setNewProfileName('');
+                                            }
+                                        }}
+                                        disabled={!newProfileName}
+                                        className="btn btn-primary"
+                                    >
+                                        <FaSave />
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div className="space-y-3">
+                                {savedProfiles.length === 0 ? (
+                                    <p className="text-center text-sm text-[var(--text-tertiary)] py-4">No saved profiles yet.</p>
+                                ) : (
+                                    savedProfiles.map(profile => (
+                                        <div key={profile.id} className="flex items-center justify-between p-3 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)]">
+                                            <span className="text-sm font-medium text-[var(--text-primary)]">{profile.name}</span>
+                                            <div className="flex gap-2">
+                                                <button onClick={() => loadProfile(profile)} className="p-2 text-[var(--accent-blue)] hover:bg-[var(--accent-blue)]/10 rounded-lg"><FaUndo /></button>
+                                                <button onClick={() => deleteProfile(profile.id)} className="p-2 text-[var(--error)] hover:bg-[var(--error)]/10 rounded-lg"><FaTrash /></button>
+                                            </div>
+                                        </div>
+                                    ))
+                                )}
                             </div>
                         </div>
                     )}
+
+                    {/* --- PERFORMANCE TAB --- */}
+                    {activeTab === 'perf' && (
+                        <div className="p-6 space-y-8">
+
+                            {/* Lite Mode Banner */}
+                            <div className="bg-gradient-to-r from-[var(--bg-deepest)] to-[var(--bg-card)] p-5 rounded-2xl border border-[var(--border-subtle)] shadow-xl relative overflow-hidden group">
+                                <div className="absolute inset-0 bg-[var(--accent-purple)]/5 group-hover:bg-[var(--accent-purple)]/10 transition-colors"></div>
+                                <div className="relative z-10">
+                                    <div className="flex items-center gap-3 mb-2">
+                                        <div className="p-2 bg-[var(--accent-purple)] text-white rounded-lg shadow-lg">
+                                            <FaTachometerAlt className="text-xl" />
+                                        </div>
+                                        <div>
+                                            <h3 className="text-lg font-bold text-[var(--text-primary)]">Lite Mode</h3>
+                                            <p className="text-xs text-[var(--text-secondary)]">Max speed, zero lag.</p>
+                                        </div>
+                                    </div>
+                                    <p className="text-xs text-[var(--text-tertiary)] mb-4">
+                                        Instantly disables all heavy visual effects (Blur, Shadows, 3D) for the most lightweight experience possible.
+                                    </p>
+                                    <button
+                                        onClick={enableLiteMode}
+                                        className="w-full py-2.5 rounded-xl bg-[var(--accent-purple)] hover:bg-[var(--accent-purple)]/90 text-white font-semibold text-sm shadow-lg shadow-[var(--accent-purple)]/20 transition-all active:scale-[0.98]"
+                                    >
+                                        Activate Lite Mode
+                                    </button>
+                                </div>
+                            </div>
+                            {/* Strict CPU Mode (User Requested) */}
+                            <div className="flex items-center justify-between p-4 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)]">
+                                <div>
+                                    <h3 className="text-sm font-bold text-[var(--text-primary)] flex items-center gap-2">
+                                        Ultra Performance
+                                        {performance.strictMode && <span className="text-[10px] bg-[var(--success)]/10 text-[var(--success)] px-2 py-0.5 rounded-full">ACTIVE</span>}
+                                    </h3>
+                                    <p className="text-xs text-[var(--text-secondary)] mt-1">
+                                        Strictly disables GPU usage. No animations, transitions, or effects.
+                                    </p>
+                                </div>
+                                <button
+                                    onClick={() => updatePerformance('strictMode', !performance.strictMode)}
+                                    className={`relative w-12 h-7 rounded-full transition-colors ${performance.strictMode ? 'bg-[var(--success)]' : 'bg-[var(--bg-elevated)]'}`}
+                                >
+                                    <div className={`absolute top-1 left-1 bg-white w-5 h-5 rounded-full transition-transform shadow-sm ${performance.strictMode ? 'translate-x-5' : ''}`} />
+                                </button>
+                            </div>
+
+                            {/* Suggestions Section */}
+                            {(performance.enableGlassmorphism || performance.enableShadows || performance.enable3D) && (
+                                <section>
+                                    <h3 className="text-xs font-bold text-[var(--text-secondary)] uppercase mb-3 flex items-center gap-2">
+                                        Optimization Suggestions
+                                        <span className="bg-[var(--warning)]/10 text-[var(--warning)] text-[10px] px-2 rounded-full">
+                                            {(performance.enableGlassmorphism ? 1 : 0) + (performance.enableShadows ? 1 : 0) + (performance.enable3D ? 1 : 0)} Issues
+                                        </span>
+                                    </h3>
+                                    <div className="space-y-3">
+                                        {performance.enableGlassmorphism && (
+                                            <div className="flex items-center justify-between p-3 bg-[var(--bg-surface)] rounded-xl border-l-4 border-l-[var(--warning)] border-y border-r border-[var(--border-subtle)]">
+                                                <div>
+                                                    <p className="text-sm font-medium text-[var(--text-primary)]">Heavy Blur Detected</p>
+                                                    <p className="text-[10px] text-[var(--text-tertiary)]">Glassmorphism uses significant GPU power.</p>
+                                                </div>
+                                                <button onClick={() => updatePerformance('enableGlassmorphism', false)} className="px-3 py-1.5 bg-[var(--bg-elevated)] hover:bg-[var(--bg-hover)] text-[var(--text-primary)] text-xs rounded-lg font-medium border border-[var(--border-subtle)]">
+                                                    Disable
+                                                </button>
+                                            </div>
+                                        )}
+                                        {performance.enableShadows && (
+                                            <div className="flex items-center justify-between p-3 bg-[var(--bg-surface)] rounded-xl border-l-4 border-l-[var(--warning)] border-y border-r border-[var(--border-subtle)]">
+                                                <div>
+                                                    <p className="text-sm font-medium text-[var(--text-primary)]">Shadows Active</p>
+                                                    <p className="text-[10px] text-[var(--text-tertiary)]">Drop shadows can cause scroll lag.</p>
+                                                </div>
+                                                <button onClick={() => updatePerformance('enableShadows', false)} className="px-3 py-1.5 bg-[var(--bg-elevated)] hover:bg-[var(--bg-hover)] text-[var(--text-primary)] text-xs rounded-lg font-medium border border-[var(--border-subtle)]">
+                                                    Disable
+                                                </button>
+                                            </div>
+                                        )}
+                                        {performance.enable3D && (
+                                            <div className="flex items-center justify-between p-3 bg-[var(--bg-surface)] rounded-xl border-l-4 border-l-[var(--warning)] border-y border-r border-[var(--border-subtle)]">
+                                                <div>
+                                                    <p className="text-sm font-medium text-[var(--text-primary)]">3D Transforms</p>
+                                                    <p className="text-[10px] text-[var(--text-tertiary)]">Avoid complex perspective calculations.</p>
+                                                </div>
+                                                <button onClick={() => updatePerformance('enable3D', false)} className="px-3 py-1.5 bg-[var(--bg-elevated)] hover:bg-[var(--bg-hover)] text-[var(--text-primary)] text-xs rounded-lg font-medium border border-[var(--border-subtle)]">
+                                                    Disable
+                                                </button>
+                                            </div>
+                                        )}
+                                    </div>
+                                </section>
+                            )}
+
+                            {/* Manual Toggles (Existing but refined) */}
+                            <section>
+                                <h3 className="text-xs font-bold text-[var(--text-secondary)] uppercase mb-3">Manual Control</h3>
+                                <div className="space-y-2">
+                                    {[
+                                        { key: 'enableGlassmorphism', label: 'Glassmorphism (Blur)', desc: 'High GPU Usage' },
+                                        { key: 'enableShadows', label: 'Drop Shadows', desc: 'Moderate GPU Usage' },
+                                        { key: 'enable3D', label: '3D Transforms', desc: 'Low-Med GPU Usage' },
+                                        { key: 'enableAnimations', label: 'UI Animations', desc: 'CPU Usage' },
+                                    ].map(item => (
+                                        <div key={item.key} className="flex items-center justify-between p-3 rounded-xl border border-[var(--border-subtle)] bg-[var(--bg-surface)]">
+                                            <div>
+                                                <div className="text-sm font-medium text-[var(--text-primary)]">{item.label}</div>
+                                                <div className="text-[10px] text-[var(--text-secondary)]">{item.desc}</div>
+                                            </div>
+                                            <button
+                                                onClick={() => updatePerformance(item.key, !performance[item.key])}
+                                                className={`relative w-10 h-6 rounded-full transition-colors ${performance[item.key] ? 'bg-[var(--accent-purple)]' : 'bg-[var(--bg-elevated)]'}`}
+                                            >
+                                                <div className={`absolute top-1 left-1 bg-white w-4 h-4 rounded-full transition-transform ${performance[item.key] ? 'translate-x-4' : ''}`} />
+                                            </button>
+                                        </div>
+                                    ))}
+                                </div>
+                            </section>
+                        </div>
+                    )}
+
+                </div>
+
+                {/* Footer - Reset All */}
+                <div className="p-4 border-t border-[var(--border-subtle)] bg-transparent">
+                    <button
+                        onClick={() => {
+                            if (window.confirm('Are you sure you want to reset all appearance settings to default?')) {
+                                resetAll();
+                            }
+                        }}
+                        className="w-full py-3 rounded-xl border border-[var(--border-subtle)] text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-white hover:border-[var(--text-primary)] transition-all font-medium text-sm flex items-center justify-center gap-2 group"
+                    >
+                        <FaUndo className="group-hover:-rotate-180 transition-transform duration-500" />
+                        Reset All Settings
+                    </button>
                 </div>
             </div>
         </div>

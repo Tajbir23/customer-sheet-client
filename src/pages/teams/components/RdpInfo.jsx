@@ -104,7 +104,7 @@ const RdpInfo = ({ team, onRdpOpen, onRdpClose }) => {
               className={`
                 relative p-4 rounded-xl border transition-all duration-300 group hover:scale-[1.01] hover:shadow-lg
                 ${team?.isActive
-                  ? 'bg-[var(--bg-card)] border-[var(--border-subtle)] hover:border-[var(--accent-blue)] hover:bg-[var(--bg-elevated)]'
+                  ? 'glass border-[var(--border-subtle)] hover:border-[var(--accent-blue)] hover:bg-[var(--bg-elevated)]'
                   : 'bg-[var(--bg-card)] border-[var(--border-subtle)] opacity-90'
                 }
               `}
@@ -184,7 +184,7 @@ const RdpInfo = ({ team, onRdpOpen, onRdpClose }) => {
         <div className="text-center py-12">
           <div className="bg-[var(--bg-card)] rounded-3xl p-8 max-w-sm mx-auto border border-[var(--border-subtle)] border-dashed">
             <div className="w-16 h-16 mx-auto mb-4 text-[var(--text-muted)] flex items-center justify-center font-bold text-2xl border-2 border-[var(--text-muted)] rounded-lg">RDP</div>
-            <h4 className="text-lg font-semibold text-white mb-2">No RDP Information</h4>
+            <h4 className="text-lg font-semibold text-[var(--text-primary)] mb-2">No RDP Information</h4>
             <p className="text-[var(--text-tertiary)]">No RDP servers are currently configured for this team</p>
           </div>
         </div>

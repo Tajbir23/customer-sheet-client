@@ -30,8 +30,7 @@ const DuplicateMembersCard = ({ duplicateMembers }) => {
 
     return (
         <div className="mb-8">
-            <div className="rounded-2xl overflow-hidden border border-[var(--warning)]/30"
-                style={{ background: 'var(--bg-card)' }}>
+            <div className="rounded-2xl overflow-hidden border border-[var(--warning)]/30 glass">
                 {/* Header */}
                 <div className="px-6 py-4 border-b"
                     style={{
@@ -61,7 +60,7 @@ const DuplicateMembersCard = ({ duplicateMembers }) => {
                             onClick={handleCopyAll}
                             className={`flex items-center gap-2 px-4 py-2 rounded-lg font-bold transition-all duration-200 border ${copied
                                 ? "bg-[var(--success-bg)] text-[var(--success)] border-[var(--success)]"
-                                : "bg-[var(--bg-card)] text-[var(--text-secondary)] border-[var(--border-subtle)] hover:text-white hover:border-[var(--text-secondary)]"
+                                : "bg-[var(--bg-card)] text-[var(--text-secondary)] border-[var(--border-subtle)] hover:text-[var(--text-primary)] hover:border-[var(--text-secondary)]"
                                 }`}
                         >
                             <span className="font-bold text-sm">{copied ? "Copied!" : "Copy All"}</span>

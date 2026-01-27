@@ -261,7 +261,7 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
               <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-3">
                   <div className={`w-3 h-3 rounded-full ${team.isActive ? 'bg-[var(--success)] shadow-[0_0_8px_var(--success)]' : 'bg-[var(--error)] shadow-[0_0_8px_var(--error)]'}`} />
-                  <span className={`text-white text-sm font-bold tracking-wide transition-all duration-300 ${justToggled ? 'scale-110' : ''}`}>
+                  <span className={`text-[var(--text-primary)] text-sm font-bold tracking-wide transition-all duration-300 ${justToggled ? 'scale-110' : ''}`}>
                     {team.isActive ? 'ACTIVE TEAM' : 'INACTIVE TEAM'}
                   </span>
                   {/* Status change indicator */}
@@ -305,7 +305,7 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
                 <div className="flex items-center gap-3 mb-3">
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
-                      <h3 className="text-xl font-bold text-white truncate group-hover:text-[var(--accent-blue-light)] transition-colors">
+                      <h3 className="text-xl font-bold text-[var(--text-primary)] truncate group-hover:text-[var(--accent-blue-light)] transition-colors">
                         {team.gptAccount}
                       </h3>
                       <button
@@ -427,7 +427,7 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
           {showAllMembers && team.allMembers && team.allMembers.length > 0 && (
             <div className="p-8 border-t border-[var(--border-subtle)]" style={{ background: 'rgba(245, 158, 11, 0.05)' }}>
               <div className="flex items-center justify-between mb-6">
-                <h4 className="text-lg font-bold text-white flex items-center gap-2">
+                <h4 className="text-lg font-bold text-[var(--text-primary)] flex items-center gap-2">
                   <FaUsers className="w-5 h-5 text-[var(--warning-light)]" />
                   All Members
                 </h4>
@@ -449,7 +449,7 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
                         {member.charAt(0).toUpperCase()}
                       </div>
                       <div>
-                        <p className="text-white font-medium">{member}</p>
+                        <p className="text-[var(--text-primary)] font-medium">{member}</p>
                         <p className="text-[var(--text-tertiary)] text-sm flex items-center gap-1">
                           <FaUser className="w-3 h-3" /> Team Member
                         </p>
@@ -485,7 +485,7 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
           {isExpanded && (
             <div className="p-8 border-t border-[var(--border-subtle)] bg-[var(--bg-surface)]/50">
               <div className="flex items-center justify-between mb-6">
-                <h4 className="text-xl font-bold text-white">Team Members</h4>
+                <h4 className="text-xl font-bold text-[var(--text-primary)]">Team Members</h4>
                 <div className="flex items-center gap-3">
                   <div className={`px-3 py-1 rounded-full text-sm font-medium ${team.isActive
                     ? 'bg-[var(--info-bg)] text-[var(--accent-blue-light)]'
@@ -537,7 +537,7 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
               ) : (
                 <div className="text-center py-12">
                   <div className="bg-[var(--bg-surface)] rounded-3xl p-8 max-w-sm mx-auto border border-[var(--border-subtle)] border-dashed">
-                    <h4 className="text-lg font-semibold text-white mb-2">No Team Members</h4>
+                    <h4 className="text-lg font-semibold text-[var(--text-primary)] mb-2">No Team Members</h4>
                     <button
                       onClick={handleAddMemberClick}
                       className={`flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-bold transition-all duration-200 mx-auto ${team.isActive
@@ -656,7 +656,7 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
                 {/* Email Preview */}
                 {emailsText.trim() && (
                   <div className="mb-6">
-                    <h4 className="text-sm font-bold text-white mb-3">
+                    <h4 className="text-sm font-bold text-[var(--text-primary)] mb-3">
                       Email Preview ({validateAndParseEmails(emailsText).validEmails.length} valid emails)
                     </h4>
                     <div className="rounded-2xl p-4 border border-[var(--border-subtle)]"

@@ -47,8 +47,8 @@ const CustomerDetailsModal = ({ customer, onClose, formatDate, onUpdate }) => {
     return (
         <>
             <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4 overflow-y-auto">
-                <div className="rounded-2xl w-full max-w-4xl max-h-[95vh] overflow-y-auto shadow-2xl border my-8"
-                    style={{ background: 'var(--bg-card)', borderColor: 'var(--border-subtle)' }}
+                <div className="glass rounded-2xl w-full max-w-4xl max-h-[95vh] overflow-y-auto shadow-2xl border my-8"
+                    style={{ borderColor: 'var(--border-subtle)' }}
                 >
                     {/* Modal Header */}
                     <div className="relative p-6 rounded-t-2xl"
@@ -121,8 +121,8 @@ const CustomerDetailsModal = ({ customer, onClose, formatDate, onUpdate }) => {
                         {/* Information Sections */}
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                             {/* Personal Information */}
-                            <div className="rounded-xl p-6 border"
-                                style={{ background: 'var(--bg-surface)', borderColor: 'var(--border-subtle)' }}>
+                            <div className="rounded-xl p-6 border bg-white/5"
+                                style={{ borderColor: 'var(--border-subtle)' }}>
                                 <div className="flex items-center mb-4">
                                     <span className="w-5 h-5 text-[var(--accent-blue)] font-bold mr-2">U</span>
                                     <h4 className="text-lg font-bold text-[var(--text-primary)]">Personal Information</h4>
@@ -144,8 +144,8 @@ const CustomerDetailsModal = ({ customer, onClose, formatDate, onUpdate }) => {
                             </div>
 
                             {/* Subscription Details */}
-                            <div className="rounded-xl p-6 border"
-                                style={{ background: 'var(--bg-surface)', borderColor: 'var(--border-subtle)' }}>
+                            <div className="rounded-xl p-6 border bg-white/5"
+                                style={{ borderColor: 'var(--border-subtle)' }}>
                                 <div className="flex items-center mb-4">
                                     <span className="w-5 h-5 text-[var(--success)] font-bold mr-2">D</span>
                                     <h4 className="text-lg font-bold text-[var(--text-primary)]">Subscription Details</h4>
@@ -170,8 +170,8 @@ const CustomerDetailsModal = ({ customer, onClose, formatDate, onUpdate }) => {
                             </div>
 
                             {/* Payment Information */}
-                            <div className="rounded-xl p-6 border"
-                                style={{ background: 'var(--bg-surface)', borderColor: 'var(--border-subtle)' }}>
+                            <div className="rounded-xl p-6 border bg-white/5"
+                                style={{ borderColor: 'var(--border-subtle)' }}>
                                 <div className="flex items-center mb-4">
                                     <span className="w-5 h-5 text-[var(--accent-purple)] font-bold mr-2">$</span>
                                     <h4 className="text-lg font-bold text-[var(--text-primary)]">Payment Information</h4>
@@ -199,8 +199,8 @@ const CustomerDetailsModal = ({ customer, onClose, formatDate, onUpdate }) => {
                             </div>
 
                             {/* Notes & Reminders */}
-                            <div className="rounded-xl p-6 border"
-                                style={{ background: 'var(--bg-surface)', borderColor: 'var(--border-subtle)' }}>
+                            <div className="rounded-xl p-6 border bg-white/5"
+                                style={{ borderColor: 'var(--border-subtle)' }}>
                                 <div className="flex items-center mb-4">
                                     <span className="w-5 h-5 text-[var(--warning)] font-bold mr-2">N</span>
                                     <h4 className="text-lg font-bold text-[var(--text-primary)]">Notes & Reminders</h4>
@@ -236,7 +236,7 @@ const CustomerDetailsModal = ({ customer, onClose, formatDate, onUpdate }) => {
                     </div>
 
                     {/* Modal Footer */}
-                    <div className="flex items-center justify-between p-6 rounded-b-2xl border-t bg-[var(--bg-elevated)]"
+                    <div className="flex items-center justify-between p-6 rounded-b-2xl border-t bg-white/5"
                         style={{ borderColor: 'var(--border-subtle)' }}>
                         <div className="text-xs text-[var(--text-tertiary)] font-mono">
                             Customer ID: {customer._id}

@@ -42,7 +42,7 @@ const SearchInvoice = () => {
       </Helmet>
       <div className="min-h-screen bg-[var(--bg-deepest)]">
         <div className="flex flex-col items-center justify-center min-h-screen p-4">
-          <div className="bg-[var(--bg-card)] rounded-2xl border border-[var(--border-subtle)] p-8 max-w-md w-full animate-fade-in-up">
+          <div className="glass rounded-2xl border border-[var(--border-subtle)] p-8 max-w-md w-full animate-fade-in-up">
             <div className="text-center mb-8">
               <h1 className="text-3xl font-bold text-white mb-2">
                 Search Invoice

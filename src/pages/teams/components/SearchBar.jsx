@@ -15,7 +15,7 @@ const SearchBar = ({ search, onSearchChange, isLoading }) => {
             <FaUsersCog className="w-8 h-8 text-[var(--accent-purple)]" />
           </div>
         </div>
-        <h1 className="text-3xl sm:text-4xl font-bold mb-2 text-white">
+        <h1 className="text-3xl sm:text-4xl font-bold mb-2 text-[var(--text-primary)]">
           Team Management
         </h1>
         <p className="text-[var(--text-secondary)] text-lg font-medium">Search and manage your GPT teams</p>

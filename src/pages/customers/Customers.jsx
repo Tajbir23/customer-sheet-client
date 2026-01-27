@@ -50,7 +50,7 @@ const Customers = () => {
                 <span className="w-6 h-6 text-white font-bold text-xl flex items-center justify-center">C</span>
               </div>
               <div>
-                <h1 className="text-3xl lg:text-4xl font-bold text-white tracking-tight">
+                <h1 className="text-3xl lg:text-4xl font-bold text-[var(--text-primary)] tracking-tight">
                   Customer Management
                 </h1>
                 <p className="text-[var(--text-tertiary)] mt-1">
@@ -97,7 +97,7 @@ const Customers = () => {
               <input
                 type="text"
                 placeholder="Search customers by name, email, or phone..."
-                className="w-full pl-12 pr-4 py-4 rounded-xl text-white placeholder-[var(--text-muted)] transition-all duration-300"
+                className="w-full pl-12 pr-4 py-4 rounded-xl text-[var(--text-primary)] placeholder-[var(--text-muted)] transition-all duration-300"
                 style={{
                   background: 'var(--bg-surface)',
                   border: '1px solid var(--border-subtle)',
@@ -123,7 +123,7 @@ const Customers = () => {
               <input
                 type="date"
                 placeholder="Filter by subscription end date"
-                className="w-full pl-12 pr-4 py-4 rounded-xl text-white transition-all duration-300"
+                className="w-full pl-12 pr-4 py-4 rounded-xl text-[var(--text-primary)] transition-all duration-300"
                 style={{
                   background: 'var(--bg-surface)',
                   border: '1px solid var(--border-subtle)',

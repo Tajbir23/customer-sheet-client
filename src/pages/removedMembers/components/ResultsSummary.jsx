@@ -5,7 +5,7 @@ const ResultsSummary = ({ searchEmail, membersCount, loading }) => {
     if (loading) return null;
 
     return (
-        <div className="bg-[var(--bg-card)] rounded-2xl border border-[var(--border-subtle)] mb-6 overflow-hidden">
+        <div className="glass rounded-2xl border border-[var(--border-subtle)] mb-6 overflow-hidden">
             <div className="px-6 py-4">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-3">
@@ -30,7 +30,7 @@ const ResultsSummary = ({ searchEmail, membersCount, loading }) => {
                         </div>
                     </div>
                     <div className="text-right">
-                        <div className="text-2xl font-bold text-white">
+                        <div className="text-2xl font-bold text-[var(--text-primary)]">
                             {membersCount}
                         </div>
                         <div className="text-xs text-[var(--text-tertiary)] uppercase tracking-wide">

@@ -52,7 +52,7 @@ const TeamStats = ({ totalCount }) => {
                   style={{ background: stat.gradient }}
                 >
                   {/* Icon removed */}
-                  <span className="text-white font-bold text-lg">#</span>
+                  <span className="text-[var(--accent-purple)] font-bold text-lg">#</span>
                 </div>
                 <div className="text-right">
                   <div

@@ -49,7 +49,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
         disabled={currentPage === 1}
         className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all duration-300 ${currentPage === 1
           ? "text-[var(--text-muted)] cursor-not-allowed"
-          : "text-[var(--text-secondary)] hover:text-white hover:bg-[var(--bg-hover)]"
+          : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)]"
           }`}
         style={{ border: '1px solid var(--border-subtle)' }}
       >
@@ -67,7 +67,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
               onClick={() => onPageChange(page)}
               className={`min-w-[40px] h-10 rounded-xl font-medium transition-all duration-300 ${currentPage === page
                 ? "text-white shadow-lg"
-                : "text-[var(--text-secondary)] hover:text-white hover:bg-[var(--bg-hover)]"
+                : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)]"
                 }`}
               style={{
                 background: currentPage === page
@@ -89,7 +89,7 @@ const Pagination = ({ currentPage, totalPages, onPageChange }) => {
         disabled={currentPage === totalPages}
         className={`flex items-center gap-2 px-4 py-2 rounded-xl font-medium transition-all duration-300 ${currentPage === totalPages
           ? "text-[var(--text-muted)] cursor-not-allowed"
-          : "text-[var(--text-secondary)] hover:text-white hover:bg-[var(--bg-hover)]"
+          : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)]"
           }`}
         style={{ border: '1px solid var(--border-subtle)' }}
       >

@@ -30,7 +30,7 @@ const StatsSummary = ({ totalCount, currentPage, totalPages }) => (
       }}
     >
       <span className="text-[var(--text-tertiary)]">Page:</span>
-      <span className="ml-2 font-bold text-white">
+      <span className="ml-2 font-bold text-[var(--text-primary)]">
         {currentPage} of {totalPages}
       </span>
     </div>

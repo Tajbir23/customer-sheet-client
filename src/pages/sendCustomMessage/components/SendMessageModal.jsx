@@ -24,7 +24,7 @@ const SendMessageModal = ({ isOpen, onClose, selectedCount, onSend }) => {
 
     return (
         <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-4">
-            <div className="bg-[var(--bg-card)] rounded-2xl border border-[var(--border-subtle)] w-full max-w-lg transform transition-all">
+            <div className="glass rounded-2xl border border-[var(--border-subtle)] w-full max-w-lg transform transition-all">
                 {/* Header */}
                 <div className="flex items-center justify-between p-6 border-b border-[var(--border-subtle)]">
                     <div className="flex items-center gap-3">

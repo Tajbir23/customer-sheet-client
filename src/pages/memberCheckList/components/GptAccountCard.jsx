@@ -35,7 +35,7 @@ const GptAccountCard = ({ accountData, data, setData }) => {
   const completionPercentage = members.length > 0 ? Math.round((checkedMembers / members.length) * 100) : 0
 
   return (
-    <div className="rounded-2xl border border-[var(--border-subtle)] bg-[var(--bg-card)] overflow-hidden transition-all duration-300 hover:shadow-md hover:border-[var(--border-default)] group h-full">
+    <div className="rounded-2xl border border-[var(--border-subtle)] glass overflow-hidden transition-all duration-300 hover:shadow-md hover:border-[var(--border-default)] group h-full">
       {/* Card Header */}
       <div className="px-5 py-4 border-b border-[var(--border-subtle)] bg-[var(--bg-surface)]">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -46,7 +46,7 @@ const GptAccountCard = ({ accountData, data, setData }) => {
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
-                  <h3 className="text-base font-bold text-white truncate" title={gptAccount}>
+                  <h3 className="text-base font-bold text-[var(--text-primary)] truncate" title={gptAccount}>
                     {gptAccount}
                   </h3>
                   <button
@@ -78,7 +78,7 @@ const GptAccountCard = ({ accountData, data, setData }) => {
 
           <div className="flex items-center justify-between sm:justify-end gap-4 min-w-[140px]">
             <div className="text-right">
-              <div className="flex items-center justify-end gap-1.5 text-white font-bold text-lg leading-none">
+              <div className="flex items-center justify-end gap-1.5 text-[var(--text-primary)] font-bold text-lg leading-none">
                 <span className="text-[var(--text-tertiary)] text-xs font-bold">Total:</span>
                 <span>{members.length}</span>
               </div>
@@ -120,7 +120,7 @@ const GptAccountCard = ({ accountData, data, setData }) => {
 
       {/* Members Section */}
       <div className="p-0">
-        <div className="flex items-center justify-between px-5 py-3 border-b border-[var(--border-subtle)] bg-[var(--bg-card)]/50">
+        <div className="flex items-center justify-between px-5 py-3 border-b border-[var(--border-subtle)] bg-transparent">
           <h4 className="text-xs font-bold text-[var(--text-secondary)] uppercase tracking-wider">Team Members</h4>
           <div className={`text-[10px] font-bold px-2 py-0.5 rounded border ${checkedMembers === members.length
             ? 'bg-[var(--success)]/10 text-[var(--success)] border-[var(--success)]/20'

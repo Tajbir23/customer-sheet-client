@@ -417,8 +417,8 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search, searchSubsc
                             onClick={() => setShowExportDropdown(!showExportDropdown)}
                             disabled={isExporting || customers.length === 0}
                             className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-xl transition-all duration-300 ${isExporting || customers.length === 0
-                                    ? 'bg-[var(--bg-surface)] text-[var(--text-muted)] cursor-not-allowed'
-                                    : 'bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:text-white hover:bg-[var(--bg-hover)]'
+                                ? 'bg-[var(--bg-surface)] text-[var(--text-muted)] cursor-not-allowed'
+                                : 'bg-[var(--bg-surface)] text-[var(--text-secondary)] hover:text-white hover:bg-[var(--bg-hover)]'
                                 }`}
                             style={{ border: '1px solid var(--border-subtle)' }}
                             title={customers.length === 0 ? 'No data to export' : 'Export current page data'}
@@ -467,7 +467,7 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search, searchSubsc
                                             </svg>
                                         </div>
                                         <div className="text-left">
-                                            <div className="font-medium text-white">Export as CSV</div>
+                                            <div className="font-medium text-[var(--text-primary)]">Export as CSV</div>
                                             <div className="text-xs text-[var(--text-muted)]">Spreadsheet format</div>
                                         </div>
                                     </button>
@@ -485,7 +485,7 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search, searchSubsc
                                             </svg>
                                         </div>
                                         <div className="text-left">
-                                            <div className="font-medium text-white">Export as PDF</div>
+                                            <div className="font-medium text-[var(--text-primary)]">Export as PDF</div>
                                             <div className="text-xs text-[var(--text-muted)]">Document format</div>
                                         </div>
                                     </button>
@@ -508,7 +508,7 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search, searchSubsc
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
                             </svg>
                         </div>
-                        <h3 className="text-lg font-medium text-white mb-2">No customers found</h3>
+                        <h3 className="text-lg font-medium text-[var(--text-primary)] mb-2">No customers found</h3>
                         <p className="text-[var(--text-tertiary)]">
                             {search || searchSubscriptionEndDate
                                 ? "Try adjusting your search criteria"

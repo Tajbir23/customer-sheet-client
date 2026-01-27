@@ -64,7 +64,7 @@ const SearchSection = ({
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && handleSearch()}
-              className="w-full pl-12 pr-12 py-4 text-lg rounded-xl text-white placeholder-[var(--text-muted)] transition-all duration-300"
+              className="w-full pl-12 pr-12 py-4 text-lg rounded-xl text-[var(--text-primary)] placeholder-[var(--text-muted)] transition-all duration-300"
               style={{
                 background: 'var(--bg-surface)',
                 border: '1px solid var(--border-subtle)',
@@ -100,7 +100,7 @@ const SearchSection = ({
                 type="date"
                 value={endDate}
                 onChange={(e) => setEndDate(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl text-white transition-all duration-300"
+                className="w-full px-4 py-3 rounded-xl text-[var(--text-primary)] transition-all duration-300"
                 style={{
                   background: 'var(--bg-surface)',
                   border: '1px solid var(--border-subtle)',
@@ -127,7 +127,7 @@ const SearchSection = ({
                 type="date"
                 value={orderDate}
                 onChange={(e) => setOrderDate(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl text-white transition-all duration-300"
+                className="w-full px-4 py-3 rounded-xl text-[var(--text-primary)] transition-all duration-300"
                 style={{
                   background: 'var(--bg-surface)',
                   border: '1px solid var(--border-subtle)',

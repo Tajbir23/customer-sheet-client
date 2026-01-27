@@ -11,11 +11,11 @@ const SearchSection = ({
     totalPages
 }) => {
     return (
-        <div className="bg-[var(--bg-card)] rounded-2xl border border-[var(--border-subtle)] mb-8 overflow-hidden">
+        <div className="glass rounded-2xl border border-[var(--border-subtle)] mb-8 overflow-hidden">
             {/* Header */}
-            <div className="bg-[var(--bg-surface)] px-6 py-4 border-b border-[var(--border-subtle)]">
+            <div className="bg-transparent px-6 py-4 border-b border-[var(--border-subtle)]">
                 <div className="flex items-center justify-between">
-                    <h3 className="font-semibold text-white">Search & Filter</h3>
+                    <h3 className="font-semibold text-[var(--text-primary)]">Search & Filter</h3>
                     <div className="flex items-center space-x-2">
                         <span className="text-sm text-[var(--text-tertiary)]">
                             Page {currentPage} {totalPages > 1 && `of ${totalPages}`}
@@ -38,12 +38,12 @@ const SearchSection = ({
                             value={searchEmail}
                             onChange={(e) => setSearchEmail(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && handleSearch(searchEmail)}
-                            className="w-full pl-12 pr-12 py-4 text-lg bg-[var(--bg-surface)] border border-[var(--border-subtle)] rounded-xl focus:outline-none focus:border-[var(--accent-blue)] focus:ring-1 focus:ring-[var(--accent-blue)] transition-all duration-200 text-white placeholder-[var(--text-muted)]"
+                            className="w-full pl-12 pr-12 py-4 text-lg bg-[var(--bg-surface)] border border-[var(--border-subtle)] rounded-xl focus:outline-none focus:border-[var(--accent-blue)] focus:ring-1 focus:ring-[var(--accent-blue)] transition-all duration-200 text-[var(--text-primary)] placeholder-[var(--text-muted)]"
                         />
                         {searchEmail && (
                             <button
                                 onClick={clearSearch}
-                                className="absolute inset-y-0 right-0 pr-4 flex items-center text-[var(--text-tertiary)] hover:text-white transition-colors"
+                                className="absolute inset-y-0 right-0 pr-4 flex items-center text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors"
                             >
                                 <span className="h-5 w-5 font-bold">X</span>
                             </button>
@@ -78,11 +78,11 @@ const SearchSection = ({
 
                         {/* Additional Actions */}
                         <div className="flex items-center space-x-3">
-                            <button className="inline-flex items-center gap-2 px-4 py-3 text-[var(--text-secondary)] hover:text-white hover:bg-[var(--bg-hover)] rounded-xl transition-all duration-200">
+                            <button className="inline-flex items-center gap-2 px-4 py-3 text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)] rounded-xl transition-all duration-200">
                                 <span className="w-4 h-4 font-bold">F</span>
                                 <span className="hidden sm:inline">Filter</span>
                             </button>
-                            <button className="inline-flex items-center gap-2 px-4 py-3 text-[var(--text-secondary)] hover:text-white hover:bg-[var(--bg-hover)] rounded-xl transition-all duration-200">
+                            <button className="inline-flex items-center gap-2 px-4 py-3 text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)] rounded-xl transition-all duration-200">
                                 <span className="w-4 h-4 font-bold">↓</span>
                                 <span className="hidden sm:inline">Export</span>
                             </button>

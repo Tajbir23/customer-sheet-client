@@ -128,7 +128,7 @@ const HistoryCard = ({ item, index = 0 }) => {
             <div className="flex-1 min-w-0">
               <p className="text-xs text-[var(--accent-blue-light)] font-medium uppercase">GPT Account</p>
               <div className="flex items-center gap-2">
-                <p className="text-white font-medium truncate">{item.gptAccount}</p>
+                <p className="text-[var(--text-primary)] font-medium truncate">{item.gptAccount}</p>
                 <button
                   onClick={() => copyToClipboard(item.gptAccount, "gptAccount")}
                   className="p-1 text-[var(--text-muted)] hover:text-[var(--accent-blue)] rounded transition-colors"
@@ -158,7 +158,7 @@ const HistoryCard = ({ item, index = 0 }) => {
             <div className="flex-1 min-w-0">
               <p className="text-xs text-[var(--success-light)] font-medium uppercase">WhatsApp/FB ID</p>
               <div className="flex items-center gap-2">
-                <p className="text-white font-medium truncate">{item.waOrFbId || "N/A"}</p>
+                <p className="text-[var(--text-primary)] font-medium truncate">{item.waOrFbId || "N/A"}</p>
                 {item.waOrFbId && (
                   <button
                     onClick={() => copyToClipboard(item.waOrFbId, "waOrFbId")}
@@ -189,7 +189,7 @@ const HistoryCard = ({ item, index = 0 }) => {
             </div>
             <div>
               <p className="text-xs text-[var(--accent-purple-light)] font-medium uppercase">Order Date</p>
-              <p className="text-white font-medium">{formatDate(item.orderDate)}</p>
+              <p className="text-[var(--text-primary)] font-medium">{formatDate(item.orderDate)}</p>
             </div>
           </div>
 
@@ -206,7 +206,7 @@ const HistoryCard = ({ item, index = 0 }) => {
             </div>
             <div>
               <p className="text-xs text-[var(--error-light)] font-medium uppercase">Subscription End</p>
-              <p className="text-white font-medium">{formatDate(item.endAt)}</p>
+              <p className="text-[var(--text-primary)] font-medium">{formatDate(item.endAt)}</p>
             </div>
           </div>
         </div>

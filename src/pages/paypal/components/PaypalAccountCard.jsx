@@ -57,7 +57,7 @@ const PaypalAccountCard = ({ account }) => {
     }
 
     return (
-        <div className="bg-[var(--bg-card)] rounded-2xl border border-[var(--border-subtle)] overflow-hidden">
+        <div className="glass rounded-2xl border border-[var(--border-subtle)] overflow-hidden">
             {/* Header */}
             <div className="px-5 pt-5 pb-4 bg-[var(--bg-surface)] border-b border-[var(--border-subtle)]">
                 <div className="flex items-start justify-between gap-3">

@@ -398,9 +398,10 @@ const Teams = () => {
         // Add teamId to visibleTeamIds so it stays visible after member removal
         setVisibleTeamIds(prev => new Set([...prev, teamId]));
 
-        setData((prevData) => {
+        // Create update function to use for both state updates
+        const updateState = (prevData) => {
           if (!Array.isArray(prevData)) return [];
-          const updatedData = prevData.map((team) => {
+          return prevData.map((team) => {
             if (team._id === teamId) {
               const updatedMembers = team.members.filter(
                 (_, index) => index !== memberIndex
@@ -409,8 +410,10 @@ const Teams = () => {
             }
             return team;
           });
-          return updatedData;
-        });
+        };
+
+        setData(updateState);
+        setInActiveData(updateState);
         toast.success("Member removed successfully");
       } else {
         toast.error(response.message || "Failed to remove member");

@@ -641,13 +641,39 @@
   z-index: 1;
 }
 
+
 /* Toast Customization */
+.Toastify__toast-container {
+  z-index: 99999 !important;
+}
+
 .Toastify__toast {
   background: var(--bg-card) !important;
   border: 1px solid var(--border-subtle) !important;
   border-radius: var(--radius-lg) !important;
   color: var(--text-primary) !important;
   box-shadow: var(--shadow-lg) !important;
+  pointer-events: auto !important;
+  /* Ensure clickable */
+  cursor: default;
+}
+
+.Toastify__toast-body {
+  padding: 0;
+  margin: 0;
+}
+
+.Toastify__close-button {
+  color: var(--text-muted) !important;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+  pointer-events: auto !important;
+  /* Ensure close button clickable */
+}
+
+.Toastify__close-button:hover {
+  opacity: 1;
+  color: var(--text-primary) !important;
 }
 
 .Toastify__toast--success {

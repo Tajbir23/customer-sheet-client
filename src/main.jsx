@@ -16,7 +16,18 @@ createRoot(document.getElementById('root')).render(
       <ThemeProvider>
         <FontProvider>
           <RouterProvider router={Routes} />
-          <ToastContainer />
+          <ToastContainer
+            position="top-right"
+            autoClose={3000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover={false}
+            theme="dark"
+          />
         </FontProvider>
       </ThemeProvider>
     </SocketProvider>

@@ -128,16 +128,35 @@ const OldCustomers = () => {
   };
 
   // Handle Send Action
-  const handleSend = () => {
+  const [isSending, setIsSending] = useState(false);
+
+  const handleSend = async () => {
     const selectedCustomers = data.filter(c => selectedIds.has(c._id));
     const payload = selectedCustomers.map(c => ({
       email: c.email,
-      phone: c.waOrFbId
+      waOrFbId: c.waOrFbId
     }));
 
-    console.log('Sending message to:', payload);
-    toast.success(`Prepared to send messages to ${payload.length} customers (Check console for payload)`);
-    // Here you would call the actual API to send messages
+    try {
+      setIsSending(true);
+      const response = await handleApi(
+        '/whatsapp/send-message-to-select-sub-end-customers',
+        'POST',
+        payload
+      );
+
+      if (response.success) {
+        toast.success(`Messages sent to ${payload.length} customers successfully!`);
+        setSelectedIds(new Set()); // Clear selection after successful send
+      } else {
+        toast.error(response.message || 'Failed to send messages');
+      }
+    } catch (error) {
+      console.error('Error sending messages:', error);
+      toast.error('An error occurred while sending messages');
+    } finally {
+      setIsSending(false);
+    }
   };
 
   return (
@@ -173,6 +192,7 @@ const OldCustomers = () => {
             toggleColumn={toggleColumn}
             selectedCount={selectedIds.size}
             handleSend={handleSend}
+            isSending={isSending}
           />
         </div>
       </div>

@@ -8,7 +8,8 @@ const ActionToolbar = ({
     visibleColumns,
     toggleColumn,
     selectedCount,
-    handleSend
+    handleSend,
+    isSending
 }) => {
     const dropdownRef = useRef(null);
 
@@ -97,17 +98,21 @@ const ActionToolbar = ({
                 {/* Send Button */}
                 <button
                     onClick={handleSend}
-                    disabled={selectedCount === 0}
-                    className={`px-6 py-2.5 rounded-lg font-bold text-white flex items-center gap-2 transition-all ${selectedCount === 0 ? 'opacity-50 cursor-not-allowed' : 'hover:-translate-y-0.5'}`}
+                    disabled={selectedCount === 0 || isSending}
+                    className={`px-6 py-2.5 rounded-lg font-bold text-white flex items-center gap-2 transition-all ${selectedCount === 0 || isSending ? 'opacity-50 cursor-not-allowed' : 'hover:-translate-y-0.5'}`}
                     style={{
-                        background: selectedCount > 0 ? 'linear-gradient(135deg, var(--accent-purple) 0%, var(--accent-blue) 100%)' : 'var(--bg-surface)',
-                        boxShadow: selectedCount > 0 ? '0 4px 12px rgba(139, 92, 246, 0.3)' : 'none'
+                        background: selectedCount > 0 && !isSending ? 'linear-gradient(135deg, var(--accent-purple) 0%, var(--accent-blue) 100%)' : 'var(--bg-surface)',
+                        boxShadow: selectedCount > 0 && !isSending ? '0 4px 12px rgba(139, 92, 246, 0.3)' : 'none'
                     }}
                 >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                    </svg>
-                    Send Message ({selectedCount})
+                    {isSending ? (
+                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    ) : (
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                        </svg>
+                    )}
+                    {isSending ? 'Sending...' : `Send Message (${selectedCount})`}
                 </button>
             </div>
         </div>

@@ -21,6 +21,7 @@ import ResellerPage from "../pages/reseller-info/page";
 import ResellerAuthCheck from "./ResellerAuthCheck";
 import ResellerTeams from "../pages/reseller/teams/ResellerTeams";
 import SendCustomMessage from "../pages/sendCustomMessage/sendCustomMessage";
+import OldCustomers from "../pages/oldCustomers/OldCustomers";
 
 const Routes = createBrowserRouter([
   {
@@ -78,6 +79,10 @@ const Routes = createBrowserRouter([
       {
         path: "/send-custom-message",
         element: <SendCustomMessage />,
+      },
+      {
+        path: "/old-customers",
+        element: <OldCustomers />,
       }
     ],
   },

@@ -77,6 +77,11 @@ const Navbar = ({ isOpen, setIsOpen, onOpenSettings }) => {
         name: "Send Message",
         path: "/send-custom-message",
         icon: <FaCommentDots className="w-5 h-5" />,
+      },
+      {
+        name: "Old Customers",
+        path: "/old-customers",
+        icon: <FaUserFriends className="w-5 h-5" />,
       }
     ];
   }

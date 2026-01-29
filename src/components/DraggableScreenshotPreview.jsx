@@ -141,7 +141,7 @@ const DraggableScreenshotPreview = ({
       <html>
         <head><title>Screenshot - ${preview.gptAccount}</title></head>
         <body style="margin:0;background:#1f2937;display:flex;justify-content:center;align-items:center;min-height:100vh;">
-          <img src="data:image/png;base64,${preview.image}" style="max-width:100%;height:auto;"/>
+          <img src="data:image/webp;base64,${preview.image}" style="max-width:100%;height:auto;"/>
         </body>
       </html>
     `);
@@ -162,7 +162,7 @@ const DraggableScreenshotPreview = ({
                 >
                     <div className="relative max-w-full max-h-full">
                         <img
-                            src={`data:image/png;base64,${preview.image}`}
+                            src={`data:image/webp;base64,${preview.image}`}
                             alt="Screenshot Fullscreen"
                             className="max-w-full max-h-[90vh] object-contain rounded-lg"
                             onClick={(e) => e.stopPropagation()}
@@ -259,7 +259,7 @@ const DraggableScreenshotPreview = ({
                         {/* Screenshot Image */}
                         <div className="p-2 relative">
                             <img
-                                src={`data:image/png;base64,${preview.image}`}
+                                src={`data:image/webp;base64,${preview.image}`}
                                 alt="Screenshot Preview"
                                 className="w-full h-auto rounded-lg border cursor-pointer hover:opacity-90 transition-opacity"
                                 style={{ borderColor: 'var(--border-subtle)' }}

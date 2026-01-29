@@ -40,20 +40,21 @@ const MemberItem = ({ member, gptAccount, data, setData }) => {
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
                 <span className={`text-xs font-bold ${isChecked ? 'text-[var(--success)]' : 'text-[var(--text-tertiary)]'}`}>@</span>
-                <p className={`font-mono text-sm truncate transition-colors ${isChecked ? 'text-[var(--text-primary)] font-medium' : 'text-[var(--text-secondary)]'}`}>
+                <p
+                  onClick={handleCopyEmail}
+                  className={`font-mono text-sm truncate transition-colors cursor-pointer hover:text-[var(--accent-blue)] ${copied
+                      ? 'text-[var(--success)] font-bold'
+                      : isChecked
+                        ? 'text-[var(--text-primary)] font-medium'
+                        : 'text-[var(--text-secondary)]'
+                    }`}
+                  title="Click to copy email"
+                >
                   {email}
                 </p>
-                <button
-                  onClick={handleCopyEmail}
-                  className="p-1.5 rounded-md hover:bg-[var(--bg-hover)] text-[var(--text-tertiary)] hover:text-[var(--text-primary)] transition-colors opacity-0 group-hover/item:opacity-100"
-                  title="Copy email"
-                >
-                  {copied ? (
-                    <span className="text-[10px] text-[var(--success)] font-bold">Copied</span>
-                  ) : (
-                    <span className="text-[10px] font-bold">Copy</span>
-                  )}
-                </button>
+                {copied && (
+                  <span className="text-[10px] text-[var(--success)] font-bold">Copied!</span>
+                )}
               </div>
               <div className="flex items-center gap-2 mt-1">
                 <span className="text-[10px] text-[var(--text-tertiary)] uppercase tracking-wider font-semibold">Team Member</span>

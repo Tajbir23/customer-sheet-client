@@ -22,6 +22,7 @@ import ResellerAuthCheck from "./ResellerAuthCheck";
 import ResellerTeams from "../pages/reseller/teams/ResellerTeams";
 import SendCustomMessage from "../pages/sendCustomMessage/sendCustomMessage";
 import OldCustomers from "../pages/oldCustomers/OldCustomers";
+import MonitorLogs from "../pages/monitor-logs/MonitorLogs";
 
 const Routes = createBrowserRouter([
   {
@@ -83,6 +84,14 @@ const Routes = createBrowserRouter([
       {
         path: "/old-customers",
         element: <OldCustomers />,
+      },
+      {
+        path: "/monitor-logs",
+        element: <MonitorLogs />,
+      },
+      {
+        path: "/monitor-logs/:id",
+        element: <MonitorLogs />,
       }
     ],
   },

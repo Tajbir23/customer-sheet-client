@@ -20,6 +20,7 @@ import {
   FaCheckCircle,
   FaCog
 } from 'react-icons/fa';
+import { LuLogs } from "react-icons/lu";
 
 
 const Navbar = ({ isOpen, setIsOpen, onOpenSettings }) => {
@@ -82,6 +83,11 @@ const Navbar = ({ isOpen, setIsOpen, onOpenSettings }) => {
         name: "Old Customers",
         path: "/old-customers",
         icon: <FaUserFriends className="w-5 h-5" />,
+      },
+      {
+        name: "Monitor Logs",
+        path: "/monitor-logs",
+        icon: <LuLogs className="w-5 h-5" />,
       }
     ];
   }

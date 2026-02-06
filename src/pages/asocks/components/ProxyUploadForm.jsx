@@ -106,6 +106,7 @@ const ProxyUploadForm = ({ onClose }) => {
                     <option value="germany">Germany</option>
                     <option value="france">France</option>
                     <option value="united-kingdom">United Kingdom</option>
+                    <option value="korea">Korea</option>
                 </select>
                 {errors.location && (
                     <p className="mt-1 text-sm text-red-600">{errors.location}</p>

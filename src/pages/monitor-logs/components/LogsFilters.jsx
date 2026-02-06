@@ -1,4 +1,6 @@
 import React from 'react'
+import DatePicker from 'react-datepicker'
+import 'react-datepicker/dist/react-datepicker.css'
 
 // Log types for dropdown filter
 const LOG_TYPES = [
@@ -24,6 +26,21 @@ const LogsFilters = ({
     onClearFilters,
     hasActiveFilters
 }) => {
+    // Convert string date to Date object for DatePicker
+    const selectedDate = dateFilter ? new Date(dateFilter) : null
+
+    const handleDateChange = (date) => {
+        if (date) {
+            // Format to YYYY-MM-DD for API
+            const year = date.getFullYear()
+            const month = String(date.getMonth() + 1).padStart(2, '0')
+            const day = String(date.getDate()).padStart(2, '0')
+            setDateFilter(`${year}-${month}-${day}`)
+        } else {
+            setDateFilter('')
+        }
+    }
+
     return (
         <div
             className="rounded-xl p-4 mb-6 font-mono"
@@ -32,6 +49,55 @@ const LogsFilters = ({
                 border: '1px solid #21262d',
             }}
         >
+            <style>{`
+                .react-datepicker {
+                    background: #0d1117 !important;
+                    border: 1px solid #30363d !important;
+                    font-family: ui-monospace, monospace !important;
+                    border-radius: 8px !important;
+                }
+                .react-datepicker__header {
+                    background: #161b22 !important;
+                    border-bottom: 1px solid #30363d !important;
+                }
+                .react-datepicker__current-month,
+                .react-datepicker__day-name {
+                    color: #c9d1d9 !important;
+                }
+                .react-datepicker__day {
+                    color: #8b949e !important;
+                    border-radius: 4px !important;
+                }
+                .react-datepicker__day:hover {
+                    background: #30363d !important;
+                    color: #c9d1d9 !important;
+                }
+                .react-datepicker__day--selected,
+                .react-datepicker__day--keyboard-selected {
+                    background: #238636 !important;
+                    color: #fff !important;
+                }
+                .react-datepicker__day--today {
+                    background: #21262d !important;
+                    color: #58a6ff !important;
+                    font-weight: bold !important;
+                }
+                .react-datepicker__day--outside-month {
+                    color: #484f58 !important;
+                }
+                .react-datepicker__navigation-icon::before {
+                    border-color: #8b949e !important;
+                }
+                .react-datepicker__navigation:hover *::before {
+                    border-color: #c9d1d9 !important;
+                }
+                .react-datepicker__triangle {
+                    display: none !important;
+                }
+                .react-datepicker-popper {
+                    z-index: 100 !important;
+                }
+            `}</style>
             <div className="flex flex-wrap gap-4 items-end">
                 {/* Log Type Dropdown */}
                 <div className="flex-1 min-w-[200px]">
@@ -78,21 +144,22 @@ const LogsFilters = ({
                     </div>
                 </div>
 
-                {/* Date Filter */}
+                {/* Date Filter with DatePicker */}
                 <div className="flex-1 min-w-[180px]">
                     <label className="block text-xs text-gray-500 mb-2">
                         --date
                     </label>
-                    <input
-                        type="date"
-                        value={dateFilter}
-                        onChange={(e) => setDateFilter(e.target.value)}
+                    <DatePicker
+                        selected={selectedDate}
+                        onChange={handleDateChange}
+                        dateFormat="yyyy-MM-dd"
+                        placeholderText="Select date..."
+                        isClearable
                         className="w-full px-3 py-2 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500/50"
-                        style={{
-                            background: '#0d1117',
-                            border: '1px solid #30363d',
-                            color: '#c9d1d9'
-                        }}
+                        wrapperClassName="w-full"
+                        calendarClassName="console-calendar"
+                        showPopperArrow={false}
+                        popperPlacement="bottom-start"
                     />
                 </div>
 

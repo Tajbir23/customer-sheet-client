@@ -20,22 +20,13 @@ const ProxyUploadForm = ({ onClose }) => {
 
         if (!formData.proxyUrl) {
             newErrors.proxyUrl = 'Proxy URL is required'
-        } else if (!isValidUrl(formData.proxyUrl)) {
-            newErrors.proxyUrl = 'Please enter a valid URL'
         }
 
         setErrors(newErrors)
         return Object.keys(newErrors).length === 0
     }
 
-    const isValidUrl = (string) => {
-        try {
-            new URL(string)
-            return true
-        } catch (_) {
-            return false
-        }
-    }
+
 
     const handleInputChange = (e) => {
         const { name, value } = e.target
@@ -94,9 +85,9 @@ const ProxyUploadForm = ({ onClose }) => {
                     id="location"
                     value={formData.location}
                     onChange={handleInputChange}
-                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${errors.location
-                            ? 'border-red-500 bg-red-50'
-                            : 'border-gray-300 bg-white hover:border-gray-400'
+                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors text-black ${errors.location
+                        ? 'border-red-500 bg-red-50'
+                        : 'border-gray-300 bg-white hover:border-gray-400'
                         }`}
                 >
                     <option value="">Select location</option>
@@ -125,9 +116,9 @@ const ProxyUploadForm = ({ onClose }) => {
                     value={formData.proxyUrl}
                     onChange={handleInputChange}
                     placeholder="https://proxy.example.com:8080"
-                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors ${errors.proxyUrl
-                            ? 'border-red-500 bg-red-50'
-                            : 'border-gray-300 bg-white hover:border-gray-400'
+                    className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors text-black ${errors.proxyUrl
+                        ? 'border-red-500 bg-red-50'
+                        : 'border-gray-300 bg-white hover:border-gray-400'
                         }`}
                 />
                 {errors.proxyUrl && (

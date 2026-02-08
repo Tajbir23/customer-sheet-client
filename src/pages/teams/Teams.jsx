@@ -14,6 +14,7 @@ import TeamGrid from "./components/TeamGrid";
 import DuplicateMembersCard from "./components/DuplicateMembersCard";
 import Pagination from "./components/Pagination";
 import InactiveTeamsSection from "./components/InactiveTeamsSection";
+import NewTeamsSection from "./components/NewTeamsSection";
 import AllTeamsHeader from "./components/AllTeamsHeader";
 import AdminFilter from "./components/AdminFilter";
 import ResultsInfo from "./components/ResultsInfo";
@@ -29,6 +30,7 @@ const Teams = () => {
     totalActiveTeams: 0,
     totalInactiveTeams: 0,
   });
+  const [newTeams, setNewTeams] = useState([]);
   const [duplicateMembers, setDuplicateMembers] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -297,8 +299,10 @@ const Teams = () => {
           "GET"
         );
 
+        console.log("team", response)
         if (response.success) {
           setData(response.data || []);
+          setNewTeams(response.newGptAccount || []);
           setInActiveData(response.gptInActiveData || []);
           setTotalCount({
             totalTeams: response.total || 0,
@@ -500,10 +504,12 @@ const Teams = () => {
           "GET"
         );
 
+        console.log("team", response)
         if (isSubscribed) {
           if (response.success) {
             setData(response.data || []);
             setInActiveData(response.gptInActiveData || []);
+            setNewTeams(response.newGptAccount || []);
             setTotalCount({
               totalTeams: response.total || 0,
               totalMembers: response.totalMembers || 0,
@@ -571,6 +577,18 @@ const Teams = () => {
 
     return (
       <>
+        {/* New Teams Section (Last 7 Days) */}
+        <NewTeamsSection
+          newTeams={newTeams}
+          onToggleActive={handleToggleActive}
+          onRemoveMember={handleRemoveMember}
+          onAddMembers={handleAddMembers}
+          togglingTeam={togglingTeam}
+          recentlyToggledTeam={recentlyToggledTeam}
+          recentlyAddedMembers={recentlyAddedMembers}
+          userId={userId}
+        />
+
         {/* Inactive Teams Section */}
         <InactiveTeamsSection
           inActiveData={inActiveData}

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import ToggleButton from "./ToggleButton";
-
+import InactiveReasonPanel from "./InactiveReasonPanel";
 import Member from "./Member";
 import RdpInfo from "./RdpInfo";
 import handleApi from "../../../libs/handleAPi";
@@ -40,6 +40,7 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
   const [showAllMembers, setShowAllMembers] = useState(false);
   const [copiedAllMemberEmail, setCopiedAllMemberEmail] = useState(null);
   const [showMemberActions, setShowMemberActions] = useState(false);
+  const [showInactiveReason, setShowInactiveReason] = useState(false);
 
   useEffect(() => {
     const fetchReferences = async () => {
@@ -94,6 +95,7 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
     if (except !== 'members') setIsExpanded(false);
     if (except !== 'allMembers') setShowAllMembers(false);
     if (except !== 'actions') setShowMemberActions(false);
+    if (except !== 'inactiveReason') setShowInactiveReason(false);
   };
 
   const handleToggleRdp = () => {
@@ -118,6 +120,12 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
     const newState = !showMemberActions;
     if (newState) closeOtherToggles('actions');
     setShowMemberActions(newState);
+  };
+
+  const handleToggleInactiveReason = () => {
+    const newState = !showInactiveReason;
+    if (newState) closeOtherToggles('inactiveReason');
+    setShowInactiveReason(newState);
   };
 
   const handleCopyEmail = async () => {
@@ -412,9 +420,28 @@ const TeamCard = ({ team, onToggleActive, isToggling, onRemoveMember, onAddMembe
                     {showAllMembers ? <FaChevronUp className="w-2.5 h-2.5" /> : <FaChevronDown className="w-2.5 h-2.5" />}
                   </button>
                 )}
+
+                {!team.isActive && (
+                  <button
+                    onClick={handleToggleInactiveReason}
+                    className={`border backdrop-blur-sm rounded-xl px-3 py-2 transition-all duration-200 font-medium flex items-center gap-2 ${showInactiveReason
+                        ? 'bg-[var(--error)] border-[var(--error)] text-white'
+                        : 'bg-[var(--error-bg)] hover:bg-[var(--error)]/20 border-[var(--error)]/30 text-[var(--error-light)]'
+                      }`}
+                  >
+                    <span className="text-xs flex items-center gap-1">⚠ Inactive Reason</span>
+                    {showInactiveReason ? <FaChevronUp className="w-2.5 h-2.5" /> : <FaChevronDown className="w-2.5 h-2.5" />}
+                  </button>
+                )}
               </div>
             </div>
           </div>
+
+          {/* Inactive Reason Section */}
+          <InactiveReasonPanel
+            gptAccount={team.gptAccount}
+            isOpen={showInactiveReason}
+          />
 
           {/* RDP Section */}
           {showRdp && (

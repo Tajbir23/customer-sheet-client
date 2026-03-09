@@ -25,6 +25,7 @@ const Layout = () => {
     if (!socket || !isConnected) return
 
     const unsubscribe = subscribe('invite-monitoring-response', (data) => {
+      console.log('Received invite-monitoring-response:', data) 
       // Handle browser closed status
       if (data.status === 'invite_completed_browser_closed') {
         setScreenshotPreview(prev => {

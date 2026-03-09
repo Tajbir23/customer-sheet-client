@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { toast } from 'react-toastify';
 import handleApi from '../../../../libs/handleAPi';
+import { useSocket } from '../../../../context/SocketContext';
 
 const ResellerTeamCard = ({ team, onRemoveMember, onMemberAdded }) => {
     const [isExpanded, setIsExpanded] = useState(false);
@@ -14,6 +15,21 @@ const ResellerTeamCard = ({ team, onRemoveMember, onMemberAdded }) => {
         orderDate: new Date().toISOString().split('T')[0],
     });
     const [formErrors, setFormErrors] = useState({});
+    const { emit, isConnected } = useSocket();
+    const [userId, setUserId] = useState(null);
+
+    // Extract userId from JWT token on mount
+    useEffect(() => {
+        try {
+            const token = localStorage.getItem('token');
+            if (token) {
+                const payload = JSON.parse(atob(token.split('.')[1]));
+                setUserId(payload._id || payload.id || payload.userId);
+            }
+        } catch (err) {
+            console.error('Error decoding token:', err);
+        }
+    }, []);
 
     const handleCopyEmail = async () => {
         try {
@@ -82,6 +98,11 @@ const ResellerTeamCard = ({ team, onRemoveMember, onMemberAdded }) => {
             errors.orderDate = 'Order date is required';
         }
 
+        if (!isConnected) {
+            toast.error('Socket not connected. Please try again.');
+            return;
+        }
+
         if (Object.keys(errors).length > 0) {
             setFormErrors(errors);
             return;
@@ -89,22 +110,34 @@ const ResellerTeamCard = ({ team, onRemoveMember, onMemberAdded }) => {
 
         setIsAdding(true);
         try {
-            const response = await handleApi('/reseller/add-customer', 'POST', {
-                email: formData.email.trim(),
+
+            emit('invite-member', {
+                userId: userId || null,
                 gptAccount: team.gptAccount,
-                orderDate: formData.orderDate,
+                memberEmail: formData.email.trim(),
+                server: team.server,
+                isResell: true
             });
 
-            if (response.success) {
-                toast.success('Customer added successfully!');
-                handleCloseAddModal();
-                // Callback to refresh the teams list
-                if (onMemberAdded) {
-                    onMemberAdded();
-                }
-            } else {
-                toast.error(response.message || 'Failed to add customer');
-            }
+            toast.success(`Invite sent to ${formData.email.trim()}`);
+            handleCloseAddModal();
+            onMemberAdded();
+            // const response = await handleApi('/reseller/add-customer', 'POST', {
+            //     email: formData.email.trim(),
+            //     gptAccount: team.gptAccount,
+            //     orderDate: formData.orderDate,
+            // });
+
+            // if (response.success) {
+            //     toast.success('Customer added successfully!');
+            //     handleCloseAddModal();
+            //     // Callback to refresh the teams list
+            //     if (onMemberAdded) {
+            //         onMemberAdded();
+            //     }
+            // } else {
+            //     toast.error(response.message || 'Failed to add customer');
+            // }
         } catch (err) {
             console.error('Failed to add customer:', err);
             toast.error('Failed to add customer');

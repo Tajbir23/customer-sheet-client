@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import handleApi from "../../libs/handleAPi";
 
 import { toast } from "react-toastify";
 import useAddMember from "../../libs/useAddMember";
-import { useSocket } from "../../context/SocketContext";
 
 // Import components
 import SearchBar from "./components/SearchBar";
@@ -18,7 +17,6 @@ import NewTeamsSection from "./components/NewTeamsSection";
 import AllTeamsHeader from "./components/AllTeamsHeader";
 import AdminFilter from "./components/AdminFilter";
 import ResultsInfo from "./components/ResultsInfo";
-import DraggableScreenshotPreview from "../../components/DraggableScreenshotPreview";
 import { Helmet } from "react-helmet";
 
 const Teams = () => {
@@ -50,18 +48,8 @@ const Teams = () => {
   // Track team IDs that should stay visible even after member removal
   const [visibleTeamIds, setVisibleTeamIds] = useState(new Set());
 
-  // Refs for managing waiting timeouts
-  const inviteWaitingTimeoutRef = useRef(null);
-  const removeWaitingTimeoutRef = useRef(null);
   // Get userId from JWT token
   const [userId, setUserId] = useState(null);
-  // Screenshot preview from socket
-  const [screenshotPreview, setScreenshotPreview] = useState(null);
-  // Remove member screenshot preview from socket
-  const [removeScreenshotPreview, setRemoveScreenshotPreview] = useState(null);
-  // Waiting states for screenshot previews
-  const [inviteWaiting, setInviteWaiting] = useState(false);
-  const [removeWaiting, setRemoveWaiting] = useState(false);
 
   // Extract userId from JWT token on mount
   useEffect(() => {
@@ -76,132 +64,6 @@ const Teams = () => {
       console.error('Error decoding token:', err);
     }
   }, []);
-
-  // Get socket subscribe function
-  const { subscribe, socket, isConnected } = useSocket();
-
-  // Listen for invite-monitoring-response event (only once in Teams page)
-  useEffect(() => {
-    console.log('Socket status:', { socket: !!socket, isConnected });
-
-    // Only subscribe when socket is connected
-    if (!socket || !isConnected) return;
-
-    console.log('Subscribing to invite-monitoring-response event');
-
-    const unsubscribe = subscribe('invite-monitoring-response', (data) => {
-      console.log('invite-monitoring-response received:', data);
-
-      // Handle browser closed status - clear screenshot and show message
-      if (data.status === 'invite_completed_browser_closed') {
-        setScreenshotPreview(null);
-        setInviteWaiting(false);
-        toast.info('✅ Invite completed - Browser closed');
-        return;
-      }
-
-      // Handle screenshot preview
-      if (data.status === 'screenshot' && data.screenshot) {
-        // Clear any existing timeout
-        if (inviteWaitingTimeoutRef.current) {
-          clearTimeout(inviteWaitingTimeoutRef.current);
-        }
-
-        // Reset waiting (new screenshot arrived), then set waiting again for next
-        setInviteWaiting(false);
-        setScreenshotPreview({
-          id: Date.now() + Math.random(), // Unique ID to force re-render
-          image: data.screenshot,
-          gptAccount: data.gptAccount,
-          memberEmail: data.memberEmail,
-          timestamp: data.timestamp
-        });
-
-        // After showing screenshot, set waiting for next screenshot
-        inviteWaitingTimeoutRef.current = setTimeout(() => {
-          setInviteWaiting(true);
-        }, 100);
-      }
-
-      if (data.success && data.message) {
-        toast.success(data.message);
-      } else if (!data.success && data.message) {
-        toast.error(data.message);
-      }
-    });
-
-    return () => {
-      if (unsubscribe) unsubscribe();
-    };
-  }, [subscribe, socket, isConnected]);
-
-  // Listen for remove-monitoring-response event
-  useEffect(() => {
-    // Only subscribe when socket is connected
-    if (!socket || !isConnected) return;
-
-    console.log('Subscribing to remove-monitoring-response event');
-
-    const unsubscribe = subscribe('remove-monitoring-response', (data) => {
-      console.log('remove-monitoring-response received:', data);
-
-      // Handle different status types
-      if (data.status === 'removed') {
-        toast.success('✅ Remove member successful');
-        return;
-      }
-
-      if (data.status === 'remove_failed') {
-        toast.error('❌ Remove failed');
-        return;
-      }
-
-      if (data.status === 'error') {
-        toast.error('⚠️ Something went wrong');
-        return;
-      }
-
-      if (data.status === 'removed_browser_closed') {
-        setRemoveScreenshotPreview(null);
-        setRemoveWaiting(false);
-        toast.info('🔒 Browser closing');
-        return;
-      }
-
-      // Handle screenshot preview
-      if (data.status === 'screenshot' && data.screenshot) {
-        // Clear any existing timeout
-        if (removeWaitingTimeoutRef.current) {
-          clearTimeout(removeWaitingTimeoutRef.current);
-        }
-
-        // Reset waiting (new screenshot arrived), then set waiting again for next
-        setRemoveWaiting(false);
-        setRemoveScreenshotPreview({
-          id: Date.now() + Math.random(), // Unique ID to force re-render
-          image: data.screenshot,
-          gptAccount: data.gptAccount,
-          email: data.email,
-          timestamp: data.timestamp
-        });
-
-        // After showing screenshot, set waiting for next screenshot
-        removeWaitingTimeoutRef.current = setTimeout(() => {
-          setRemoveWaiting(true);
-        }, 100);
-      }
-
-      if (data.success && data.message) {
-        toast.success(data.message);
-      } else if (!data.success && data.message) {
-        toast.error(data.message);
-      }
-    });
-
-    return () => {
-      if (unsubscribe) unsubscribe();
-    };
-  }, [subscribe, socket, isConnected]);
 
   // Sort teams with inactive first
   const sortedTeams = useMemo(() => {
@@ -683,22 +545,6 @@ const Teams = () => {
           </div>
         )}
       </div>
-
-      {/* Screenshot Preview - Draggable, Resizable */}
-      <DraggableScreenshotPreview
-        preview={screenshotPreview}
-        onClose={() => { setScreenshotPreview(null); setInviteWaiting(false); }}
-        isWaiting={inviteWaiting}
-        type="invite"
-      />
-
-      {/* Remove Member Screenshot Preview - Draggable, Resizable */}
-      <DraggableScreenshotPreview
-        preview={removeScreenshotPreview}
-        onClose={() => { setRemoveScreenshotPreview(null); setRemoveWaiting(false); }}
-        isWaiting={removeWaiting}
-        type="remove"
-      />
     </div>
   );
 };

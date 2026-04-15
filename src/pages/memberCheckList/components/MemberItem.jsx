@@ -4,15 +4,14 @@ import { toast } from 'react-toastify'
 import UpdateMember from './UpdateMember'
 import AddMember from './AddMember'
 import removeDataFromCheckList from './removeDataFromChecklist'
-import { useSocket } from '../../../context/SocketContext'
+import handleApi from '../../../libs/handleAPi'
 
-const MemberItem = ({ member, gptAccount, server, data, setData }) => {
+const MemberItem = ({ member, gptAccount, data, setData }) => {
   const { email, isChecked, isResell, reference } = member
   const [copied, setCopied] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
   const [showRemoveConfirm, setShowRemoveConfirm] = useState(false)
   const [isRemoving, setIsRemoving] = useState(false)
-  const { emit, isConnected } = useSocket()
 
   const handleCopyEmail = async () => {
     try {
@@ -24,25 +23,24 @@ const MemberItem = ({ member, gptAccount, server, data, setData }) => {
     }
   }
 
-  const handleRemoveMember = () => {
-    if (!isConnected) {
-      toast.error('Socket not connected. Please try again.')
-      return
-    }
-
+  const handleRemoveMember = async () => {
     setIsRemoving(true)
     try {
-      emit('remove-member', {
+      const response = await handleApi('/gpt-account/remove-from-checklist', 'DELETE', {
         gptAccount,
-        email: email.trim(),
-        server: server || ''
+        email: email.trim()
       })
-      toast.success(`Remove request sent for ${email}`)
-      removeDataFromCheckList(gptAccount, email, data, setData)
-      setShowRemoveConfirm(false)
+
+      if (response.success) {
+        toast.success(`${email} removed from checklist`)
+        removeDataFromCheckList(gptAccount, email, data, setData)
+        setShowRemoveConfirm(false)
+      } else {
+        toast.error(response.message || 'Failed to remove member')
+      }
     } catch (err) {
-      console.error('Error sending remove request:', err)
-      toast.error('Failed to send remove request')
+      console.error('Error removing member from checklist:', err)
+      toast.error('Failed to remove member from checklist')
     } finally {
       setIsRemoving(false)
     }
@@ -146,16 +144,8 @@ const MemberItem = ({ member, gptAccount, server, data, setData }) => {
 
             {/* Body */}
             <div className="p-5">
-              {/* Socket Status */}
-              <div className="mb-3 flex items-center gap-2">
-                <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-[var(--success)] animate-pulse' : 'bg-[var(--error)]'}`}></div>
-                <span className={`text-xs font-medium ${isConnected ? 'text-[var(--success)]' : 'text-[var(--error)]'}`}>
-                  {isConnected ? 'Connected' : 'Disconnected'}
-                </span>
-              </div>
-
               <p className="text-sm text-[var(--text-secondary)] mb-3">
-                Are you sure you want to remove this member?
+                Are you sure you want to remove this member from checklist?
               </p>
               <div className="p-3 bg-[var(--bg-surface)] rounded-xl border border-[var(--border-subtle)]">
                 <p className="text-sm font-mono text-white font-medium truncate">{email}</p>
@@ -163,7 +153,7 @@ const MemberItem = ({ member, gptAccount, server, data, setData }) => {
 
               <div className="mt-3 p-3 bg-[var(--warning)]/10 border border-[var(--warning)]/30 rounded-xl">
                 <p className="text-xs text-[var(--warning)] font-medium">
-                  ⚠️ This will send a remove request via real-time socket connection.
+                  ⚠️ This will only remove the member from the checklist, not from the team or monitoring server.
                 </p>
               </div>
             </div>
@@ -179,7 +169,7 @@ const MemberItem = ({ member, gptAccount, server, data, setData }) => {
               </button>
               <button
                 onClick={handleRemoveMember}
-                disabled={isRemoving || !isConnected}
+                disabled={isRemoving}
                 className="px-4 py-2 text-sm font-bold text-white bg-[var(--error)] hover:bg-[var(--error)]/90 rounded-xl transition-all duration-200 disabled:opacity-50 flex items-center gap-2"
               >
                 {isRemoving ? (

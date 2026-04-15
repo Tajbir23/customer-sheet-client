@@ -1,11 +1,18 @@
 import React, { useState } from 'react'
+import { createPortal } from 'react-dom'
+import { toast } from 'react-toastify'
 import UpdateMember from './UpdateMember'
 import AddMember from './AddMember'
+import removeDataFromCheckList from './removeDataFromChecklist'
+import { useSocket } from '../../../context/SocketContext'
 
-const MemberItem = ({ member, gptAccount, data, setData }) => {
+const MemberItem = ({ member, gptAccount, server, data, setData }) => {
   const { email, isChecked, isResell, reference } = member
   const [copied, setCopied] = useState(false)
   const [isOpen, setIsOpen] = useState(false)
+  const [showRemoveConfirm, setShowRemoveConfirm] = useState(false)
+  const [isRemoving, setIsRemoving] = useState(false)
+  const { emit, isConnected } = useSocket()
 
   const handleCopyEmail = async () => {
     try {
@@ -14,6 +21,30 @@ const MemberItem = ({ member, gptAccount, data, setData }) => {
       setTimeout(() => setCopied(false), 2000)
     } catch (err) {
       console.error('Failed to copy email:', err)
+    }
+  }
+
+  const handleRemoveMember = () => {
+    if (!isConnected) {
+      toast.error('Socket not connected. Please try again.')
+      return
+    }
+
+    setIsRemoving(true)
+    try {
+      emit('remove-member', {
+        gptAccount,
+        email: email.trim(),
+        server: server || ''
+      })
+      toast.success(`Remove request sent for ${email}`)
+      removeDataFromCheckList(gptAccount, email, data, setData)
+      setShowRemoveConfirm(false)
+    } catch (err) {
+      console.error('Error sending remove request:', err)
+      toast.error('Failed to send remove request')
+    } finally {
+      setIsRemoving(false)
     }
   }
 
@@ -61,21 +92,33 @@ const MemberItem = ({ member, gptAccount, data, setData }) => {
               </div>
             </div>
 
-            {/* Badges */}
-            <div className="flex flex-col items-end gap-1.5 flex-shrink-0">
-              {reference?._id && (
-                <div className="flex items-center gap-1 bg-[var(--accent-blue)] text-white px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider shadow-sm shadow-blue-500/20">
-                  <span className="text-[9px] font-bold">Ref:</span>
-                  <span>{reference.username}</span>
-                </div>
-              )}
+            {/* Remove Button & Badges */}
+            <div className="flex items-center gap-2 flex-shrink-0">
+              {/* Badges */}
+              <div className="flex flex-col items-end gap-1.5">
+                {reference?._id && (
+                  <div className="flex items-center gap-1 bg-[var(--accent-blue)] text-white px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider shadow-sm shadow-blue-500/20">
+                    <span className="text-[9px] font-bold">Ref:</span>
+                    <span>{reference.username}</span>
+                  </div>
+                )}
 
-              {isResell && (
-                <div className="flex items-center gap-1 bg-[var(--accent-purple)]/10 text-[var(--accent-purple)] px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider border border-[var(--accent-purple)]/20">
-                  <span className="font-bold">★</span>
-                  <span>Resell</span>
-                </div>
-              )}
+                {isResell && (
+                  <div className="flex items-center gap-1 bg-[var(--accent-purple)]/10 text-[var(--accent-purple)] px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider border border-[var(--accent-purple)]/20">
+                    <span className="font-bold">★</span>
+                    <span>Resell</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Remove Button */}
+              <button
+                onClick={() => setShowRemoveConfirm(true)}
+                className="w-7 h-7 rounded-lg flex items-center justify-center text-[var(--text-muted)] hover:text-[var(--error)] hover:bg-[var(--error)]/10 border border-transparent hover:border-[var(--error)]/30 transition-all duration-200 opacity-0 group-hover/item:opacity-100"
+                title="Remove member"
+              >
+                <span className="text-xs font-bold">🗑</span>
+              </button>
             </div>
           </div>
         </div>
@@ -83,6 +126,76 @@ const MemberItem = ({ member, gptAccount, data, setData }) => {
 
       {isOpen === 'update' && <UpdateMember member={member} gptAccount={gptAccount} setIsOpen={setIsOpen} memberData={data} setData={setData} />}
       {isOpen === 'add' && <AddMember member={member} gptAccount={gptAccount} setIsOpen={setIsOpen} reference={reference} memberData={data} setData={setData} />}
+
+      {/* Remove Confirmation Modal */}
+      {showRemoveConfirm && createPortal(
+        <div className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4">
+          <div className="bg-[var(--bg-card)] rounded-2xl border border-[var(--border-subtle)] max-w-sm w-full mx-4 overflow-hidden">
+            {/* Header */}
+            <div className="p-5 border-b border-[var(--border-subtle)]">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-[var(--error)]/20 rounded-xl flex items-center justify-center">
+                  <span className="text-[var(--error)] font-bold text-lg">🗑</span>
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-white">Remove Member</h3>
+                  <p className="text-[var(--text-tertiary)] text-xs">{gptAccount}</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Body */}
+            <div className="p-5">
+              {/* Socket Status */}
+              <div className="mb-3 flex items-center gap-2">
+                <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-[var(--success)] animate-pulse' : 'bg-[var(--error)]'}`}></div>
+                <span className={`text-xs font-medium ${isConnected ? 'text-[var(--success)]' : 'text-[var(--error)]'}`}>
+                  {isConnected ? 'Connected' : 'Disconnected'}
+                </span>
+              </div>
+
+              <p className="text-sm text-[var(--text-secondary)] mb-3">
+                Are you sure you want to remove this member?
+              </p>
+              <div className="p-3 bg-[var(--bg-surface)] rounded-xl border border-[var(--border-subtle)]">
+                <p className="text-sm font-mono text-white font-medium truncate">{email}</p>
+              </div>
+
+              <div className="mt-3 p-3 bg-[var(--warning)]/10 border border-[var(--warning)]/30 rounded-xl">
+                <p className="text-xs text-[var(--warning)] font-medium">
+                  ⚠️ This will send a remove request via real-time socket connection.
+                </p>
+              </div>
+            </div>
+
+            {/* Footer */}
+            <div className="flex items-center justify-end gap-3 p-5 border-t border-[var(--border-subtle)] bg-[var(--bg-surface)]">
+              <button
+                onClick={() => setShowRemoveConfirm(false)}
+                disabled={isRemoving}
+                className="px-4 py-2 text-sm font-bold text-[var(--text-secondary)] bg-[var(--bg-elevated)] hover:bg-[var(--bg-hover)] rounded-xl transition-all duration-200 disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleRemoveMember}
+                disabled={isRemoving || !isConnected}
+                className="px-4 py-2 text-sm font-bold text-white bg-[var(--error)] hover:bg-[var(--error)]/90 rounded-xl transition-all duration-200 disabled:opacity-50 flex items-center gap-2"
+              >
+                {isRemoving ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                    Removing...
+                  </>
+                ) : (
+                  'Remove'
+                )}
+              </button>
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
     </>
   )
 }

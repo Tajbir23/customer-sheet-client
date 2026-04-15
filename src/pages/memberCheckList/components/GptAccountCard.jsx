@@ -145,7 +145,7 @@ const GptAccountCard = ({ accountData, data, setData }) => {
                 key={member._id}
                 className=""
               >
-                <MemberItem member={member} gptAccount={gptAccount} data={data} setData={setData} />
+                <MemberItem member={member} gptAccount={gptAccount} server={accountData.server} data={data} setData={setData} />
               </div>
             ))
           )}

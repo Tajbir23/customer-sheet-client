@@ -276,7 +276,16 @@ const MissingMemberCard = ({ entry, expanded, onToggle, onCopy, copiedEmail }) =
                         <span className="text-[var(--warning)] font-bold text-sm">@</span>
                     </div>
                     <div className="min-w-0 flex-1">
-                        <h3 className="font-bold text-[var(--text-primary)] truncate">{entry.gptAccount}</h3>
+                        <div className="flex items-center gap-2">
+                            <h3 className="font-bold text-[var(--text-primary)] truncate">{entry.gptAccount}</h3>
+                            <button
+                                onClick={(e) => { e.stopPropagation(); onCopy(entry.gptAccount); }}
+                                className="p-1 rounded-lg text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)] transition-colors shrink-0"
+                                title="Copy GPT account"
+                            >
+                                {copiedEmail === entry.gptAccount ? <FaCheck className="w-3 h-3 text-[var(--success)]" /> : <FaCopy className="w-3 h-3" />}
+                            </button>
+                        </div>
                         <div className="flex items-center gap-2 mt-0.5 flex-wrap">
                             <span className="text-xs text-[var(--text-tertiary)]">
                                 Checklist: <span className="text-[var(--text-secondary)] font-medium">{entry.totalChecklistMembers}</span>

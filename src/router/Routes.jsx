@@ -23,6 +23,7 @@ import ResellerTeams from "../pages/reseller/teams/ResellerTeams";
 import SendCustomMessage from "../pages/sendCustomMessage/sendCustomMessage";
 import OldCustomers from "../pages/oldCustomers/OldCustomers";
 import MonitorLogs from "../pages/monitor-logs/MonitorLogs";
+import MissingMembers from "../pages/missingMembers/MissingMembers";
 
 const Routes = createBrowserRouter([
   {
@@ -92,6 +93,10 @@ const Routes = createBrowserRouter([
       {
         path: "/monitor-logs/:id",
         element: <MonitorLogs />,
+      },
+      {
+        path: "/missing-members",
+        element: <MissingMembers />,
       }
     ],
   },

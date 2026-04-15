@@ -18,7 +18,8 @@ import {
   FaTimes,
   FaBars,
   FaCheckCircle,
-  FaCog
+  FaCog,
+  FaExclamationTriangle
 } from 'react-icons/fa';
 import { LuLogs } from "react-icons/lu";
 
@@ -88,6 +89,11 @@ const Navbar = ({ isOpen, setIsOpen, onOpenSettings }) => {
         name: "Monitor Logs",
         path: "/monitor-logs",
         icon: <LuLogs className="w-5 h-5" />,
+      },
+      {
+        name: "Missing Members",
+        path: "/missing-members",
+        icon: <FaExclamationTriangle className="w-5 h-5" />,
       }
     ];
   }

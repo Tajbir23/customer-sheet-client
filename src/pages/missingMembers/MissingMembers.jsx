@@ -123,9 +123,10 @@ const MissingMembers = () => {
 
                 {/* Stats Cards */}
                 {stats && !loading && (
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
                         <StatCard label="Checklist Accounts" value={stats.totalChecklistAccounts} color="blue" />
                         <StatCard label="Monitor Accounts" value={stats.totalMonitorAccounts} color="purple" />
+                        <StatCard label="Matched Accounts" value={stats.matchedAccounts} color="green" />
                         <StatCard label="Accounts w/ Missing" value={stats.accountsWithMissing} color="orange" />
                         <StatCard label="Total Missing Members" value={stats.totalMissingMembers} color="red" />
                     </div>
@@ -264,34 +265,45 @@ const StatCard = ({ label, value, color }) => {
 }
 
 const MissingMemberCard = ({ entry, expanded, onToggle, onCopy, copiedEmail }) => {
-    const borderColor = entry.teamExistsInMonitor ? 'var(--warning)' : 'var(--error)'
-    const label = entry.teamExistsInMonitor ? 'Members missing' : 'Team not in monitor'
-
     return (
-        <div className="rounded-2xl border overflow-hidden" style={{ borderColor: `color-mix(in srgb, ${borderColor} 30%, transparent)` }}>
+        <div className="rounded-2xl border border-[var(--warning)]/30 overflow-hidden glass">
             <div
-                className="px-5 py-4 flex items-center justify-between cursor-pointer transition-colors hover:opacity-90"
-                style={{ background: `color-mix(in srgb, ${borderColor} 5%, transparent)` }}
+                className="px-5 py-4 flex items-center justify-between cursor-pointer hover:bg-[var(--warning)]/5 transition-colors"
                 onClick={onToggle}
             >
                 <div className="flex items-center gap-3 min-w-0 flex-1">
-                    <div className="p-2 rounded-lg shrink-0" style={{
-                        background: `color-mix(in srgb, ${borderColor} 10%, transparent)`,
-                        border: `1px solid color-mix(in srgb, ${borderColor} 20%, transparent)`
-                    }}>
-                        <span style={{ color: borderColor }} className="font-bold text-sm">@</span>
+                    <div className="p-2 rounded-lg bg-[var(--warning)]/10 border border-[var(--warning)]/20 shrink-0">
+                        <span className="text-[var(--warning)] font-bold text-sm">@</span>
                     </div>
                     <div className="min-w-0 flex-1">
                         <h3 className="font-bold text-[var(--text-primary)] truncate">{entry.gptAccount}</h3>
-                        <p className="text-xs font-medium" style={{ color: borderColor }}>{label}</p>
+                        <div className="flex items-center gap-2 mt-0.5 flex-wrap">
+                            <span className="text-xs text-[var(--text-tertiary)]">
+                                Checklist: <span className="text-[var(--text-secondary)] font-medium">{entry.totalChecklistMembers}</span>
+                            </span>
+                            <span className="w-1 h-1 rounded-full bg-[var(--text-tertiary)]"></span>
+                            <span className="text-xs text-[var(--text-tertiary)]">
+                                Monitor: <span className="text-[var(--text-secondary)] font-medium">{entry.totalMonitorMembers}</span>
+                            </span>
+                            {entry.monitorServer && (
+                                <>
+                                    <span className="w-1 h-1 rounded-full bg-[var(--text-tertiary)]"></span>
+                                    <span className="text-xs text-[var(--accent-blue)] font-medium">{entry.monitorServer}</span>
+                                </>
+                            )}
+                            {entry.monitorIsActive !== undefined && (
+                                <>
+                                    <span className="w-1 h-1 rounded-full bg-[var(--text-tertiary)]"></span>
+                                    <span className={`text-xs font-medium ${entry.monitorIsActive ? 'text-[var(--success)]' : 'text-[var(--error)]'}`}>
+                                        {entry.monitorIsActive ? 'Active' : 'Inactive'}
+                                    </span>
+                                </>
+                            )}
+                        </div>
                     </div>
                 </div>
                 <div className="flex items-center gap-3 shrink-0">
-                    <span className="text-xs font-bold px-2.5 py-1 rounded-lg" style={{
-                        background: `color-mix(in srgb, ${borderColor} 10%, transparent)`,
-                        color: borderColor,
-                        border: `1px solid color-mix(in srgb, ${borderColor} 20%, transparent)`
-                    }}>
+                    <span className="text-xs font-bold px-2.5 py-1 rounded-lg bg-[var(--warning)]/10 text-[var(--warning)] border border-[var(--warning)]/20">
                         {entry.missingCount} missing
                     </span>
                     {expanded ? <FaChevronUp className="text-[var(--text-tertiary)]" /> : <FaChevronDown className="text-[var(--text-tertiary)]" />}
@@ -299,9 +311,9 @@ const MissingMemberCard = ({ entry, expanded, onToggle, onCopy, copiedEmail }) =
             </div>
 
             {expanded && (
-                <div className="border-t px-5 py-4 space-y-2" style={{ borderColor: `color-mix(in srgb, ${borderColor} 20%, transparent)` }}>
+                <div className="border-t border-[var(--warning)]/20 px-5 py-4 space-y-2">
                     {entry.missingMembers.map((m, i) => (
-                        <MemberRow key={i} email={m.email} reference={m.reference} isChecked={m.isChecked} onCopy={onCopy} copiedEmail={copiedEmail} />
+                        <MemberRow key={i} email={m.email} reference={m.reference} isChecked={m.isChecked} gptAccount={entry.monitorGptAccount || entry.gptAccount} onCopy={onCopy} copiedEmail={copiedEmail} />
                     ))}
                 </div>
             )}
@@ -309,18 +321,25 @@ const MissingMemberCard = ({ entry, expanded, onToggle, onCopy, copiedEmail }) =
     )
 }
 
-const MemberRow = ({ email, reference, isChecked, onCopy, copiedEmail }) => (
-    <div className="flex items-center justify-between py-2 px-3 rounded-xl bg-[var(--bg-card)] border border-[var(--border-subtle)]">
+const MemberRow = ({ email, reference, isChecked, gptAccount, onCopy, copiedEmail }) => (
+    <div className="flex items-center justify-between py-2.5 px-3 rounded-xl bg-[var(--bg-card)] border border-[var(--border-subtle)]">
         <div className="flex items-center gap-3 min-w-0 flex-1">
             <div className={`w-2 h-2 rounded-full shrink-0 ${isChecked ? 'bg-[var(--success)]' : 'bg-[var(--error)]'}`}></div>
-            <span className="text-sm text-[var(--text-primary)] truncate font-medium">{email}</span>
+            <div className="min-w-0 flex-1">
+                <span className="text-sm text-[var(--text-primary)] truncate font-medium block">{email}</span>
+                <div className="flex items-center gap-2 mt-0.5 flex-wrap">
+                    {reference && (
+                        <span className="text-[10px] font-bold text-[var(--accent-purple)] bg-[var(--accent-purple)]/10 px-1.5 py-0.5 rounded">
+                            {reference.username || reference.email || 'N/A'}
+                        </span>
+                    )}
+                    <span className="text-[10px] text-[var(--text-tertiary)]">
+                        missing in <span className="font-medium text-[var(--warning)]">{gptAccount}</span>
+                    </span>
+                </div>
+            </div>
         </div>
         <div className="flex items-center gap-2 shrink-0">
-            {reference && (
-                <span className="text-xs text-[var(--text-tertiary)] bg-[var(--bg-surface)] px-2 py-0.5 rounded-lg">
-                    {reference.username || reference.email || 'N/A'}
-                </span>
-            )}
             <button
                 onClick={(e) => { e.stopPropagation(); onCopy(email); }}
                 className="p-1.5 rounded-lg text-[var(--text-tertiary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)] transition-colors"

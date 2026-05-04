@@ -92,9 +92,52 @@ const SubmitRefundRequest = () => {
                         Refund Request
                     </h1>
                     <p className="text-[var(--text-tertiary)] mt-2">
-                        Fill out the form below. You can add multiple emails for the same refund request.
+                        নিচের ফর্মটি পূরণ করে আপনার রিফান্ড রিকোয়েস্ট জমা দিন।
                     </p>
                 </div>
+
+                {!results && (
+                    <div className="mb-6 p-5 rounded-2xl bg-[var(--bg-card)] border border-[var(--border-subtle)]">
+                        <h2 className="text-lg font-bold text-[var(--text-primary)] mb-3">
+                            📋 বিস্তারিত নির্দেশনা — অনুগ্রহ করে মনোযোগ দিয়ে পড়ুন
+                        </h2>
+                        <ol className="list-decimal list-inside space-y-2.5 text-sm text-[var(--text-secondary)] leading-relaxed">
+                            <li>
+                                <strong className="text-[var(--text-primary)]">Email(s) having issue:</strong>{' '}
+                                যে ChatGPT মেইল(গুলো)তে সমস্যা হচ্ছে সেটি লিখুন। একাধিক মেইল থাকলে{' '}
+                                <em className="text-[var(--accent-blue)]">"Add another email"</em> বাটনে ক্লিক করে নতুন
+                                মেইল যোগ করুন। ভুল বা বানান ভুল মেইল দিলে রিকোয়েস্ট রিজেক্ট হয়ে যাবে।
+                            </li>
+                            <li>
+                                <strong className="text-[var(--text-primary)]">Days used:</strong>{' '}
+                                সাবস্ক্রিপশন কেনার পর কত দিন ব্যবহার করেছেন সেই সংখ্যাটি লিখুন (যেমন: <code>5</code> অথবা{' '}
+                                <code>12</code>)।
+                            </li>
+                            <li>
+                                <strong className="text-[var(--text-primary)]">WhatsApp number:</strong>{' '}
+                                আপনার সচল WhatsApp নম্বরটি দিন। প্রয়োজনে আমরা এই নম্বরে যোগাযোগ করব।
+                            </li>
+                            <li>
+                                <strong className="text-[var(--text-primary)]">Paid from bKash number:</strong>{' '}
+                                যে bKash নম্বর থেকে আপনি পেমেন্ট করেছিলেন সেই নম্বরটি দিন। (পেমেন্ট ভেরিফাই করার জন্য
+                                জরুরি)
+                            </li>
+                            <li>
+                                <strong className="text-[var(--text-primary)]">Refund to bKash number:</strong>{' '}
+                                যে bKash নম্বরে রিফান্ড নিতে চান সেই নম্বরটি দিন। পেমেন্ট নম্বর ও রিফান্ড নম্বর একই হলেও সমস্যা নেই।
+                            </li>
+                            <li>
+                                সব ঠিক থাকলে <em className="text-[var(--accent-blue)]">"Submit Refund Request"</em>{' '}
+                                বাটনে ক্লিক করুন। প্রতিটি মেইলের রেজাল্ট আলাদা ভাবে দেখানো হবে।
+                            </li>
+                        </ol>
+
+                        <div className="mt-4 p-3 rounded-xl bg-yellow-500/10 border border-yellow-500/40 text-yellow-300 text-xs leading-relaxed">
+                            <strong>⚠️ লক্ষ্য করুন:</strong> একই মেইল দ্বিতীয়বার সাবমিট করলে অথবা যে মেইলটি আমাদের সিস্টেমে
+                            খুঁজে পাওয়া যাবে না, সেটি স্বয়ংক্রিয়ভাবে রিজেক্ট হয়ে যাবে। তাই সঠিক মেইল ঠিকানা দিন।
+                        </div>
+                    </div>
+                )}
 
                 {results ? (
                     <div className="space-y-4">

@@ -33,7 +33,7 @@ const RefundRequests = () => {
     const [copied, setCopied] = useState(false)
     const [search, setSearch] = useState('')
     const [debouncedSearch, setDebouncedSearch] = useState('')
-    const [statusFilter, setStatusFilter] = useState('')
+    const [statusFilter, setStatusFilter] = useState('pending')
     const [page, setPage] = useState(1)
     const [totalPages, setTotalPages] = useState(1)
     const [total, setTotal] = useState(0)
@@ -237,7 +237,7 @@ const RefundRequests = () => {
                                         </div>
                                         <div>
                                             <span className="text-[var(--text-tertiary)]">Paid amount: </span>
-                                            <span className="text-[var(--text-primary)]">৳{r.paidAmount}</span>
+                                            <span className="text-[var(--text-primary)]">{r.paidAmount ? `৳${r.paidAmount}` : '—'}</span>
                                         </div>
                                         <div>
                                             <span className="text-[var(--text-tertiary)]">WhatsApp: </span>

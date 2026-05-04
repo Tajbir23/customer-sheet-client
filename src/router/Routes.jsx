@@ -24,6 +24,8 @@ import SendCustomMessage from "../pages/sendCustomMessage/sendCustomMessage";
 import OldCustomers from "../pages/oldCustomers/OldCustomers";
 import MonitorLogs from "../pages/monitor-logs/MonitorLogs";
 import MissingMembers from "../pages/missingMembers/MissingMembers";
+import RefundRequests from "../pages/refundRequests/RefundRequests";
+import SubmitRefundRequest from "../pages/refundRequests/SubmitRefundRequest";
 
 const Routes = createBrowserRouter([
   {
@@ -97,6 +99,10 @@ const Routes = createBrowserRouter([
       {
         path: "/missing-members",
         element: <MissingMembers />,
+      },
+      {
+        path: "/refund-requests",
+        element: <RefundRequests />,
       }
     ],
   },
@@ -133,6 +139,10 @@ const Routes = createBrowserRouter([
   {
     path: "/facebook-terms-conditions",
     element: <FacebookTermsConditions />,
+  },
+  {
+    path: "/refund-request/:uid",
+    element: <SubmitRefundRequest />,
   },
 ]);
 

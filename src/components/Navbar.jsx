@@ -19,7 +19,8 @@ import {
   FaBars,
   FaCheckCircle,
   FaCog,
-  FaExclamationTriangle
+  FaExclamationTriangle,
+  FaUndo
 } from 'react-icons/fa';
 import { LuLogs } from "react-icons/lu";
 
@@ -94,6 +95,11 @@ const Navbar = ({ isOpen, setIsOpen, onOpenSettings }) => {
         name: "Missing Members",
         path: "/missing-members",
         icon: <FaExclamationTriangle className="w-5 h-5" />,
+      },
+      {
+        name: "Refund Request",
+        path: "/refund-requests",
+        icon: <FaUndo className="w-5 h-5" />,
       }
     ];
   }

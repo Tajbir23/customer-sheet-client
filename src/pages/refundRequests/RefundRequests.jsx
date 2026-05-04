@@ -236,6 +236,10 @@ const RefundRequests = () => {
                                             <span className="text-[var(--text-primary)]">{r.daysUsed}</span>
                                         </div>
                                         <div>
+                                            <span className="text-[var(--text-tertiary)]">Paid amount: </span>
+                                            <span className="text-[var(--text-primary)]">৳{r.paidAmount}</span>
+                                        </div>
+                                        <div>
                                             <span className="text-[var(--text-tertiary)]">WhatsApp: </span>
                                             <span className="text-[var(--text-primary)]">{r.whatsappNumber}</span>
                                         </div>

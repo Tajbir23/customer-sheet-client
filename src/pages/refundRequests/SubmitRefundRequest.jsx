@@ -12,6 +12,7 @@ const SubmitRefundRequest = () => {
     const [bkashPaymentNumber, setBkashPaymentNumber] = useState('')
     const [bkashRefundNumber, setBkashRefundNumber] = useState('')
     const [whatsappNumber, setWhatsappNumber] = useState('')
+    const [paidAmount, setPaidAmount] = useState('')
 
     const [submitting, setSubmitting] = useState(false)
     const [results, setResults] = useState(null)
@@ -29,6 +30,7 @@ const SubmitRefundRequest = () => {
         setBkashPaymentNumber('')
         setBkashRefundNumber('')
         setWhatsappNumber('')
+        setPaidAmount('')
     }
 
     const handleSubmit = async (e) => {
@@ -36,7 +38,7 @@ const SubmitRefundRequest = () => {
         setError('')
         setResults(null)
 
-        if (!daysUsed || !bkashPaymentNumber || !bkashRefundNumber || !whatsappNumber) {
+        if (!daysUsed || !bkashPaymentNumber || !bkashRefundNumber || !whatsappNumber || !paidAmount) {
             setError('Please fill all the common fields.')
             return
         }
@@ -51,7 +53,8 @@ const SubmitRefundRequest = () => {
             daysUsed,
             bkashPaymentNumber,
             bkashRefundNumber,
-            whatsappNumber
+            whatsappNumber,
+            paidAmount
         }))
 
         try {
@@ -112,6 +115,11 @@ const SubmitRefundRequest = () => {
                                 <strong className="text-[var(--text-primary)]">Days used:</strong>{' '}
                                 সাবস্ক্রিপশন কেনার পর কত দিন ব্যবহার করেছেন সেই সংখ্যাটি লিখুন (যেমন: <code>5</code> অথবা{' '}
                                 <code>12</code>)।
+                            </li>
+                            <li>
+                                <strong className="text-[var(--text-primary)]">Paid amount (৳):</strong>{' '}
+                                আপনি কত টাকা পেমেন্ট করেছিলেন সেই পরিমাণ লিখুন (যেমন: <code>500</code>)। সঠিক
+                                অ্যামাউন্ট দিন, এটি পেমেন্ট ভেরিফাই করতে ব্যবহৃত হবে।
                             </li>
                             <li>
                                 <strong className="text-[var(--text-primary)]">WhatsApp number:</strong>{' '}
@@ -227,6 +235,18 @@ const SubmitRefundRequest = () => {
                                     value={daysUsed}
                                     onChange={(e) => setDaysUsed(e.target.value)}
                                     placeholder="e.g. 5"
+                                    className="w-full px-4 py-3 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent-blue)]"
+                                    required
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm text-[var(--text-secondary)] mb-1.5">Paid amount (৳)</label>
+                                <input
+                                    type="text"
+                                    value={paidAmount}
+                                    onChange={(e) => setPaidAmount(e.target.value)}
+                                    placeholder="e.g. 500"
                                     className="w-full px-4 py-3 rounded-xl bg-[var(--bg-surface)] border border-[var(--border-subtle)] text-[var(--text-primary)] focus:outline-none focus:border-[var(--accent-blue)]"
                                     required
                                 />

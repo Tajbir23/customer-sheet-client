@@ -3,7 +3,7 @@ import handleApi from '../../../libs/handleAPi'
 import { toast } from 'react-toastify'
 
 
-const AddCustomerForm = ({ setIsOpen, className, defaultPlan = 'business' }) => {
+const AddCustomerForm = ({ setIsOpen, className, defaultPlan = 'business', lockPlan = false }) => {
   const isMountedRef = useRef(true)
   const [references, setReferences] = useState([])
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -154,15 +154,39 @@ const AddCustomerForm = ({ setIsOpen, className, defaultPlan = 'business' }) => 
 
               <div>
                 <label className={labelClass}>Plan *</label>
-                <select
-                  name="plan"
-                  required
-                  defaultValue={defaultPlan}
-                  className={inputClass}
-                >
-                  <option value="business">ChatGPT Business</option>
-                  <option value="plus">ChatGPT Plus</option>
-                </select>
+                {lockPlan ? (
+                  <>
+                    <input type="hidden" name="plan" value={defaultPlan} />
+                    <div
+                      className={`${inputClass} flex items-center justify-between cursor-not-allowed`}
+                      style={{ opacity: 0.85 }}
+                      title="Plan is locked based on the current page"
+                    >
+                      <span className="font-semibold text-[var(--text-primary)]">
+                        {defaultPlan === 'plus' ? 'ChatGPT Plus' : 'ChatGPT Business'}
+                      </span>
+                      <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md"
+                        style={{
+                          background: 'var(--bg-surface)',
+                          color: 'var(--text-tertiary)',
+                          border: '1px solid var(--border-subtle)',
+                        }}
+                      >
+                        Locked
+                      </span>
+                    </div>
+                  </>
+                ) : (
+                  <select
+                    name="plan"
+                    required
+                    defaultValue={defaultPlan}
+                    className={inputClass}
+                  >
+                    <option value="business">ChatGPT Business</option>
+                    <option value="plus">ChatGPT Plus</option>
+                  </select>
+                )}
               </div>
             </div>
           </div>

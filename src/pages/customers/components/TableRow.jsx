@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 
 import { toast } from 'react-toastify';
-import { FaEye, FaTrash, FaCheck, FaClock, FaExclamationCircle, FaCopy } from 'react-icons/fa';
+import { FaEye, FaTrash, FaCheck, FaClock, FaExclamationCircle, FaCopy, FaExchangeAlt } from 'react-icons/fa';
 
-const TableRow = ({ item, index, formatDate, onViewDetails, onDelete, showPlanBadge = true }) => {
+const TableRow = ({ item, index, formatDate, onViewDetails, onDelete, onSwitchPlan, showPlanBadge = true }) => {
     const [copiedEmail, setCopiedEmail] = useState(false);
 
     // Default legacy customers without an explicit plan to "business"
@@ -256,6 +256,36 @@ const TableRow = ({ item, index, formatDate, onViewDetails, onDelete, showPlanBa
                         <FaEye className="w-3 h-3" />
                         <span className="font-bold">View</span>
                     </button>
+                    {showPlanBadge && onSwitchPlan && (
+                        <button
+                            onClick={() => onSwitchPlan(item)}
+                            className="inline-flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-lg transition-all duration-200 transform hover:-translate-y-0.5"
+                            style={{
+                                background: planKey === 'plus' ? 'rgba(6, 182, 212, 0.15)' : 'rgba(139, 92, 246, 0.15)',
+                                color: planKey === 'plus' ? 'var(--accent-cyan-light)' : 'var(--accent-purple-light)',
+                                border: planKey === 'plus' ? '1px solid rgba(6, 182, 212, 0.3)' : '1px solid rgba(139, 92, 246, 0.3)',
+                            }}
+                            onMouseEnter={(e) => {
+                                if (planKey === 'plus') {
+                                    e.currentTarget.style.background = 'rgba(6, 182, 212, 0.25)';
+                                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(6, 182, 212, 0.3)';
+                                } else {
+                                    e.currentTarget.style.background = 'rgba(139, 92, 246, 0.25)';
+                                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(139, 92, 246, 0.3)';
+                                }
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.background = planKey === 'plus' ? 'rgba(6, 182, 212, 0.15)' : 'rgba(139, 92, 246, 0.15)';
+                                e.currentTarget.style.boxShadow = 'none';
+                            }}
+                            title={planKey === 'plus' ? 'Move to ChatGPT Business' : 'Move to ChatGPT Plus'}
+                        >
+                            <FaExchangeAlt className="w-3 h-3" />
+                            <span className="font-bold hidden lg:inline">
+                                {planKey === 'plus' ? '→ Business' : '→ Plus'}
+                            </span>
+                        </button>
+                    )}
                     <button
                         onClick={() => onDelete(item)}
                         className="inline-flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-lg transition-all duration-200 transform hover:-translate-y-0.5"

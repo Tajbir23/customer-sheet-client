@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import handleApi from '../../../libs/handleAPi';
 import CustomerDetailsModal from './CustomerDetailsModal';
 import DeleteCustomerModal from './DeleteCustomerModal';
+import SwitchPlanModal from './SwitchPlanModal';
 import TableHeader from './TableHeader';
 import TableRow from './TableRow';
 import Pagination from './Pagination';
@@ -97,18 +98,29 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search, searchSubsc
 
     const [selectedCustomer, setSelectedCustomer] = useState(null);
     const [deleteCustomer, setDeleteCustomer] = useState(null);
+    const [switchPlanCustomer, setSwitchPlanCustomer] = useState(null);
 
     const handleViewDetails = (customer) => {
         setSelectedCustomer(customer);
     };
 
+    // Default legacy customers (no plan field) to 'business' for filter-match logic
+    const customerPlanOf = (c) => (c?.plan === 'plus' ? 'plus' : 'business');
+
     const handleCustomerUpdate = (updatedCustomer) => {
-        setCustomers(prevCustomers =>
-            prevCustomers.map(customer =>
-                customer?._id === updatedCustomer?._id ? updatedCustomer : customer
-            )
-        );
-        setSelectedCustomer(updatedCustomer);
+        if (!updatedCustomer?._id) return;
+        // If a plan filter is active and the customer no longer matches, drop it from the list
+        if (plan && plan !== customerPlanOf(updatedCustomer)) {
+            setCustomers(prev => prev.filter(c => c._id !== updatedCustomer._id));
+            setTotalItems(prev => Math.max(0, prev - 1));
+            // Close details modal since the customer left this view
+            setSelectedCustomer(null);
+        } else {
+            setCustomers(prev =>
+                prev.map(c => (c?._id === updatedCustomer._id ? updatedCustomer : c))
+            );
+            setSelectedCustomer(updatedCustomer);
+        }
     };
 
     const handleDelete = async (_id) => {
@@ -124,6 +136,32 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search, searchSubsc
             toast.error('Error deleting customer');
         } finally {
             setDeleteCustomer(null);
+        }
+    };
+
+    const handleSwitchPlan = async (_id, targetPlan) => {
+        try {
+            const response = await handleApi(`/customers/change-plan/${_id}`, 'PUT', { plan: targetPlan }, navigate);
+            if (response?.success && response.customer) {
+                const updated = response.customer;
+                // If a plan filter is active and the customer no longer matches, drop the row
+                if (plan && plan !== customerPlanOf(updated)) {
+                    setCustomers(prev => prev.filter(c => c._id !== _id));
+                    setTotalItems(prev => Math.max(0, prev - 1));
+                } else {
+                    setCustomers(prev =>
+                        prev.map(c => (c._id === _id ? updated : c))
+                    );
+                }
+                toast.success(response.message || `Moved to ChatGPT ${targetPlan === 'plus' ? 'Plus' : 'Business'}`);
+            } else {
+                toast.error(response?.message || 'Failed to move customer');
+            }
+        } catch (err) {
+            console.error('Error switching plan:', err);
+            toast.error('Error moving customer');
+        } finally {
+            setSwitchPlanCustomer(null);
         }
     };
 
@@ -537,6 +575,7 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search, searchSubsc
                                         formatDate={formatDate}
                                         onViewDetails={handleViewDetails}
                                         onDelete={setDeleteCustomer}
+                                        onSwitchPlan={showPlanColumn ? setSwitchPlanCustomer : undefined}
                                         showPlanBadge={showPlanColumn}
                                     />
                                 ))}
@@ -581,6 +620,13 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search, searchSubsc
                     customer={deleteCustomer}
                     onClose={() => setDeleteCustomer(null)}
                     onDelete={handleDelete}
+                />
+            )}
+            {switchPlanCustomer && (
+                <SwitchPlanModal
+                    customer={switchPlanCustomer}
+                    onClose={() => setSwitchPlanCustomer(null)}
+                    onConfirm={handleSwitchPlan}
                 />
             )}
         </div>

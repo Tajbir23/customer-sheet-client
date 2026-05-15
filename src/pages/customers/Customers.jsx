@@ -44,6 +44,7 @@ const Customers = ({ plan }) => {
           setIsOpen={setIsOpen}
           className="modal-overlay"
           defaultPlan={lockedPlan || 'business'}
+          lockPlan={!!lockedPlan}
         />
       )}
 

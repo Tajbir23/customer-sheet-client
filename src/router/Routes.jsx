@@ -45,6 +45,14 @@ const Routes = createBrowserRouter([
         element: <Customers />,
       },
       {
+        path: "/chatgpt-business",
+        element: <Customers plan="business" />,
+      },
+      {
+        path: "/chatgpt-plus",
+        element: <Customers plan="plus" />,
+      },
+      {
         path: "/teams",
         element: <Teams />,
       },

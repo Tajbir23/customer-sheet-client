@@ -3,7 +3,7 @@ import handleApi from '../../../libs/handleAPi'
 import { toast } from 'react-toastify'
 
 
-const AddCustomerForm = ({ setIsOpen, className }) => {
+const AddCustomerForm = ({ setIsOpen, className, defaultPlan = 'business' }) => {
   const isMountedRef = useRef(true)
   const [references, setReferences] = useState([])
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -52,7 +52,8 @@ const AddCustomerForm = ({ setIsOpen, className }) => {
       reference: formData.reference.value,
       paidAmount: formData.paidAmount.value,
       paymentMethod: formData.paymentMethod.value,
-      paymentDate: formData.paymentDate.value
+      paymentDate: formData.paymentDate.value,
+      plan: formData.plan.value
     }
 
     try {
@@ -148,6 +149,19 @@ const AddCustomerForm = ({ setIsOpen, className }) => {
                   {references.map((reference) => (
                     <option key={reference._id} value={reference._id}>{reference.username}</option>
                   ))}
+                </select>
+              </div>
+
+              <div>
+                <label className={labelClass}>Plan *</label>
+                <select
+                  name="plan"
+                  required
+                  defaultValue={defaultPlan}
+                  className={inputClass}
+                >
+                  <option value="business">ChatGPT Business</option>
+                  <option value="plus">ChatGPT Plus</option>
                 </select>
               </div>
             </div>

@@ -3,8 +3,24 @@ import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 import { FaEye, FaTrash, FaCheck, FaClock, FaExclamationCircle, FaCopy } from 'react-icons/fa';
 
-const TableRow = ({ item, index, formatDate, onViewDetails, onDelete }) => {
+const TableRow = ({ item, index, formatDate, onViewDetails, onDelete, showPlanBadge = true }) => {
     const [copiedEmail, setCopiedEmail] = useState(false);
+
+    // Default legacy customers without an explicit plan to "business"
+    const planKey = item.plan === 'plus' ? 'plus' : 'business';
+    const planConfig = planKey === 'plus'
+        ? {
+            label: 'ChatGPT Plus',
+            bg: 'rgba(139, 92, 246, 0.15)',
+            text: 'var(--accent-purple-light)',
+            border: 'rgba(139, 92, 246, 0.35)',
+        }
+        : {
+            label: 'ChatGPT Business',
+            bg: 'rgba(6, 182, 212, 0.15)',
+            text: 'var(--accent-cyan-light)',
+            border: 'rgba(6, 182, 212, 0.35)',
+        };
 
     const getStatusConfig = (status) => {
         switch (status) {
@@ -96,6 +112,19 @@ const TableRow = ({ item, index, formatDate, onViewDetails, onDelete }) => {
                         <div className="text-xs text-[var(--text-muted)] capitalize">
                             {item.orderFrom} Customer
                         </div>
+                        {showPlanBadge && (
+                            <div
+                                className="inline-flex items-center mt-1.5 px-2 py-0.5 rounded-md text-[10px] font-semibold uppercase tracking-wide"
+                                style={{
+                                    background: planConfig.bg,
+                                    color: planConfig.text,
+                                    border: `1px solid ${planConfig.border}`,
+                                }}
+                                title={planConfig.label}
+                            >
+                                {planConfig.label}
+                            </div>
+                        )}
                     </div>
                 </div>
             </td>

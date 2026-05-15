@@ -46,7 +46,7 @@ const TableSkeleton = () => {
     );
 };
 
-const CustomerTable = ({ className, isLoading, setIsLoading, search, searchSubscriptionEndDate }) => {
+const CustomerTable = ({ className, isLoading, setIsLoading, search, searchSubscriptionEndDate, plan = '', showPlanColumn = true }) => {
     const [customers, setCustomers] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
@@ -64,7 +64,7 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search, searchSubsc
             try {
                 setIsLoading(true);
                 const response = await handleApi(
-                    `/customers/get?search=${search}&searchSubscriptionEndDate=${searchSubscriptionEndDate}&page=${currentPage}&limit=${pageSize}&sortBy=${sortConfig.key}&sortDirection=${sortConfig.direction}`,
+                    `/customers/get?search=${search}&searchSubscriptionEndDate=${searchSubscriptionEndDate}&page=${currentPage}&limit=${pageSize}&sortBy=${sortConfig.key}&sortDirection=${sortConfig.direction}${plan ? `&plan=${plan}` : ''}`,
                     "GET",
                     {},
                     navigate
@@ -88,7 +88,12 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search, searchSubsc
         return () => {
             isMounted = false;
         };
-    }, [search, searchSubscriptionEndDate, currentPage, pageSize, sortConfig, setIsLoading, navigate]);
+    }, [search, searchSubscriptionEndDate, currentPage, pageSize, sortConfig, plan, setIsLoading, navigate]);
+
+    // Reset to first page whenever the plan filter changes
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [plan]);
 
     const [selectedCustomer, setSelectedCustomer] = useState(null);
     const [deleteCustomer, setDeleteCustomer] = useState(null);
@@ -532,6 +537,7 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search, searchSubsc
                                         formatDate={formatDate}
                                         onViewDetails={handleViewDetails}
                                         onDelete={setDeleteCustomer}
+                                        showPlanBadge={showPlanColumn}
                                     />
                                 ))}
                             </tbody>

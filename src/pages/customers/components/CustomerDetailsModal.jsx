@@ -68,6 +68,11 @@ const CustomerDetailsModal = ({ customer, onClose, formatDate, onUpdate }) => {
                                     <p className="text-blue-100 text-sm capitalize font-medium">
                                         {customer.orderFrom} Customer • {formatDate(customer.orderDate)}
                                     </p>
+                                    <span
+                                        className="inline-flex items-center mt-2 px-2.5 py-0.5 rounded-md text-[11px] font-semibold uppercase tracking-wide bg-white/15 border border-white/25 text-white"
+                                    >
+                                        {customer.plan === 'plus' ? 'ChatGPT Plus' : 'ChatGPT Business'}
+                                    </span>
                                 </div>
                             </div>
                             <div className="flex items-center space-x-3">

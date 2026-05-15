@@ -19,7 +19,8 @@ const EditCustomerModal = ({ customer, onClose, onUpdate }) => {
         paymentStatus: customer.paymentStatus || 'pending',
         paidAmount: customer.paidAmount || '',
         paymentDate: customer.paymentDate?.split('T')[0] || '',
-        paymentMethod: customer.paymentMethod || ''
+        paymentMethod: customer.paymentMethod || '',
+        plan: customer.plan || 'business'
     });
 
     useEffect(() => {
@@ -43,7 +44,8 @@ const EditCustomerModal = ({ customer, onClose, onUpdate }) => {
         try {
             const response = await handleApi(`/customers/edit/${customer?._id}`, 'PUT', formData, navigate);
             if (isMountedRef.current && response.success) {
-                onUpdate(response.data);
+                // Server returns the updated doc under `customer`; fall back to `data` for safety
+                onUpdate(response.customer || response.data);
                 toast.success('Customer updated successfully');
                 onClose();
             }
@@ -141,6 +143,23 @@ const EditCustomerModal = ({ customer, onClose, onUpdate }) => {
                                     }}
                                     placeholder="GPT account identifier"
                                 />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="block text-sm font-bold text-[var(--text-secondary)]">Plan</label>
+                                <select
+                                    name="plan"
+                                    value={formData.plan}
+                                    onChange={handleChange}
+                                    className="w-full px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-[var(--accent-blue)] transition-colors"
+                                    style={{
+                                        background: 'var(--bg-surface)',
+                                        border: '1px solid var(--border-subtle)',
+                                        color: 'var(--text-primary)'
+                                    }}
+                                >
+                                    <option value="business">ChatGPT Business</option>
+                                    <option value="plus">ChatGPT Plus</option>
+                                </select>
                             </div>
                         </div>
                     </div>

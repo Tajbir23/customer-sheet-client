@@ -4,12 +4,24 @@ import CustomerTable from './components/CustomerTable'
 import AddCustomerForm from './components/AddCustomerForm'
 import { Helmet } from 'react-helmet'
 
-const Customers = () => {
+const Customers = ({ plan }) => {
   const [isOpen, setIsOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [search, setSearch] = useState('')
   const [debouncedSearch, setDebouncedSearch] = useState('')
   const [searchSubscriptionEndDate, setSearchSubscriptionEndDate] = useState('')
+  const [planFilter, setPlanFilter] = useState('all')
+
+  // When the page is dedicated to a specific plan (e.g. /chatgpt-plus),
+  // we lock the filter to that plan and hide the dropdown.
+  const lockedPlan = plan === 'plus' || plan === 'business' ? plan : null
+  const effectivePlan = lockedPlan || (planFilter === 'all' ? '' : planFilter)
+
+  const pageMeta = lockedPlan === 'plus'
+    ? { title: 'ChatGPT Plus Customers', subtitle: 'Manage your ChatGPT Plus customer base', tag: 'C+' }
+    : lockedPlan === 'business'
+      ? { title: 'ChatGPT Business Customers', subtitle: 'Manage your ChatGPT Business customer base', tag: 'CB' }
+      : { title: 'Customer Management', subtitle: 'Manage and track your customer database with ease', tag: 'C' }
 
   // Debounce search term
   useEffect(() => {
@@ -23,7 +35,7 @@ const Customers = () => {
   return (
     <div className="min-h-screen p-6 md:p-8 lg:p-10 max-w-7xl mx-auto">
       <Helmet>
-        <title>Customers - Customer Sheet</title>
+        <title>{pageMeta.title} - Customer Sheet</title>
       </Helmet>
 
       {/* Modal Overlay */}
@@ -31,6 +43,7 @@ const Customers = () => {
         <AddCustomerForm
           setIsOpen={setIsOpen}
           className="modal-overlay"
+          defaultPlan={lockedPlan || 'business'}
         />
       )}
 
@@ -47,14 +60,14 @@ const Customers = () => {
                   boxShadow: '0 8px 20px -8px rgba(59, 130, 246, 0.5)',
                 }}
               >
-                <span className="w-6 h-6 text-white font-bold text-xl flex items-center justify-center">C</span>
+                <span className="w-6 h-6 text-white font-bold text-xl flex items-center justify-center">{pageMeta.tag}</span>
               </div>
               <div>
                 <h1 className="text-3xl lg:text-4xl font-bold text-[var(--text-primary)] tracking-tight">
-                  Customer Management
+                  {pageMeta.title}
                 </h1>
                 <p className="text-[var(--text-tertiary)] mt-1">
-                  Manage and track your customer database with ease
+                  {pageMeta.subtitle}
                 </p>
               </div>
             </div>
@@ -143,6 +156,28 @@ const Customers = () => {
               <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] group-focus-within:text-[var(--accent-cyan)] transition-colors duration-200 font-bold">D</span>
             </div>
           </div>
+
+          {/* Plan Filter (only on the combined /customers page) */}
+          {!lockedPlan && (
+            <div className="lg:w-56">
+              <div className="relative group">
+                <select
+                  value={planFilter}
+                  onChange={(e) => setPlanFilter(e.target.value)}
+                  className="w-full pl-12 pr-4 py-4 rounded-xl text-[var(--text-primary)] transition-all duration-300 appearance-none"
+                  style={{
+                    background: 'var(--bg-surface)',
+                    border: '1px solid var(--border-subtle)',
+                  }}
+                >
+                  <option value="all">All Plans</option>
+                  <option value="business">ChatGPT Business</option>
+                  <option value="plus">ChatGPT Plus</option>
+                </select>
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] group-focus-within:text-[var(--accent-purple)] transition-colors duration-200 font-bold">P</span>
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
@@ -189,6 +224,8 @@ const Customers = () => {
           isLoading={isLoading}
           search={debouncedSearch}
           searchSubscriptionEndDate={searchSubscriptionEndDate}
+          plan={effectivePlan}
+          showPlanColumn={!lockedPlan}
         />
       </div>
     </div>

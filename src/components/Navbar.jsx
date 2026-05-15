@@ -20,7 +20,9 @@ import {
   FaCheckCircle,
   FaCog,
   FaExclamationTriangle,
-  FaUndo
+  FaUndo,
+  FaBriefcase,
+  FaCrown
 } from 'react-icons/fa';
 import { LuLogs } from "react-icons/lu";
 
@@ -38,6 +40,8 @@ const Navbar = ({ isOpen, setIsOpen, onOpenSettings }) => {
     navigation = [
       { name: "Home", path: "/", icon: <FaHome className="w-5 h-5" /> },
       { name: "Customers", path: "/customers", icon: <FaUsers className="w-5 h-5" /> },
+      { name: "ChatGPT Business", path: "/chatgpt-business", icon: <FaBriefcase className="w-5 h-5" /> },
+      { name: "ChatGPT Plus", path: "/chatgpt-plus", icon: <FaCrown className="w-5 h-5" /> },
       { name: "Teams", path: "/teams", icon: <FaUserFriends className="w-5 h-5" /> },
       {
         name: "ChatGPT Accounts",

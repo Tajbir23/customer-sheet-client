@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
 import {
@@ -23,9 +23,13 @@ import {
   FaUndo,
   FaBriefcase,
   FaCrown,
-  FaGem
+  FaGem,
+  FaChevronDown,
+  FaListUl
 } from 'react-icons/fa';
 import { LuLogs } from "react-icons/lu";
+
+const CUSTOMER_PATHS = ['/customers', '/chatgpt-business', '/chatgpt-plus', '/gemini-pro'];
 
 
 const Navbar = ({ isOpen, setIsOpen, onOpenSettings }) => {
@@ -35,15 +39,29 @@ const Navbar = ({ isOpen, setIsOpen, onOpenSettings }) => {
 
   const decoded = jwtDecode(token);
 
+  const isOnCustomerRoute = CUSTOMER_PATHS.includes(location.pathname);
+  const [customersOpen, setCustomersOpen] = useState(isOnCustomerRoute);
+
+  // Auto-expand when navigating into any customer route
+  useEffect(() => {
+    if (isOnCustomerRoute) setCustomersOpen(true);
+  }, [isOnCustomerRoute]);
+
   let navigation = [];
 
   if (decoded.role === 'admin') {
     navigation = [
       { name: "Home", path: "/", icon: <FaHome className="w-5 h-5" /> },
-      { name: "Customers", path: "/customers", icon: <FaUsers className="w-5 h-5" /> },
-      { name: "ChatGPT Business", path: "/chatgpt-business", icon: <FaBriefcase className="w-5 h-5" /> },
-      { name: "ChatGPT Plus", path: "/chatgpt-plus", icon: <FaCrown className="w-5 h-5" /> },
-      { name: "Gemini Pro", path: "/gemini-pro", icon: <FaGem className="w-5 h-5" /> },
+      {
+        name: "Customers",
+        icon: <FaUsers className="w-5 h-5" />,
+        children: [
+          { name: "All", path: "/customers", icon: <FaListUl className="w-4 h-4" /> },
+          { name: "ChatGPT Business", path: "/chatgpt-business", icon: <FaBriefcase className="w-4 h-4" /> },
+          { name: "ChatGPT Plus", path: "/chatgpt-plus", icon: <FaCrown className="w-4 h-4" /> },
+          { name: "Gemini Pro", path: "/gemini-pro", icon: <FaGem className="w-4 h-4" /> },
+        ]
+      },
       { name: "Teams", path: "/teams", icon: <FaUserFriends className="w-5 h-5" /> },
       {
         name: "ChatGPT Accounts",
@@ -161,8 +179,69 @@ const Navbar = ({ isOpen, setIsOpen, onOpenSettings }) => {
             {/* Navigation */}
             <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto">
               {navigation.map((item) => {
-                const isActive = location.pathname === item.path;
+                // Group item with sub-routes (e.g. Customers dropdown)
+                if (item.children) {
+                  const anyChildActive = item.children.some(c => c.path === location.pathname);
+                  const isExpanded = customersOpen;
 
+                  return (
+                    <div key={item.name}>
+                      <button
+                        type="button"
+                        onClick={() => setCustomersOpen(prev => !prev)}
+                        className={`w-full flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-colors duration-150
+                        ${anyChildActive
+                            ? "bg-[var(--bg-hover)] text-[var(--text-primary)]"
+                            : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)]"
+                          }`}
+                      >
+                        <span className={`mr-3 p-1.5 rounded-lg
+                          ${anyChildActive
+                            ? "bg-[var(--accent-blue)]/20 text-[var(--accent-blue)]"
+                            : "bg-[var(--bg-surface)]"
+                          }`}>
+                          {item.icon}
+                        </span>
+                        <span className="font-medium flex-1 text-left">{item.name}</span>
+                        <FaChevronDown
+                          className={`w-3 h-3 text-[var(--text-tertiary)] transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
+                        />
+                      </button>
+
+                      {isExpanded && (
+                        <div className="mt-1 ml-3 pl-3 space-y-1 border-l border-[var(--border-subtle)]">
+                          {item.children.map((child) => {
+                            const isChildActive = location.pathname === child.path;
+                            return (
+                              <Link
+                                key={child.name}
+                                to={child.path}
+                                onClick={() => setIsOpen(false)}
+                                className={`flex items-center px-3 py-2 text-sm rounded-lg transition-colors duration-150
+                                ${isChildActive
+                                    ? "bg-[var(--accent-blue)] text-white font-semibold"
+                                    : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--bg-hover)]"
+                                  }`}
+                              >
+                                <span className={`mr-2.5 p-1 rounded-md
+                                  ${isChildActive
+                                    ? "bg-white/20"
+                                    : "bg-[var(--bg-surface)]"
+                                  }`}>
+                                  {child.icon}
+                                </span>
+                                <span>{child.name}</span>
+                              </Link>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  );
+                }
+
+                // Regular single item
+                const isActive = location.pathname === item.path;
                 return (
                   <Link
                     key={item.name}

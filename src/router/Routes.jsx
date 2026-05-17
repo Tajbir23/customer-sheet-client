@@ -53,6 +53,10 @@ const Routes = createBrowserRouter([
         element: <Customers plan="plus" />,
       },
       {
+        path: "/gemini-pro",
+        element: <Customers plan="gemini-pro" />,
+      },
+      {
         path: "/teams",
         element: <Teams />,
       },

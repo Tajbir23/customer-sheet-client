@@ -105,7 +105,8 @@ const CustomerTable = ({ className, isLoading, setIsLoading, search, searchSubsc
     };
 
     // Default legacy customers (no plan field) to 'business' for filter-match logic
-    const customerPlanOf = (c) => (c?.plan === 'plus' ? 'plus' : 'business');
+    const customerPlanOf = (c) =>
+        c?.plan === 'plus' || c?.plan === 'gemini-pro' ? c.plan : 'business';
 
     const handleCustomerUpdate = (updatedCustomer) => {
         if (!updatedCustomer?._id) return;

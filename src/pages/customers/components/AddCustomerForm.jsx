@@ -163,7 +163,11 @@ const AddCustomerForm = ({ setIsOpen, className, defaultPlan = 'business', lockP
                       title="Plan is locked based on the current page"
                     >
                       <span className="font-semibold text-[var(--text-primary)]">
-                        {defaultPlan === 'plus' ? 'ChatGPT Plus' : 'ChatGPT Business'}
+                        {defaultPlan === 'plus'
+                          ? 'ChatGPT Plus'
+                          : defaultPlan === 'gemini-pro'
+                            ? 'Gemini Pro'
+                            : 'ChatGPT Business'}
                       </span>
                       <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md"
                         style={{
@@ -185,6 +189,7 @@ const AddCustomerForm = ({ setIsOpen, className, defaultPlan = 'business', lockP
                   >
                     <option value="business">ChatGPT Business</option>
                     <option value="plus">ChatGPT Plus</option>
+                    <option value="gemini-pro">Gemini Pro</option>
                   </select>
                 )}
               </div>

@@ -1,22 +1,46 @@
 import React, { useState } from 'react';
 
+const PLAN_META = {
+    business: {
+        label: 'ChatGPT Business',
+        accent: '6, 182, 212',
+        textVar: 'var(--accent-cyan-light)',
+        gradient: 'linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-blue) 100%)',
+    },
+    plus: {
+        label: 'ChatGPT Plus',
+        accent: '139, 92, 246',
+        textVar: 'var(--accent-purple-light)',
+        gradient: 'linear-gradient(135deg, var(--accent-purple) 0%, var(--accent-blue) 100%)',
+    },
+    'gemini-pro': {
+        label: 'Gemini Pro',
+        accent: '16, 185, 129',
+        textVar: 'var(--success-light)',
+        gradient: 'linear-gradient(135deg, var(--success) 0%, var(--accent-cyan) 100%)',
+    },
+};
+
+const ALL_PLANS = ['business', 'plus', 'gemini-pro'];
+
 const SwitchPlanModal = ({ customer, onClose, onConfirm }) => {
     const [isSwitching, setIsSwitching] = useState(false);
+    const [pendingTarget, setPendingTarget] = useState(null);
 
     if (!customer) return null;
 
-    const currentPlan = customer.plan === 'plus' ? 'plus' : 'business';
-    const targetPlan = currentPlan === 'plus' ? 'business' : 'plus';
+    const currentPlan = ALL_PLANS.includes(customer.plan) ? customer.plan : 'business';
+    const otherPlans = ALL_PLANS.filter(p => p !== currentPlan);
+    const currentMeta = PLAN_META[currentPlan];
 
-    const currentLabel = currentPlan === 'plus' ? 'ChatGPT Plus' : 'ChatGPT Business';
-    const targetLabel = targetPlan === 'plus' ? 'ChatGPT Plus' : 'ChatGPT Business';
-
-    const handleConfirm = async () => {
+    const handleConfirm = async (targetPlan) => {
         try {
             setIsSwitching(true);
+            setPendingTarget(targetPlan);
             await onConfirm(customer._id, targetPlan);
         } finally {
             setIsSwitching(false);
+            setPendingTarget(null);
         }
     };
 
@@ -28,15 +52,9 @@ const SwitchPlanModal = ({ customer, onClose, onConfirm }) => {
                 {/* Header */}
                 <div className="flex items-center gap-3 mb-6">
                     <div className="w-10 h-10 rounded-full flex items-center justify-center"
-                        style={{
-                            background: targetPlan === 'plus'
-                                ? 'rgba(139, 92, 246, 0.15)'
-                                : 'rgba(6, 182, 212, 0.15)'
-                        }}
+                        style={{ background: `rgba(${currentMeta.accent}, 0.15)` }}
                     >
-                        <span className="text-lg font-bold"
-                            style={{ color: targetPlan === 'plus' ? 'var(--accent-purple-light)' : 'var(--accent-cyan-light)' }}
-                        >
+                        <span className="text-lg font-bold" style={{ color: currentMeta.textVar }}>
                             ⇄
                         </span>
                     </div>
@@ -56,39 +74,51 @@ const SwitchPlanModal = ({ customer, onClose, onConfirm }) => {
                     </div>
                 </div>
 
-                {/* From -> To visual */}
-                <div className="mb-6 flex items-center justify-between gap-3">
-                    <div className="flex-1 rounded-xl p-3 text-center border"
-                        style={{
-                            background: currentPlan === 'plus' ? 'rgba(139, 92, 246, 0.08)' : 'rgba(6, 182, 212, 0.08)',
-                            borderColor: currentPlan === 'plus' ? 'rgba(139, 92, 246, 0.3)' : 'rgba(6, 182, 212, 0.3)',
-                        }}
-                    >
-                        <p className="text-[10px] text-[var(--text-tertiary)] uppercase tracking-wider mb-1">From</p>
-                        <p className="text-sm font-bold"
-                            style={{ color: currentPlan === 'plus' ? 'var(--accent-purple-light)' : 'var(--accent-cyan-light)' }}
-                        >
-                            {currentLabel}
-                        </p>
-                    </div>
-                    <span className="text-2xl text-[var(--text-muted)] font-bold">→</span>
-                    <div className="flex-1 rounded-xl p-3 text-center border"
-                        style={{
-                            background: targetPlan === 'plus' ? 'rgba(139, 92, 246, 0.15)' : 'rgba(6, 182, 212, 0.15)',
-                            borderColor: targetPlan === 'plus' ? 'rgba(139, 92, 246, 0.4)' : 'rgba(6, 182, 212, 0.4)',
-                        }}
-                    >
-                        <p className="text-[10px] text-[var(--text-tertiary)] uppercase tracking-wider mb-1">To</p>
-                        <p className="text-sm font-bold"
-                            style={{ color: targetPlan === 'plus' ? 'var(--accent-purple-light)' : 'var(--accent-cyan-light)' }}
-                        >
-                            {targetLabel}
-                        </p>
-                    </div>
+                {/* Currently in */}
+                <div className="mb-4 rounded-xl p-3 text-center border"
+                    style={{
+                        background: `rgba(${currentMeta.accent}, 0.08)`,
+                        borderColor: `rgba(${currentMeta.accent}, 0.3)`,
+                    }}
+                >
+                    <p className="text-[10px] text-[var(--text-tertiary)] uppercase tracking-wider mb-1">Currently in</p>
+                    <p className="text-sm font-bold" style={{ color: currentMeta.textVar }}>
+                        {currentMeta.label}
+                    </p>
                 </div>
 
-                {/* Actions */}
-                <div className="flex justify-end gap-3">
+                {/* Destination chooser */}
+                <p className="text-[var(--text-secondary)] text-sm font-medium mb-2">Move to:</p>
+                <div className="space-y-2 mb-6">
+                    {otherPlans.map((target) => {
+                        const meta = PLAN_META[target];
+                        const isPending = isSwitching && pendingTarget === target;
+                        return (
+                            <button
+                                key={target}
+                                disabled={isSwitching}
+                                onClick={() => handleConfirm(target)}
+                                className="w-full px-4 py-3 rounded-xl font-semibold text-white shadow-lg hover:shadow-xl transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed transform hover:-translate-y-0.5"
+                                style={{ background: meta.gradient }}
+                            >
+                                {isPending ? (
+                                    <>
+                                        <span className="w-3.5 h-3.5 animate-spin font-bold">...</span>
+                                        Moving to {meta.label}...
+                                    </>
+                                ) : (
+                                    <>
+                                        <span className="w-3.5 h-3.5 font-bold">→</span>
+                                        Move to {meta.label}
+                                    </>
+                                )}
+                            </button>
+                        );
+                    })}
+                </div>
+
+                {/* Cancel */}
+                <div className="flex justify-end">
                     <button
                         disabled={isSwitching}
                         className="px-5 py-2.5 rounded-xl font-medium transition-all duration-200 border disabled:opacity-50 disabled:cursor-not-allowed"
@@ -100,28 +130,6 @@ const SwitchPlanModal = ({ customer, onClose, onConfirm }) => {
                         onClick={onClose}
                     >
                         Cancel
-                    </button>
-                    <button
-                        disabled={isSwitching}
-                        className="px-5 py-2.5 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transition-all duration-200 flex items-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed"
-                        style={{
-                            background: targetPlan === 'plus'
-                                ? 'linear-gradient(135deg, var(--accent-purple) 0%, var(--accent-blue) 100%)'
-                                : 'linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-blue) 100%)'
-                        }}
-                        onClick={handleConfirm}
-                    >
-                        {isSwitching ? (
-                            <>
-                                <span className="w-3.5 h-3.5 animate-spin font-bold">...</span>
-                                Moving...
-                            </>
-                        ) : (
-                            <>
-                                <span className="w-3.5 h-3.5 font-bold">⇄</span>
-                                Move to {targetLabel}
-                            </>
-                        )}
                     </button>
                 </div>
             </div>

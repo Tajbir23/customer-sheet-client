@@ -7,20 +7,28 @@ const TableRow = ({ item, index, formatDate, onViewDetails, onDelete, onSwitchPl
     const [copiedEmail, setCopiedEmail] = useState(false);
 
     // Default legacy customers without an explicit plan to "business"
-    const planKey = item.plan === 'plus' ? 'plus' : 'business';
-    const planConfig = planKey === 'plus'
-        ? {
+    const planKey = item.plan === 'plus' || item.plan === 'gemini-pro' ? item.plan : 'business';
+    const PLAN_BADGE_CONFIG = {
+        plus: {
             label: 'ChatGPT Plus',
             bg: 'rgba(139, 92, 246, 0.15)',
             text: 'var(--accent-purple-light)',
             border: 'rgba(139, 92, 246, 0.35)',
-        }
-        : {
+        },
+        'gemini-pro': {
+            label: 'Gemini Pro',
+            bg: 'rgba(16, 185, 129, 0.15)',
+            text: 'var(--success-light)',
+            border: 'rgba(16, 185, 129, 0.35)',
+        },
+        business: {
             label: 'ChatGPT Business',
             bg: 'rgba(6, 182, 212, 0.15)',
             text: 'var(--accent-cyan-light)',
             border: 'rgba(6, 182, 212, 0.35)',
-        };
+        },
+    };
+    const planConfig = PLAN_BADGE_CONFIG[planKey];
 
     const getStatusConfig = (status) => {
         switch (status) {
@@ -261,29 +269,22 @@ const TableRow = ({ item, index, formatDate, onViewDetails, onDelete, onSwitchPl
                             onClick={() => onSwitchPlan(item)}
                             className="inline-flex items-center gap-2 px-3 py-2 text-xs font-medium rounded-lg transition-all duration-200 transform hover:-translate-y-0.5"
                             style={{
-                                background: planKey === 'plus' ? 'rgba(6, 182, 212, 0.15)' : 'rgba(139, 92, 246, 0.15)',
-                                color: planKey === 'plus' ? 'var(--accent-cyan-light)' : 'var(--accent-purple-light)',
-                                border: planKey === 'plus' ? '1px solid rgba(6, 182, 212, 0.3)' : '1px solid rgba(139, 92, 246, 0.3)',
+                                background: 'rgba(99, 102, 241, 0.15)',
+                                color: 'var(--accent-purple-light)',
+                                border: '1px solid rgba(99, 102, 241, 0.3)',
                             }}
                             onMouseEnter={(e) => {
-                                if (planKey === 'plus') {
-                                    e.currentTarget.style.background = 'rgba(6, 182, 212, 0.25)';
-                                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(6, 182, 212, 0.3)';
-                                } else {
-                                    e.currentTarget.style.background = 'rgba(139, 92, 246, 0.25)';
-                                    e.currentTarget.style.boxShadow = '0 4px 12px rgba(139, 92, 246, 0.3)';
-                                }
+                                e.currentTarget.style.background = 'rgba(99, 102, 241, 0.25)';
+                                e.currentTarget.style.boxShadow = '0 4px 12px rgba(99, 102, 241, 0.3)';
                             }}
                             onMouseLeave={(e) => {
-                                e.currentTarget.style.background = planKey === 'plus' ? 'rgba(6, 182, 212, 0.15)' : 'rgba(139, 92, 246, 0.15)';
+                                e.currentTarget.style.background = 'rgba(99, 102, 241, 0.15)';
                                 e.currentTarget.style.boxShadow = 'none';
                             }}
-                            title={planKey === 'plus' ? 'Move to ChatGPT Business' : 'Move to ChatGPT Plus'}
+                            title="Move to another plan"
                         >
                             <FaExchangeAlt className="w-3 h-3" />
-                            <span className="font-bold hidden lg:inline">
-                                {planKey === 'plus' ? '→ Business' : '→ Plus'}
-                            </span>
+                            <span className="font-bold hidden lg:inline">Move</span>
                         </button>
                     )}
                     <button

@@ -14,14 +14,17 @@ const Customers = ({ plan }) => {
 
   // When the page is dedicated to a specific plan (e.g. /chatgpt-plus),
   // we lock the filter to that plan and hide the dropdown.
-  const lockedPlan = plan === 'plus' || plan === 'business' ? plan : null
+  const VALID_PLANS = ['business', 'plus', 'gemini-pro']
+  const lockedPlan = VALID_PLANS.includes(plan) ? plan : null
   const effectivePlan = lockedPlan || (planFilter === 'all' ? '' : planFilter)
 
   const pageMeta = lockedPlan === 'plus'
     ? { title: 'ChatGPT Plus Customers', subtitle: 'Manage your ChatGPT Plus customer base', tag: 'C+' }
-    : lockedPlan === 'business'
-      ? { title: 'ChatGPT Business Customers', subtitle: 'Manage your ChatGPT Business customer base', tag: 'CB' }
-      : { title: 'Customer Management', subtitle: 'Manage and track your customer database with ease', tag: 'C' }
+    : lockedPlan === 'gemini-pro'
+      ? { title: 'Gemini Pro Customers', subtitle: 'Manage your Gemini Pro customer base', tag: 'GP' }
+      : lockedPlan === 'business'
+        ? { title: 'ChatGPT Business Customers', subtitle: 'Manage your ChatGPT Business customer base', tag: 'CB' }
+        : { title: 'Customer Management', subtitle: 'Manage and track your customer database with ease', tag: 'C' }
 
   // Debounce search term
   useEffect(() => {
@@ -174,6 +177,7 @@ const Customers = ({ plan }) => {
                   <option value="all">All Plans</option>
                   <option value="business">ChatGPT Business</option>
                   <option value="plus">ChatGPT Plus</option>
+                  <option value="gemini-pro">Gemini Pro</option>
                 </select>
                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)] group-focus-within:text-[var(--accent-purple)] transition-colors duration-200 font-bold">P</span>
               </div>

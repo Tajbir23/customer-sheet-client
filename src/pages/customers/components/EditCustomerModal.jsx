@@ -159,6 +159,7 @@ const EditCustomerModal = ({ customer, onClose, onUpdate }) => {
                                 >
                                     <option value="business">ChatGPT Business</option>
                                     <option value="plus">ChatGPT Plus</option>
+                                    <option value="gemini-pro">Gemini Pro</option>
                                 </select>
                             </div>
                         </div>

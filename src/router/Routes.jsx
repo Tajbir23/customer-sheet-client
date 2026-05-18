@@ -26,6 +26,7 @@ import MonitorLogs from "../pages/monitor-logs/MonitorLogs";
 import MissingMembers from "../pages/missingMembers/MissingMembers";
 import RefundRequests from "../pages/refundRequests/RefundRequests";
 import SubmitRefundRequest from "../pages/refundRequests/SubmitRefundRequest";
+import ChatGptCheckout from "../pages/tools/ChatGptCheckout";
 
 const Routes = createBrowserRouter([
   {
@@ -115,6 +116,10 @@ const Routes = createBrowserRouter([
       {
         path: "/refund-requests",
         element: <RefundRequests />,
+      },
+      {
+        path: "/tools/chatgpt-checkout",
+        element: <ChatGptCheckout />,
       }
     ],
   },

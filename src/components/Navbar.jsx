@@ -25,11 +25,14 @@ import {
   FaCrown,
   FaGem,
   FaChevronDown,
-  FaListUl
+  FaListUl,
+  FaTools,
+  FaCreditCard
 } from 'react-icons/fa';
 import { LuLogs } from "react-icons/lu";
 
 const CUSTOMER_PATHS = ['/customers', '/chatgpt-business', '/chatgpt-plus', '/gemini-pro'];
+const TOOL_PATHS = ['/tools/chatgpt-checkout'];
 
 
 const Navbar = ({ isOpen, setIsOpen, onOpenSettings }) => {
@@ -40,12 +43,19 @@ const Navbar = ({ isOpen, setIsOpen, onOpenSettings }) => {
   const decoded = jwtDecode(token);
 
   const isOnCustomerRoute = CUSTOMER_PATHS.includes(location.pathname);
+  const isOnToolsRoute = TOOL_PATHS.includes(location.pathname);
   const [customersOpen, setCustomersOpen] = useState(isOnCustomerRoute);
+  const [toolsOpen, setToolsOpen] = useState(isOnToolsRoute);
 
   // Auto-expand when navigating into any customer route
   useEffect(() => {
     if (isOnCustomerRoute) setCustomersOpen(true);
   }, [isOnCustomerRoute]);
+
+  // Auto-expand when navigating into any tools route
+  useEffect(() => {
+    if (isOnToolsRoute) setToolsOpen(true);
+  }, [isOnToolsRoute]);
 
   let navigation = [];
 
@@ -124,6 +134,14 @@ const Navbar = ({ isOpen, setIsOpen, onOpenSettings }) => {
         name: "Refund Request",
         path: "/refund-requests",
         icon: <FaUndo className="w-5 h-5" />,
+      },
+      {
+        name: "Tools",
+        icon: <FaTools className="w-5 h-5" />,
+        groupKey: "tools",
+        children: [
+          { name: "ChatGPT Checkout", path: "/tools/chatgpt-checkout", icon: <FaCreditCard className="w-4 h-4" /> },
+        ]
       }
     ];
   }
@@ -182,13 +200,17 @@ const Navbar = ({ isOpen, setIsOpen, onOpenSettings }) => {
                 // Group item with sub-routes (e.g. Customers dropdown)
                 if (item.children) {
                   const anyChildActive = item.children.some(c => c.path === location.pathname);
-                  const isExpanded = customersOpen;
+                  const groupKey = item.groupKey || 'customers';
+                  const isExpanded = groupKey === 'tools' ? toolsOpen : customersOpen;
+                  const toggle = groupKey === 'tools'
+                    ? () => setToolsOpen(prev => !prev)
+                    : () => setCustomersOpen(prev => !prev);
 
                   return (
                     <div key={item.name}>
                       <button
                         type="button"
-                        onClick={() => setCustomersOpen(prev => !prev)}
+                        onClick={toggle}
                         className={`w-full flex items-center px-4 py-3 text-sm font-medium rounded-xl transition-colors duration-150
                         ${anyChildActive
                             ? "bg-[var(--bg-hover)] text-[var(--text-primary)]"

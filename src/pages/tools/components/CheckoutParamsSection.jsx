@@ -41,7 +41,8 @@ const CheckoutParamsSection = ({
                             onChange={(v) => update({ checkoutUiMode: v })}
                             options={[
                                 { value: "hosted", label: "hosted" },
-                                { value: "custom", label: "custom" }
+                                { value: "custom", label: "custom" },
+                                { value: "stripe", label: "Stripe" }
                             ]}
                         />
                     </Field>
